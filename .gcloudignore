@@ -1,0 +1,13 @@
+# 秘密情報（Cloud Build に含めない）
+.env
+
+# Python キャッシュ
+__pycache__/
+*.pyc
+*.pyo
+
+# 仮想環境
+.venv/
+
+# ローカル開発用ファイル
+.git/

@@ -1,0 +1,19 @@
+# 秘密情報
+.env
+
+# Claude Code ローカル設定
+.claude/settings.local.json
+
+# ADK 自動生成ファイル
+**/.adk/
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
