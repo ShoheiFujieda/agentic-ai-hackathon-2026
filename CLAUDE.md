@@ -90,6 +90,6 @@
 
 ### 残タスク（10/6 分）
 - [ ] 題材決定
-- [ ] GitHub へ push（`gh` 未インストール。GitHub上でリポジトリを作成してURLを設定）
+- [x] GitHub へ push（https://github.com/ShoheiFujieda/agentic-ai-hackathon-2026 、ブランチ `main`）
 - [ ] 技術検証: before_tool_callback / 承認待ち保存 / 監査ログ / adk eval
 - [x] Cloud Run の動作確認
