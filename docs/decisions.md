@@ -5,4 +5,8 @@
 ## 2026-10-06
 - **Firestore は `(default)` DB を Native モード・us-central1 に作成。** Cloud Run と同じリージョンにして遅延を抑え、無料枠（1プロジェクト1DB）に収めるため。ロケーションは後から変更できない。
 - **エージェント専用サービスアカウント `hackathon-agent-sa` を用意し、付与するのは `roles/aiplatform.user`（Gemini呼び出し）と `roles/datastore.user`（Firestore読み書き）の2つだけ。** デフォルトのCompute SAは権限が広すぎるため使わない（最小権限）。Cloud Run はこのSAで動作（revision 00002）。
+- **人間の承認は ADK の Tool Confirmation を使わず、Firestore に承認待ちを保存する自前方式にする。** 公式ドキュメント上、Tool Confirmation は実験的な機能で、DatabaseSessionService / VertexAiSessionService では使えない。Firestore のセッション保存も Java 版にしかない（2026-10-06 に adk.dev で確認）。
+- **ルール判定（許可リスト・上限）はモデルに任せず、`before_tool_callback` のコードで行う。** モデルが判断を誤っても、コードが最後の砦になる。拒否時はツールを実行せず、理由をエージェントに返して説明させる。
+- **監査ログは Firestore `audit_logs` と標準出力（Cloud Logging）の両方に書き、書けない場合は低リスク操作でも実行しない。** ADK はガードが止めた呼び出しにも after_tool_callback を呼ぶため、`temp:` state の印で「実行済み」の誤記録を防ぐ。
+- **Gemini 呼び出しは thinking=LOW、30秒タイムアウト、最大3回リトライ。失敗時は `on_model_error_callback` で「処理は行っていない」と返す。** 検証中に、応答に約3分かかる呼び出しがまれに発生したため。
 - **予算アラートを月3,000円（50%/90%/100%でメール通知）で設定。** 想定外の課金に早く気づくため。通知のみでサービスは止まらない。
