@@ -82,7 +82,14 @@
 3. `DESIGN_SPEC.md` を作成して設計を固める
 4. GitHub リポジトリに push（未完了）
 
-### 残タスク（10/5-6 分）
+### 完了済み（10/6）
+- Firestore `(default)` DB 作成（Native / us-central1 / 無料枠）
+- エージェント専用SA `hackathon-agent-sa`（`aiplatform.user` と `datastore.user` のみ）→ Cloud Run をこのSAで稼働、応答確認済み
+- 予算アラート 月3,000円（50/90/100%通知）
+- 判断記録: `docs/decisions.md`
+
+### 残タスク（10/6 分）
 - [ ] 題材決定
-- [ ] GitHub へ push（リモートURL設定が必要）
-- [ ] Cloud Run の動作確認（gcloudプロキシ経由）
+- [ ] GitHub へ push（`gh` 未インストール。GitHub上でリポジトリを作成してURLを設定）
+- [ ] 技術検証: before_tool_callback / 承認待ち保存 / 監査ログ / adk eval
+- [x] Cloud Run の動作確認
