@@ -25,6 +25,9 @@ ADK組み込みの Tool Confirmation は実験的な機能で、永続セッシ�
 - 高リスクのツール呼び出し → Firestore `approvals/{id}` に `status=pending` で保存し、エージェントには `pending_approval` と承認IDを返す
 - 承認者が承認または却下する（検証段階ではCLIスクリプト、後で画面）
 - エージェントが同じ承認IDで再実行 → ガードが確認する。`approved` で、**引数が承認時と同じ**で、**未使用**のときだけ実行し、`used` にする（使い回しと中身のすり替えを防ぐ）
+- 依頼した本人は承認できない（職務分離）。承認は依頼者本人のみが使え、有効期限は24時間
+- 確認と更新は Firestore のトランザクションで一度に行い、同時実行による二重使用を防ぐ
+- 実装: `hackathon_agent/governance/approvals.py`、承認CLI `scripts/approve.py`、テスト `tests/test_approvals.py`（7件）
 
 ### 3.3 監査ログ
 Firestore `audit_logs` に1操作1件で記録する。

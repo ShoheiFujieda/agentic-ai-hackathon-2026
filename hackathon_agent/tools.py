@@ -13,13 +13,16 @@ def get_balance(tool_context: ToolContext) -> dict:
     return {"status": "ok", "balance": balance}
 
 
-def send_payment(payee: str, amount: int, reason: str, tool_context: ToolContext) -> dict:
-    """支払先に送金する（架空）。
+def send_payment(
+    payee: str, amount: int, reason: str, tool_context: ToolContext, approval_id: str | None = None
+) -> dict:
+    """支払先に送金する（架空）。人間の承認が必要。
 
     Args:
         payee: 支払先の名前。
         amount: 金額（円、整数）。
         reason: 支払いの理由。監査ログに残る。
+        approval_id: 承認後に実行するときだけ、承認待ちのときに返された承認IDを指定する。
     """
     balance = tool_context.state.get("balance", INITIAL_BALANCE)
     if amount > balance:

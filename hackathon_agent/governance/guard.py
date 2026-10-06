@@ -8,7 +8,7 @@ from typing import Any
 
 from google.adk.tools import BaseTool, ToolContext
 
-from . import audit
+from . import approvals, audit
 
 # 技術検証用の架空ルール。題材が決まったら差し替える。
 MAX_AMOUNT = 100_000
@@ -74,13 +74,20 @@ def before_tool_guard(tool: BaseTool, args: dict[str, Any], tool_context: ToolCo
     if validator and (problem := validator(args)):
         return _blocked(name, args, tool_context, "blocked", problem)
 
-    # 3. リスク判定（承認の仕組みは次のステップで実装。それまで高リスクは止める）
+    # 3. リスク判定: 高リスクは人間の承認がないと実行しない
+    allow_reason = "ルール適合"
     if risk == "high":
-        return _blocked(
-            name, args, tool_context, "pending", "高リスク操作のため人間の承認が必要です（承認機能は未実装）"
-        )
+        approval_id = args.get("approval_id")
+        if not approval_id:
+            new_id = approvals.create(**_who(tool_context), tool=name, args=args)
+            result = _blocked(name, args, tool_context, "pending", f"高リスク操作のため人間の承認が必要です（承認ID: {new_id}）")
+            return {**result, "approval_id": new_id}
+        ok, why = approvals.consume(approval_id=approval_id, user_id=tool_context.user_id, tool=name, args=args)
+        if not ok:
+            return _blocked(name, args, tool_context, "blocked", why)
+        allow_reason = why
 
-    if not audit.record(**_who(tool_context), tool=name, args=args, decision="allowed", reason="ルール適合"):
+    if not audit.record(**_who(tool_context), tool=name, args=args, decision="allowed", reason=allow_reason):
         # 監査ログが残せない操作は、低リスクでも実行しない
         tool_context.state[_skip_key(tool_context)] = True
         return {"status": "error", "reason": "監査ログを記録できないため実行を中止しました"}

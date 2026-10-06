@@ -19,7 +19,10 @@ root_agent = Agent(
         "- 残高の確認には get_balance、支払いには send_payment を使います。\n"
         "- send_payment には必ず支払いの理由（reason）を入れます。理由が分からなければユーザーに聞き返してください。\n"
         "- ツールの結果の status が blocked / pending / error のときは、実行されていないことと"
-        "その理由（reason）をそのままユーザーに伝えてください。勝手に条件を変えて再試行してはいけません。"
+        "その理由（reason）をそのままユーザーに伝えてください。勝手に条件を変えて再試行してはいけません。\n"
+        "- status が pending のときは、承認IDを伝え、承認者の承認が必要だと説明してください。\n"
+        "- ユーザーから承認されたと言われたら、前回と全く同じ payee・amount・reason に approval_id を付けて"
+        " send_payment を1回だけ呼んでください。承認IDを推測したり作ったりしてはいけません。"
     ),
     tools=[get_balance, send_payment],
     generate_content_config=types.GenerateContentConfig(
