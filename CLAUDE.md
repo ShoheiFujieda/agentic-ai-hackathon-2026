@@ -93,3 +93,8 @@
 - [x] GitHub へ push（https://github.com/ShoheiFujieda/agentic-ai-hackathon-2026 、ブランチ `main`）
 - [ ] 技術検証: before_tool_callback / 承認待ち保存 / 監査ログ / adk eval
 - [x] Cloud Run の動作確認
+
+### 10/7 の確認事項
+- 個人情報・秘密情報の点検済み（全公開リポジトリの全履歴・GCPの鍵）。漏洩なし。未使用の Gemini API Key は削除
+- [ ] **提出までに**: Cloud Run は今 IAM 認証必須のため審査員が開けない → URLを公開し、アプリ側ログイン（テストアカウント）に切り替える
+- 300ドルの Google Cloud クーポンは適用済み
