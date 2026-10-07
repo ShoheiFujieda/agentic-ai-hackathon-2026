@@ -11,3 +11,7 @@ __pycache__/
 
 # ローカル開発用ファイル
 .git/
+
+# ローカルの試行記録・Claude Code 設定（本番に含めない）
+**/.adk/
+.claude/
