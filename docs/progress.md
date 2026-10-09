@@ -5,7 +5,7 @@
 ## 現在の状態（最終更新: 2026-10-09）
 
 ### 環境（変わらない事実）
-- uv + Python 3.12 + google-adk 2.11.0。エージェント: `hackathon_agent/agent.py`（model: gemini-3.8-flash）
+- uv + Python 3.12.10（python.org の署名つき。`%LOCALAPPDATA%\Python\pythoncore-3.12-64`。uv が入れる署名なしの Python はスマート アプリ コントロールに止められる）+ google-adk 2.11.0。エージェント: `hackathon_agent/agent.py`（model: gemini-3.8-flash）
 - ローカル起動: `uv run adk web --port 9000`
 - Cloud Run: `https://hackathon-agent-525978871269.us-central1.run.app`（認証必須、最大2インスタンス、専用SA `hackathon-agent-sa`）
 - Firestore `(default)`（Native / us-central1）。予算アラート 月3,000円。300ドルのクーポン適用済み
