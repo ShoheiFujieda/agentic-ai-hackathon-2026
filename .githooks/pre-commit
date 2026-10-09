@@ -1,3 +1,10 @@
 #!/bin/sh
 # コミット前に秘密情報を検査する（設定: git config core.hooksPath .githooks）
-exec uv run --quiet python scripts/hooks/check_secrets.py
+# 検査は標準ライブラリだけで動くので、プロジェクトの依存は読み込まない
+if command -v uv >/dev/null 2>&1; then
+  exec uv run --no-project --quiet python scripts/hooks/check_secrets.py
+elif command -v python3 >/dev/null 2>&1; then
+  exec python3 scripts/hooks/check_secrets.py
+else
+  exec python scripts/hooks/check_secrets.py
+fi
