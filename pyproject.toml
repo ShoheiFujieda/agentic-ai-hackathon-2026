@@ -40,3 +40,8 @@ ignore = ["E501"]
 [tool.ruff.lint.per-file-ignores]
 # ADK はパッケージの __init__.py で `from . import agent` と書く決まり
 "**/__init__.py" = ["F401"]
+
+[tool.uv]
+# uv が入れる Python には署名がなく、Windows のスマート アプリ コントロールに止められる（10/9）。
+# パソコンに入っている python.org の署名つき Python を優先する
+python-preference = "system"
