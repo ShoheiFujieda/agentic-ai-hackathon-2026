@@ -141,14 +141,23 @@ def application_route(value: str) -> str:
     return "不明"
 
 
-def monthly_amount_yen(value: str) -> int | None:
-    """「3万円」「30,000円」などを月額の円にする。読めなければ None。"""
+def amount(value: str) -> dict:
+    """金額欄（「3万円」「年額120万円」「一時金30万円」など）を、金額と単位（月額／年額／一時金）にする。"""
     v = (value or "").replace(",", "").replace("，", "")
     m = re.search(r"(\d+(?:\.\d+)?)\s*万円", v)
-    if m:
-        return int(float(m[1]) * 10_000)
-    m = re.search(r"(\d{4,})\s*円", v)
-    return int(m[1]) if m else None
+    yen = int(float(m[1]) * 10_000) if m else None
+    if yen is None:
+        m = re.search(r"(\d{4,})\s*円", v)
+        yen = int(m[1]) if m else None
+    if yen is None:
+        per = "不明"
+    elif re.search(r"一時金|総額|一括|一回", v):
+        per = "一時金"
+    elif re.search(r"年額|年間|年\s*\d|／年|/年|毎年", v):
+        per = "年額"
+    else:
+        per = "月額"  # 筑波大学の欄名は「奨学金月額」
+    return {"yen": yen, "per": per, "text": (value or "").strip()[:60]}
 
 
 def typical_months(entries: list[Entry], organization: str) -> list[int]:

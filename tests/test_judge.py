@@ -178,3 +178,11 @@ def test_絞り込みは確実に対象外のものだけ除く():
     )
     # 市の名前だけでは地域が分からないので残す
     assert prefilter({"organization": "川越市", "scholarship": "奨学金"}, mine, "東都工科大学") is None
+
+
+def test_別分野の言葉にはスポーツと美術を含む():
+    from hackathon_agent.scholarship.judge import OTHER_FIELDS
+
+    assert OTHER_FIELDS.search("（公財）ヨネックススポーツ振興財団")
+    assert OTHER_FIELDS.search("（公財）現代美術文化振興財団")
+    assert not OTHER_FIELDS.search("（一財）TCS奨学会")

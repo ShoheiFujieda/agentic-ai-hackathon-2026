@@ -8,39 +8,53 @@ from typing import Any
 
 from google.adk.tools import BaseTool, ToolContext
 
+from ..scholarship.prefilter import PREFECTURES
+from ..tools import FACULTY_KEYWORDS, RECEIVING
 from . import approvals, audit
 
-# 技術検証用の架空ルール。題材が決まったら差し替える。
-MAX_AMOUNT = 100_000
-ALLOWED_PAYEES = {"A社", "B社", "C社"}
+# 1セッションで find_scholarships を呼べる回数（Gemini の費用の上限）
+MAX_SEARCHES_PER_SESSION = 5
 
 # 許可リスト: ここにないツールは実行させない
 TOOL_RISK = {
-    "get_balance": "low",
-    "send_payment": "high",
+    "find_scholarships": "low",
+    "get_scholarship_detail": "low",
 }
 
 
-def _validate_send_payment(args: dict[str, Any]) -> str | None:
+def _validate_find_scholarships(args: dict[str, Any], tool_context: ToolContext) -> str | None:
     """問題があれば理由を返す。問題なければ None。"""
-    payee = args.get("payee")
-    amount = args.get("amount")
-    reason = (args.get("reason") or "").strip()
-    if payee not in ALLOWED_PAYEES:
-        return f"支払先「{payee}」は許可リストにありません（許可: {', '.join(sorted(ALLOWED_PAYEES))}）"
-    if not isinstance(amount, int) or isinstance(amount, bool):
-        return "金額は整数（円）で指定してください"
-    if amount <= 0:
-        return "金額は1円以上にしてください"
-    if amount > MAX_AMOUNT:
-        return f"金額が上限（{MAX_AMOUNT:,}円）を超えています"
-    if not reason:
-        return "支払いの理由（reason）が必要です"
+    if args.get("gakugun") not in FACULTY_KEYWORDS:
+        return f"学群名「{args.get('gakugun')}」は使えません（使える値: {'、'.join(FACULTY_KEYWORDS)}）"
+    grade = args.get("grade")
+    if not isinstance(grade, int) or isinstance(grade, bool) or not 1 <= grade <= 6:
+        return "学年は1〜6の整数で指定してください"
+    for key, label in (
+        ("home_prefecture", "出身地"),
+        ("residence_prefecture", "本人の住所"),
+        ("guardian_prefecture", "保護者の住所"),
+    ):
+        if args.get(key) not in PREFECTURES:
+            return f"{label}「{args.get(key)}」は都道府県名（例: 埼玉県）で指定してください"
+    receiving = args.get("receiving")
+    if not isinstance(receiving, list) or not set(receiving) <= RECEIVING:
+        return f"受給中の奨学金は {'、'.join(sorted(RECEIVING))} から選んでください（なければ空のリスト）"
+    used = tool_context.state.get("search_count", 0)
+    if used >= MAX_SEARCHES_PER_SESSION:
+        return f"このセッションでの検索は上限（{MAX_SEARCHES_PER_SESSION}回）に達しました。新しいセッションで試してください"
+    return None
+
+
+def _validate_get_scholarship_detail(args: dict[str, Any], tool_context: ToolContext) -> str | None:
+    sid = args.get("scholarship_id")
+    if not isinstance(sid, int) or isinstance(sid, bool) or sid <= 0:
+        return "scholarship_id は find_scholarships の結果にある正の整数を指定してください"
     return None
 
 
 VALIDATORS = {
-    "send_payment": _validate_send_payment,
+    "find_scholarships": _validate_find_scholarships,
+    "get_scholarship_detail": _validate_get_scholarship_detail,
 }
 
 
@@ -71,7 +85,7 @@ def before_tool_guard(tool: BaseTool, args: dict[str, Any], tool_context: ToolCo
 
     # 2. 引数の検証
     validator = VALIDATORS.get(name)
-    if validator and (problem := validator(args)):
+    if validator and (problem := validator(args, tool_context)):
         return _blocked(name, args, tool_context, "blocked", problem)
 
     # 3. リスク判定: 高リスクは人間の承認がないと実行しない
@@ -89,6 +103,8 @@ def before_tool_guard(tool: BaseTool, args: dict[str, Any], tool_context: ToolCo
             return _blocked(name, args, tool_context, "blocked", why)
         allow_reason = why
 
+    if name == "find_scholarships":
+        tool_context.state["search_count"] = tool_context.state.get("search_count", 0) + 1
     if not audit.record(**_who(tool_context), tool=name, args=args, decision="allowed", reason=allow_reason):
         # 監査ログが残せない操作は、低リスクでも実行しない
         tool_context.state[_skip_key(tool_context)] = True

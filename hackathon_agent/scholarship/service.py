@@ -4,13 +4,14 @@ AI を使うのは「出願資格」の文章の読み取りだけ。締切・�
 """
 
 import logging
+import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict
 from datetime import date
 
 from . import cache, extract, tsukuba, web
-from .judge import ELIGIBLE, INELIGIBLE, NEEDS_CHECK, Profile, fiscal_year, judge
+from .judge import ELIGIBLE, INELIGIBLE, NEEDS_CHECK, OTHER_FIELDS, Profile, fiscal_year, judge
 from .prefilter import prefilter
 
 logger = logging.getLogger(__name__)
@@ -18,6 +19,8 @@ logger = logging.getLogger(__name__)
 UNIVERSITY = "筑波大学"
 CACHE_VERSION = "v3"  # 抜き出し方を変えたら上げて、古いキャッシュを使わないようにする
 WORKERS = 4
+# 名前から「一部の人だけが対象」と推定できる言葉（カレンダーで印を付ける）
+SPECIAL_HINTS = re.compile(r"障害|遺児|被災|震災|ひとり親|母子|父子|児童養護|里親|難病|がん")
 INDEX_TTL_SEC = 3600
 
 _index: tuple[float, list[tsukuba.Entry]] | None = None
@@ -71,7 +74,7 @@ def check_entry(entry: tsukuba.Entry, profile: Profile, today: date) -> dict:
         "deadline": cond["period"]["deadline"],
         "route": cond["application_route"],
         "kind": entry.kind,
-        "monthly_yen": tsukuba.monthly_amount_yen(detail.get("奨学金月額", "")),
+        "amount": tsukuba.amount(detail.get("奨学金月額", "")),
         "status": result.status,
         "reasons": result.reasons,
         "url": entry.url,
@@ -80,10 +83,15 @@ def check_entry(entry: tsukuba.Entry, profile: Profile, today: date) -> dict:
 
 
 def _calendar(
-    entries: list[tsukuba.Entry], profile_prefs: set[str], today: date, open_now: set[str], limit: int = 15
+    entries: list[tsukuba.Entry],
+    profile: Profile,
+    profile_prefs: set[str],
+    today: date,
+    open_now: set[str],
+    limit: int = 15,
 ) -> list[dict]:
-    """今年度と昨年度に締切が過ぎたものから、来年の準備カレンダーを作る（条件は募集時に確認）。
-    今まさに募集中の団体は「今応募できる」の側に出るので、ここには入れない。"""
+    """今年度と昨年度に締切が過ぎたものから、準備カレンダーを作る（条件は募集時に確認）。
+    今まさに募集中の団体は「今応募できる」の側に出るので、ここには入れない。名前から明らかに別分野と分かるものも除く。"""
     fy = fiscal_year(today)
     seen: dict[str, tsukuba.Entry] = {}
     for e in entries:
@@ -92,6 +100,9 @@ def _calendar(
         if any(k in web.norm(e.organization) or web.norm(e.organization) in k for k in open_now):
             continue
         if prefilter({"organization": e.organization}, profile_prefs, UNIVERSITY):
+            continue
+        name = e.organization
+        if OTHER_FIELDS.search(name) and not any(k in name for k in profile.field_keywords):
             continue
         key = web.norm(e.organization)
         if key not in seen or (seen[key].deadline or date.min) < e.deadline:
@@ -104,6 +115,7 @@ def _calendar(
         years = len({x.fiscal_year for x in entries if web.norm(e.organization) in web.norm(x.organization)})
         # 次に来る締切月までの月数（今月より後の月を先に）
         until = (months[0] - today.month) % 12 or 12
+        soon = until <= 2  # 推薦書などの準備に約2か月かかるので、2か月以内なら今すぐ動く
         items.append(
             {
                 "organization": e.organization,
@@ -112,7 +124,11 @@ def _calendar(
                 "kind": e.kind,
                 "years_listed": years,
                 "months_until": until,
-                "prepare_from": f"{(months[0] - 2 - 1) % 12 + 1}月ごろ",  # 推薦書などの準備に約2か月
+                "timing": "まもなく今年の募集が始まる見込み" if soon else "次回の募集に向けて準備",
+                "prepare_from": "今すぐ" if soon else f"{(months[0] - 2 - 1) % 12 + 1}月ごろ",
+                "note": "名前から、特別な条件（障害・遺児など）の可能性があります"
+                if SPECIAL_HINTS.search(name)
+                else "",
                 "url": e.url,
             }
         )
@@ -173,7 +189,7 @@ def find(profile: Profile, today: date, max_checks: int = 20) -> dict:
         "ineligible": pick(INELIGIBLE),
         "excluded_by_name": excluded,
         "not_checked_over_limit": skipped,
-        "next_year_calendar": _calendar(entries, prefs, today, {web.norm(e.organization) for e in open_now}),
+        "next_year_calendar": _calendar(entries, profile, prefs, today, {web.norm(e.organization) for e in open_now}),
     }
 
 

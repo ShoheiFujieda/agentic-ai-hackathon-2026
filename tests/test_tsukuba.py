@@ -37,9 +37,11 @@ def test_申請方法と併給と金額():
     assert tsukuba.application_route("") == "不明"
     assert tsukuba.concurrent_rules("可")["rules"]["JASSO貸与"] == "可"
     assert tsukuba.concurrent_rules("不可")["status"] == "不明"
-    assert tsukuba.monthly_amount_yen("3万円") == 30_000
-    assert tsukuba.monthly_amount_yen("月額 40,000円") == 40_000
-    assert tsukuba.monthly_amount_yen("財団の規定による") is None
+    assert tsukuba.amount("3万円") | {"text": ""} == {"yen": 30_000, "per": "月額", "text": ""}
+    assert tsukuba.amount("月額 40,000円")["yen"] == 40_000
+    assert tsukuba.amount("年額120万円")["per"] == "年額"  # 10/9 に月額120万円と表示された実例
+    assert tsukuba.amount("一時金として30万円")["per"] == "一時金"
+    assert tsukuba.amount("財団の規定による")["per"] == "不明"
 
 
 def test_例年の締切月():
