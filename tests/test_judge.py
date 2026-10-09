@@ -136,6 +136,8 @@ def test_絞り込みは確実に対象外のものだけ除く():
     )
     assert prefilter({"organization": "埼玉県", "scholarship": "埼玉県奨学金"}, mine, "東都工科大学") is None
     assert prefilter({"organization": "公益財団法人川村育英会", "scholarship": "奨学生"}, mine, "東都工科大学") is None
-    assert prefilter({"organization": "一般財団法人大学生奨学財団", "scholarship": "給付"}, mine, "東都工科大学") is None
+    assert (
+        prefilter({"organization": "一般財団法人大学生奨学財団", "scholarship": "給付"}, mine, "東都工科大学") is None
+    )
     # 市の名前だけでは地域が分からないので残す
     assert prefilter({"organization": "川越市", "scholarship": "奨学金"}, mine, "東都工科大学") is None
