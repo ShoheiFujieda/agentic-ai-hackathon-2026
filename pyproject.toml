@@ -9,6 +9,7 @@ requires-python = ">=3.12"
 dependencies = [
     "google-adk>=2.11.0",
     "google-cloud-firestore>=2.34.0",
+    "pypdf>=6.19.0",
 ]
 
 [project.scripts]
