@@ -6,7 +6,7 @@
 import hashlib
 import json
 import uuid
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from google.cloud import firestore
@@ -27,7 +27,7 @@ def _args_hash(tool: str, args: dict[str, Any]) -> str:
 def create(*, user_id: str, session_id: str, tool: str, args: dict[str, Any]) -> str:
     """承認待ちを作り、承認IDを返す。"""
     approval_id = f"ap-{uuid.uuid4().hex[:8]}"
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     _db().collection(COLLECTION).document(approval_id).set(
         {
             "status": "pending",
@@ -68,11 +68,11 @@ def consume(*, approval_id: str, user_id: str, tool: str, args: dict[str, Any]) 
             return False, f"承認者が却下しました（{comment}）"
         if status == "used":
             return False, "この承認はすでに使用済みです（1回の承認で実行できるのは1回のみ）"
-        if datetime.now(timezone.utc) > ap["expires_at"]:
+        if datetime.now(UTC) > ap["expires_at"]:
             return False, "承認の有効期限（24時間）が切れています。もう一度依頼してください"
         if status != "approved":
             return False, f"承認の状態が不正です（{status}）"
-        txn.update(ref, {"status": "used", "used_at": datetime.now(timezone.utc)})
+        txn.update(ref, {"status": "used", "used_at": datetime.now(UTC)})
         return True, f"承認済み（承認者: {ap.get('decided_by')}、承認ID: {approval_id}）"
 
     return _txn(_db().transaction())
@@ -97,7 +97,7 @@ def decide(*, approval_id: str, approver: str, approve: bool, comment: str = "")
             {
                 "status": "approved" if approve else "rejected",
                 "decided_by": approver,
-                "decided_at": datetime.now(timezone.utc),
+                "decided_at": datetime.now(UTC),
                 "comment": comment,
             },
         )

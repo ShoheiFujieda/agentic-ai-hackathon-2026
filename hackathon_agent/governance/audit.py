@@ -3,7 +3,7 @@
 import json
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from google.cloud import firestore
@@ -37,7 +37,7 @@ def record(
     decision: allowed / blocked / pending / executed のいずれか。
     """
     entry = {
-        "at": datetime.now(timezone.utc),
+        "at": datetime.now(UTC),
         "user_id": user_id,
         "session_id": session_id,
         "tool": tool,
@@ -47,9 +47,7 @@ def record(
         "result": result,
     }
     # Cloud Run では標準出力が Cloud Logging に入るので、Firestore と二重に残す
-    logger.info(
-        "AUDIT %s", json.dumps({**entry, "at": entry["at"].isoformat()}, ensure_ascii=False, default=str)
-    )
+    logger.info("AUDIT %s", json.dumps({**entry, "at": entry["at"].isoformat()}, ensure_ascii=False, default=str))
     try:
         _db().collection(COLLECTION).add(entry)
         return True

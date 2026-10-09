@@ -21,8 +21,21 @@ build-backend = "uv_build"
 [dependency-groups]
 dev = [
     "pytest>=9.1.1",
+    "ruff>=0.16.10",
 ]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+# 行の長さは ruff format に任せる（日本語の文字列は折り返せないため）
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# ADK はパッケージの __init__.py で `from . import agent` と書く決まり
+"**/__init__.py" = ["F401"]

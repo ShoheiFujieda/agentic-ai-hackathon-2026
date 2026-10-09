@@ -3,7 +3,11 @@
 使い方: uv run python scripts/spike_extract_pdf.py <PDFのパス>...
 （.env の GOOGLE_CLOUD_PROJECT 等を環境変数に読み込んでから実行）
 """
-import sys, time
+
+import sys
+import time
+from pathlib import Path
+
 from google import genai
 from google.genai import types
 
@@ -19,14 +23,15 @@ PROMPT = """あなたは大学の奨学金担当職員の補助者です。添�
 
 client = genai.Client(vertexai=True)
 for path in sys.argv[1:]:
-    data = open(path, "rb").read()
+    data = Path(path).read_bytes()
     t = time.time()
     r = client.models.generate_content(
         model="gemini-3.8-flash",
         contents=[types.Part.from_bytes(data=data, mime_type="application/pdf"), PROMPT],
-        config=types.GenerateContentConfig(response_mime_type="application/json",
-                                           thinking_config=types.ThinkingConfig(thinking_level="LOW")),
+        config=types.GenerateContentConfig(
+            response_mime_type="application/json", thinking_config=types.ThinkingConfig(thinking_level="LOW")
+        ),
     )
     u = r.usage_metadata
-    print(f"===== {path}  {time.time()-t:.1f}s  in={u.prompt_token_count} out={u.candidates_token_count}")
+    print(f"===== {path}  {time.time() - t:.1f}s  in={u.prompt_token_count} out={u.candidates_token_count}")
     print(r.text)

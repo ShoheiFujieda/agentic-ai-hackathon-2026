@@ -80,7 +80,9 @@ def before_tool_guard(tool: BaseTool, args: dict[str, Any], tool_context: ToolCo
         approval_id = args.get("approval_id")
         if not approval_id:
             new_id = approvals.create(**_who(tool_context), tool=name, args=args)
-            result = _blocked(name, args, tool_context, "pending", f"高リスク操作のため人間の承認が必要です（承認ID: {new_id}）")
+            result = _blocked(
+                name, args, tool_context, "pending", f"高リスク操作のため人間の承認が必要です（承認ID: {new_id}）"
+            )
             return {**result, "approval_id": new_id}
         ok, why = approvals.consume(approval_id=approval_id, user_id=tool_context.user_id, tool=name, args=args)
         if not ok:

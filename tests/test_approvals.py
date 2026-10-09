@@ -23,7 +23,9 @@ def _new(requester: str) -> str:
 
 
 def _consume(approval_id: str, user: str, args: dict = ARGS) -> tuple[bool, str]:
-    return approvals.consume(approval_id=approval_id, user_id=user, tool=TOOL, args={**args, "approval_id": approval_id})
+    return approvals.consume(
+        approval_id=approval_id, user_id=user, tool=TOOL, args={**args, "approval_id": approval_id}
+    )
 
 
 def test_承認前は実行できない(requester):
