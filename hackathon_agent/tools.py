@@ -2,12 +2,11 @@
 
 import logging
 import os
-from datetime import date, datetime
-from zoneinfo import ZoneInfo
+from datetime import date, datetime, timedelta, timezone
 
 from google.adk.tools import ToolContext
 
-from .scholarship import service
+from .scholarship import service, web
 from .scholarship.judge import Profile
 
 logger = logging.getLogger(__name__)
@@ -26,6 +25,8 @@ FACULTY_KEYWORDS = {
 }
 RECEIVING = {"JASSO貸与", "JASSO給付", "他の民間給付"}
 SCHOOL_LOCATION = "茨城県"  # 筑波大学（つくば市）
+# 日本時間。日本には夏時間がないので固定の +9時間 で求める（Windows はタイムゾーンのデータを持たないため ZoneInfo を使わない）
+JST = timezone(timedelta(hours=9), "JST")
 
 
 def today() -> date:
@@ -33,7 +34,7 @@ def today() -> date:
     fixed = os.environ.get("DEMO_TODAY")
     if fixed:
         return date.fromisoformat(fixed)
-    return datetime.now(ZoneInfo("Asia/Tokyo")).date()
+    return datetime.now(JST).date()
 
 
 def find_scholarships(
@@ -69,12 +70,13 @@ def find_scholarships(
     )
     try:
         result = service.find(profile, today())
-    except Exception as e:  # 取得や読み取りの失敗で会話を止めない（安全なフォールバック）
+    except Exception as e:  # 失敗で会話を止めない（安全なフォールバック）。原因の種類は正しく伝える
         logger.exception("奨学金の検索に失敗しました")
-        return {
-            "status": "error",
-            "reason": f"筑波大学の奨学金一覧を読めませんでした（{type(e).__name__}）。時間をおいて試してください",
-        }
+        if isinstance(e, web.FetchError):
+            reason = f"筑波大学の奨学金一覧を読めませんでした（{e}）。時間をおいて試してください"
+        else:
+            reason = f"システムの内部エラーで検索できませんでした（{type(e).__name__}）。管理者に連絡してください"
+        return {"status": "error", "reason": reason}
     return {"status": "ok", **result}
 
 

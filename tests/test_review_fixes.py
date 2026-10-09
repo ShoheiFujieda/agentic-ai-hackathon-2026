@@ -112,3 +112,18 @@ def test_取得に失敗してもツールは例外を投げずerrorを返す(mo
     r = tools.find_scholarships("情報学群", 2, "埼玉県", "茨城県", "埼玉県", [], tool_context=None)
     assert r["status"] == "error"
     assert tools.get_scholarship_detail(1, tool_context=None)["status"] == "error"
+
+
+def test_今日の日付は環境に依存せず日本時間で求められる(monkeypatch):
+    # 10/9: Windows の新しい仮想環境にタイムゾーンのデータがなく ZoneInfoNotFoundError になった
+    monkeypatch.delenv("DEMO_TODAY", raising=False)
+    assert isinstance(tools.today(), date)
+
+
+def test_内部エラーを一覧の取得失敗と取り違えない(monkeypatch):
+    def boom(*a, **kw):
+        raise KeyError("x")
+
+    monkeypatch.setattr(tools.service, "find", boom)
+    r = tools.find_scholarships("情報学群", 2, "埼玉県", "茨城県", "埼玉県", [], tool_context=None)
+    assert "内部エラー" in r["reason"]
