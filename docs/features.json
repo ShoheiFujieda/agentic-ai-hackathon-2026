@@ -89,7 +89,8 @@
       "steps": [
         "上限を超える呼び出しが拒否されることをテストで確認する"
       ],
-      "passes": false
+      "passes": true,
+      "evidence": "tests/test_guard.py（許可リスト、学年、1セッション5回の上限）"
     },
     {
       "id": "F10",
