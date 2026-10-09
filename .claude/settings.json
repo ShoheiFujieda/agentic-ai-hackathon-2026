@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --project \"$CLAUDE_PROJECT_DIR\" python \"$CLAUDE_PROJECT_DIR/scripts/hooks/post_edit_ruff.py\"",
+            "timeout": 60,
+            "statusMessage": "ruff で確認中..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --project \"$CLAUDE_PROJECT_DIR\" python \"$CLAUDE_PROJECT_DIR/scripts/hooks/stop_pytest.py\"",
+            "timeout": 360,
+            "statusMessage": "pytest を実行中..."
+          }
+        ]
+      }
+    ]
+  }
+}

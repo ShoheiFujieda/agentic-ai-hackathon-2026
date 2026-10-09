@@ -17,3 +17,6 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Claude Code のフックが使う一時ファイル
+.claude/.last_pytest_ok
