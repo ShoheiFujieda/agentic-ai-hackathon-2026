@@ -5,6 +5,7 @@ AI が要項から読み取った条件（引用が原文と一致したかの�
 読み取れない条件は「要確認」に回し、自信のない「対象外」は出さない（見落としを防ぐのが目的のため）。
 """
 
+import re
 from dataclasses import dataclass, field
 from datetime import date
 
@@ -21,6 +22,12 @@ REGION_KEYS = {
     "在学校の所在地": "school_location",
     "保護者の住所": "guardian_residence",
 }
+
+
+# 分野を表す言葉。学生の分野の言葉と一致せず、対象がこれらの分野だけなら「明らかに別の分野」として対象外にする
+OTHER_FIELDS = re.compile(
+    r"医学|歯学|薬学|看護|獣医|保健|医療|法学|法律|経済|経営|商学|文学|人文|教育学|芸術|美術|音楽|体育"
+)
 
 
 @dataclass
@@ -88,6 +95,8 @@ def judge(cond: dict | None, profile: Profile, today: date) -> Judgement:
 
     # 3. 対象の学校種別・学年
     targets = _section(cond, "targets")
+    if targets.get("status") == "制限あり" and not targets.get("list"):
+        targets = {"status": "不明"}  # 「制限あり」なのに中身が空なら、読み取れていないとみなす（10/9 に誤判定あり）
     if targets.get("status") == "制限あり":
         rows = [t for t in targets.get("list", []) if t.get("school_type") == profile.school_type]
         if not rows:
@@ -124,12 +133,14 @@ def judge(cond: dict | None, profile: Profile, today: date) -> Judgement:
     elif region.get("status") != "制限なし":
         unknown.append("地域条件")
 
-    # 5. 学部・分野（一致が判断できなければ要確認。対象外にはしない）
+    # 5. 学部・分野（明らかに別の分野だけが対象なら対象外。それ以外で一致が判断できなければ要確認）
     fields = _section(cond, "fields")
     if fields.get("status") == "制限あり":
-        text = " ".join(fields.get("list", []))
-        if any(k in text for k in profile.field_keywords):
+        items = [x for x in fields.get("list", []) if x]
+        if any(k in x for x in items for k in profile.field_keywords):
             reasons.append("分野: 条件に合っています")
+        elif items and all(OTHER_FIELDS.search(x) for x in items):
+            return Judgement(INELIGIBLE, [f"対象の分野（{'、'.join(items)}）に含まれません"])
         else:
             unknown.append("学部・分野")
     elif fields.get("status") != "制限なし":
@@ -144,11 +155,23 @@ def judge(cond: dict | None, profile: Profile, today: date) -> Judgement:
         if rule is None and concurrent.get("status") == "不明":
             unknown.append("併給")
 
-    # 7. 大学経由の応募は、指定校と学内締切の確認が要る
+    # 7. その他の条件: 特別な事情（遺児・特定の資格の志望など）は本人にしか分からないので要確認。一般的な条件は注意書き
+    special = [r for r in cond.get("other_requirements") or [] if r.get("kind") == "特別"]
+    general = [r for r in cond.get("other_requirements") or [] if r.get("kind") != "特別" and r.get("quote_verified")]
+    if special:
+        items = "、".join(r.get("summary") or r.get("quote") or "" for r in special)
+        return Judgement(NEEDS_CHECK, [*reasons, f"あなたに当てはまるか確認してください: {items}"])
+    if general:
+        reasons.append("その他の条件: " + "、".join(r.get("summary") or "" for r in general))
+
+    # 8. 大学経由の応募: 本人の大学の一覧に載っていれば、その大学に募集が来ている。載っていなければ確認が要る
     if cond.get("application_route") == "大学経由":
-        return Judgement(
-            NEEDS_CHECK, [*reasons, "大学経由の応募です。指定校かどうかと学内締切を学生課に確認してください"]
-        )
+        if cond.get("listed_by_my_university"):
+            reasons.append("大学申請: あなたの大学に募集が来ています。大学の申請期限までに学生支援の窓口へ提出します")
+        else:
+            return Judgement(
+                NEEDS_CHECK, [*reasons, "大学経由の応募です。指定校かどうかと学内締切を学生課に確認してください"]
+            )
 
     if unknown:
         return Judgement(NEEDS_CHECK, [*reasons, f"確認できなかった条件: {'、'.join(dict.fromkeys(unknown))}"])

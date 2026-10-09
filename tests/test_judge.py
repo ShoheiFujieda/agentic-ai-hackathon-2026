@@ -83,6 +83,12 @@ def test_学年が合わなければ対象外():
     assert judge(_cond(targets=targets), ME, TODAY).status == INELIGIBLE
 
 
+def test_制限ありでも中身が空なら対象外にしない():
+    # タクト奨学金「学生（大学院生は応募不可）」を、AI が list を空で返した実例
+    targets = {"status": "制限あり", "list": [], "quote": "学生（大学院生は応募不可）"}
+    assert judge(_cond(targets=targets), ME, TODAY).status == NEEDS_CHECK
+
+
 def test_学校種別が合わなければ対象外():
     targets = {"status": "制限あり", "list": [{"school_type": "大学院", "grades": [1, 2]}]}
     assert judge(_cond(targets=targets), ME, TODAY).status == INELIGIBLE
@@ -102,8 +108,13 @@ def test_市区町村の地域条件は判断せず要確認():
     assert judge(_cond(region=region), ME, TODAY).status == NEEDS_CHECK
 
 
-def test_分野が一致しなくても対象外にはせず要確認():
-    fields = {"status": "制限あり", "list": ["医学", "看護学"]}
+def test_明らかに別の分野だけが対象なら対象外():
+    fields = {"status": "制限あり", "list": ["医学部", "看護学"]}
+    assert judge(_cond(fields=fields), ME, TODAY).status == INELIGIBLE
+
+
+def test_分野の一致が判断できなければ要確認():
+    fields = {"status": "制限あり", "list": ["ITエンジニアを目指す者"]}
     assert judge(_cond(fields=fields), ME, TODAY).status == NEEDS_CHECK
 
 
@@ -112,10 +123,36 @@ def test_受給中の奨学金と併給不可なら対象外():
     assert judge(_cond(concurrent=concurrent), ME, TODAY).status == INELIGIBLE
 
 
+def test_本人の大学の一覧に載っている大学申請は応募できる():
+    result = judge(_cond(application_route="大学経由", listed_by_my_university=True), ME, TODAY)
+    assert result.status == ELIGIBLE
+    assert any("大学申請" in r for r in result.reasons)
+
+
 def test_大学経由の応募は要確認():
     result = judge(_cond(application_route="大学経由"), ME, TODAY)
     assert result.status == NEEDS_CHECK
     assert any("学生課" in r for r in result.reasons)
+
+
+def test_特別な事情が条件なら要確認():
+    other = [{"kind": "特別", "summary": "保護者が交通事故で死亡・後遺障害", "quote": "", "quote_verified": True}]
+    result = judge(_cond(other_requirements=other), ME, TODAY)
+    assert result.status == NEEDS_CHECK
+    assert any("交通事故" in r for r in result.reasons)
+
+
+def test_特別な事情は引用が確認できなくても要確認にする():
+    # 見落としより確認の手間を選ぶ（応募できると言い切らない）
+    other = [{"kind": "特別", "summary": "税理士を目指す", "quote": "作り話", "quote_verified": False}]
+    assert judge(_cond(other_requirements=other), ME, TODAY).status == NEEDS_CHECK
+
+
+def test_一般的な条件は注意書きにして応募できる():
+    other = [{"kind": "一般", "summary": "経済的に困難", "quote": "", "quote_verified": True}]
+    result = judge(_cond(other_requirements=other), ME, TODAY)
+    assert result.status == ELIGIBLE
+    assert any("経済的に困難" in r for r in result.reasons)
 
 
 def test_留学生のみは対象外():
