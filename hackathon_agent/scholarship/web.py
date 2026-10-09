@@ -2,6 +2,7 @@
 
 import re
 import threading
+import time
 import unicodedata
 from html.parser import HTMLParser
 from urllib.parse import urlparse
@@ -13,8 +14,10 @@ USER_AGENT = "ScholarshipFinderBot/0.1 (+https://github.com/ShoheiFujieda/agenti
 TIMEOUT_SEC = 20
 MAX_BYTES = 5_000_000
 
-_robots: dict[str, RobotFileParser] = {}
+_robots: dict[str, tuple[float, RobotFileParser]] = {}
 _robots_lock = threading.Lock()
+ROBOTS_TTL_SEC = 3600  # 取得できた robots.txt は1時間使う
+ROBOTS_RETRY_SEC = 60  # 取得に失敗したときは、1分だけ「禁止」とみなして、その後また確かめる
 
 
 class FetchError(Exception):
@@ -29,21 +32,27 @@ def _robots_for(url: str) -> RobotFileParser:
     parts = urlparse(url)
     origin = f"{parts.scheme}://{parts.netloc}"
     with _robots_lock:
-        if origin in _robots:
-            return _robots[origin]
+        cached = _robots.get(origin)
+        if cached and time.time() < cached[0]:
+            return cached[1]
     parser = RobotFileParser()
+    ttl = ROBOTS_TTL_SEC
     try:
         resp = httpx.get(f"{origin}/robots.txt", timeout=TIMEOUT_SEC, headers={"User-Agent": USER_AGENT})
         if resp.status_code == 200:
             parser.parse(resp.text.splitlines())
         elif resp.status_code in (401, 403):
             parser.disallow_all = True  # robots.txt 自体が拒否されたら、全体を禁止とみなす
-        else:
+        elif 400 <= resp.status_code < 500:
             parser.allow_all = True  # robots.txt がなければ制限なし
+        else:
+            parser.disallow_all = True  # サーバーの一時的な失敗。確かめられないので取得しない
+            ttl = ROBOTS_RETRY_SEC
     except httpx.HTTPError:
-        parser.disallow_all = True  # 確かめられないときは取得しない
+        parser.disallow_all = True  # 確かめられないときは取得しない（すぐ確かめ直す）
+        ttl = ROBOTS_RETRY_SEC
     with _robots_lock:
-        _robots[origin] = parser
+        _robots[origin] = (time.time() + ttl, parser)
     return parser
 
 

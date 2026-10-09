@@ -30,6 +30,10 @@ OTHER_FIELDS = re.compile(
 )
 
 
+# 「医学部を除く」のように、分野の名前を除外のために書いている言い方（この場合は対象外にしない）
+EXCLUSION = re.compile(r"除く|除き|以外|を除|不可|対象外")
+
+
 @dataclass
 class Profile:
     school_type: str  # 大学 / 大学院 / 短大 / 高専 / 専門学校
@@ -84,7 +88,8 @@ def judge(cond: dict | None, profile: Profile, today: date) -> Judgement:
     year = period.get("fiscal_year")
     if deadline and deadline < today:
         return Judgement(CLOSED, [f"締切（{deadline.isoformat()}）を過ぎています"])
-    if year and year < fiscal_year(today):
+    if not deadline and year and year < fiscal_year(today):
+        # 締切が読めたときは締切で決める（年度をまたぐ募集で、締切前なのに募集終了としないため）
         return Judgement(CLOSED, [f"{year}年度の情報です。今年度の募集は未確認です"])
     if not deadline:
         unknown.append("締切")
@@ -110,6 +115,8 @@ def judge(cond: dict | None, profile: Profile, today: date) -> Judgement:
 
     # 4. 地域条件（種類ごとに照合する）
     region = _section(cond, "region")
+    if region.get("status") == "制限あり" and not region.get("conditions"):
+        region = {"status": "不明"}  # 「制限あり」なのに中身が空なら、読み取れていないとみなす
     if region.get("status") == "制限あり":
         results = []
         for c in region.get("conditions", []):
@@ -139,7 +146,7 @@ def judge(cond: dict | None, profile: Profile, today: date) -> Judgement:
         items = [x for x in fields.get("list", []) if x]
         if any(k in x for x in items for k in profile.field_keywords):
             reasons.append("分野: 条件に合っています")
-        elif items and all(OTHER_FIELDS.search(x) for x in items):
+        elif items and all(OTHER_FIELDS.search(x) and not EXCLUSION.search(x) for x in items):
             return Judgement(INELIGIBLE, [f"対象の分野（{'、'.join(items)}）に含まれません"])
         else:
             unknown.append("学部・分野")

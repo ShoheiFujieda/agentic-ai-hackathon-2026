@@ -62,7 +62,7 @@ def test_robotstxtで禁止されたページは取得しない(monkeypatch):
 
     parser = RobotFileParser()
     parser.parse(["User-agent: *", "Disallow: /*.pdf$", "Disallow: /private/"])
-    monkeypatch.setitem(web._robots, "https://example.ac.jp", parser)
+    monkeypatch.setitem(web._robots, "https://example.ac.jp", (float("inf"), parser))
     assert not web.allowed("https://example.ac.jp/private/a.html")
     assert web.allowed("https://example.ac.jp/public/a.html")
     try:

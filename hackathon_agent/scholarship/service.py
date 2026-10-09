@@ -7,11 +7,10 @@ import logging
 import re
 import time
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import asdict
 from datetime import date
 
 from . import cache, extract, tsukuba, web
-from .judge import ELIGIBLE, INELIGIBLE, NEEDS_CHECK, OTHER_FIELDS, Profile, fiscal_year, judge
+from .judge import ELIGIBLE, INELIGIBLE, NEEDS_CHECK, Profile, fiscal_year, judge
 from .prefilter import prefilter
 
 logger = logging.getLogger(__name__)
@@ -19,6 +18,8 @@ logger = logging.getLogger(__name__)
 UNIVERSITY = "筑波大学"
 CACHE_VERSION = "v3"  # 抜き出し方を変えたら上げて、古いキャッシュを使わないようにする
 WORKERS = 4
+# 団体名だけで「その分野の学生向け」と分かる言葉（経済・医療などは一般の財団名にも使われるので入れない）
+NAME_ONLY_FIELDS = re.compile(r"美術|芸術|音楽|スポーツ|体育|医学|歯学|薬学|看護|獣医")
 # 名前から「一部の人だけが対象」と推定できる言葉（カレンダーで印を付ける）
 SPECIAL_HINTS = re.compile(r"障害|遺児|被災|震災|ひとり親|母子|父子|児童養護|里親|難病|がん")
 INDEX_TTL_SEC = 3600
@@ -82,6 +83,22 @@ def check_entry(entry: tsukuba.Entry, profile: Profile, today: date) -> dict:
     }
 
 
+def _fallback(entry: tsukuba.Entry, reason: str) -> dict:
+    """判定できなかったときの結果。通常の結果と同じ項目をそろえる（id や締切を欠かさない）。"""
+    return {
+        "id": entry.id,
+        "organization": entry.organization,
+        "deadline": entry.deadline.isoformat() if entry.deadline else None,
+        "route": "不明",
+        "kind": entry.kind,
+        "amount": None,
+        "status": NEEDS_CHECK,
+        "reasons": [reason],
+        "url": entry.url,
+        "official_url": "",
+    }
+
+
 def _calendar(
     entries: list[tsukuba.Entry],
     profile: Profile,
@@ -94,17 +111,19 @@ def _calendar(
     今まさに募集中の団体は「今応募できる」の側に出るので、ここには入れない。名前から明らかに別分野と分かるものも除く。"""
     fy = fiscal_year(today)
     seen: dict[str, tsukuba.Entry] = {}
+    skipped_by_name: list[str] = []
     for e in entries:
         if not (e.for_undergraduates and e.deadline and e.deadline < today and e.fiscal_year in (fy - 1, fy)):
             continue
-        if any(k in web.norm(e.organization) or web.norm(e.organization) in k for k in open_now):
+        if tsukuba.org_key(e.organization) in open_now:
             continue
         if prefilter({"organization": e.organization}, profile_prefs, UNIVERSITY):
             continue
         name = e.organization
-        if OTHER_FIELDS.search(name) and not any(k in name for k in profile.field_keywords):
+        if NAME_ONLY_FIELDS.search(name) and not any(k in name for k in profile.field_keywords):
+            skipped_by_name.append(name)
             continue
-        key = web.norm(e.organization)
+        key = tsukuba.org_key(e.organization)
         if key not in seen or (seen[key].deadline or date.min) < e.deadline:
             seen[key] = e
     items = []
@@ -112,9 +131,11 @@ def _calendar(
         months = tsukuba.typical_months(entries, e.organization)
         if not months:
             continue
-        years = len({x.fiscal_year for x in entries if web.norm(e.organization) in web.norm(x.organization)})
+        years = len(
+            {x.fiscal_year for x in entries if tsukuba.org_key(x.organization) == tsukuba.org_key(e.organization)}
+        )
         # 次に来る締切月までの月数（今月より後の月を先に）
-        until = (months[0] - today.month) % 12 or 12
+        until = (months[0] - today.month) % 12  # 今月が例年の締切月なら 0（まもなく）
         soon = until <= 2  # 推薦書などの準備に約2か月かかるので、2か月以内なら今すぐ動く
         items.append(
             {
@@ -133,6 +154,8 @@ def _calendar(
             }
         )
     items.sort(key=lambda x: (x["months_until"], -x["years_listed"]))
+    if skipped_by_name:
+        logger.info("カレンダーから名前で除いた団体: %s", skipped_by_name)
     return items[:limit]
 
 
@@ -160,36 +183,34 @@ def find(profile: Profile, today: date, max_checks: int = 20) -> dict:
         for e, fut in [(e, pool.submit(check_entry, e, profile, today)) for e in to_check]:
             try:
                 results.append(fut.result())
-            except web.FetchError as err:
-                results.append(
-                    {"organization": e.organization, "status": NEEDS_CHECK, "reasons": [str(err)], "url": e.url}
-                )
             except Exception as err:
-                logger.exception("判定に失敗しました: %s", e.url)
-                results.append(
-                    {
-                        "organization": e.organization,
-                        "status": NEEDS_CHECK,
-                        "reasons": [f"処理に失敗したため判定できませんでした（{type(err).__name__}）"],
-                        "url": e.url,
-                    }
-                )
+                if not isinstance(err, web.FetchError):
+                    logger.exception("判定に失敗しました: %s", e.url)
+                why = str(err) if isinstance(err, web.FetchError) else f"処理に失敗しました（{type(err).__name__}）"
+                results.append(_fallback(e, f"{why}。詳細ページを直接確認してください"))
 
     def pick(status: str) -> list[dict]:
         return [r for r in results if r["status"] == status]
+
+    # 3つの区分以外の判定（募集終了・公式情報なし）は、黙って落とさずに要確認へ入れる
+    others = [r for r in results if r["status"] not in (ELIGIBLE, NEEDS_CHECK, INELIGIBLE)]
+    for r in others:
+        r["reasons"] = [f"{r['status']}: " + "、".join(r["reasons"])]
+        r["status"] = NEEDS_CHECK
 
     return {
         "today": today.isoformat(),
         "university": UNIVERSITY,
         "source": tsukuba.INDEX_URL,
-        "profile": asdict(profile),
         "open_now_total": len(open_now),
         "eligible": pick(ELIGIBLE),
         "needs_check": pick(NEEDS_CHECK),
         "ineligible": pick(INELIGIBLE),
         "excluded_by_name": excluded,
         "not_checked_over_limit": skipped,
-        "next_year_calendar": _calendar(entries, profile, prefs, today, {web.norm(e.organization) for e in open_now}),
+        "next_year_calendar": _calendar(
+            entries, profile, prefs, today, {tsukuba.org_key(e.organization) for e in open_now}
+        ),
     }
 
 

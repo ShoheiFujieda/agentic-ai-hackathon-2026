@@ -160,11 +160,20 @@ def amount(value: str) -> dict:
     return {"yen": yen, "per": per, "text": (value or "").strip()[:60]}
 
 
+_CORP = re.compile(r"[（(](公財|一財|公社|一社|社福|財|社)[）)]|(公益|一般)?(財団|社団)法人|社会福祉法人|株式会社")
+
+
+def org_key(organization: str) -> str:
+    """団体の照合用の名前（法人の種類の書き方、記号、空白を除く）。重複の統合と履歴の照合で同じ基準を使う。"""
+    return web.norm(_CORP.sub("", organization or ""))
+
+
 def typical_months(entries: list[Entry], organization: str) -> list[int]:
     """過去の掲載から、その団体の例年の締切月を出す（多い順）。"""
-    key = web.norm(organization)
+    key = org_key(organization)
     months: dict[int, int] = {}
     for e in entries:
-        if e.deadline and key and key in web.norm(e.organization):
+        # 団体名の完全一致で数える（「X財団」と「X財団記念会」を混ぜない）
+        if e.deadline and key and key == org_key(e.organization):
             months[e.deadline.month] = months.get(e.deadline.month, 0) + 1
     return [m for m, _ in sorted(months.items(), key=lambda kv: -kv[1])]

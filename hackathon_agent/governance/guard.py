@@ -103,12 +103,13 @@ def before_tool_guard(tool: BaseTool, args: dict[str, Any], tool_context: ToolCo
             return _blocked(name, args, tool_context, "blocked", why)
         allow_reason = why
 
-    if name == "find_scholarships":
-        tool_context.state["search_count"] = tool_context.state.get("search_count", 0) + 1
     if not audit.record(**_who(tool_context), tool=name, args=args, decision="allowed", reason=allow_reason):
         # 監査ログが残せない操作は、低リスクでも実行しない
         tool_context.state[_skip_key(tool_context)] = True
         return {"status": "error", "reason": "監査ログを記録できないため実行を中止しました"}
+    if name == "find_scholarships":
+        # 実際に実行するときだけ数える（中止された呼び出しで上限を使い切らない）
+        tool_context.state["search_count"] = tool_context.state.get("search_count", 0) + 1
     return None
 
 

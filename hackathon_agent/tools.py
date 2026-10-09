@@ -1,5 +1,6 @@
 """エージェントが使うツール。検索の進め方と判定はコード（hackathon_agent.scholarship）が行う。"""
 
+import logging
 import os
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
@@ -8,6 +9,8 @@ from google.adk.tools import ToolContext
 
 from .scholarship import service
 from .scholarship.judge import Profile
+
+logger = logging.getLogger(__name__)
 
 # 筑波大学の学群 → 分野の言葉（出願資格の分野と照合する）
 FACULTY_KEYWORDS = {
@@ -64,8 +67,14 @@ def find_scholarships(
         guardian_residence=guardian_prefecture,
         receiving=list(receiving),
     )
-    result = service.find(profile, today())
-    result.pop("profile", None)
+    try:
+        result = service.find(profile, today())
+    except Exception as e:  # 取得や読み取りの失敗で会話を止めない（安全なフォールバック）
+        logger.exception("奨学金の検索に失敗しました")
+        return {
+            "status": "error",
+            "reason": f"筑波大学の奨学金一覧を読めませんでした（{type(e).__name__}）。時間をおいて試してください",
+        }
     return {"status": "ok", **result}
 
 
@@ -75,7 +84,14 @@ def get_scholarship_detail(scholarship_id: int, tool_context: ToolContext) -> di
     Args:
         scholarship_id: find_scholarships の結果に含まれる id。
     """
-    d = service.detail(scholarship_id)
+    try:
+        d = service.detail(scholarship_id)
+    except Exception as e:  # 取得や読み取りの失敗で会話を止めない（安全なフォールバック）
+        logger.exception("奨学金の詳細の取得に失敗しました")
+        return {
+            "status": "error",
+            "reason": f"詳細ページを読めませんでした（{type(e).__name__}）。時間をおいて試してください",
+        }
     if d is None:
         return {"status": "error", "reason": f"id {scholarship_id} の奨学金は見つかりませんでした"}
     return {"status": "ok", **d}
