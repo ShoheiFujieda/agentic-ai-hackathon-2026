@@ -10,6 +10,7 @@
 - Cloud Run: `https://hackathon-agent-525978871269.us-central1.run.app`（認証必須、最大2インスタンス、専用SA `hackathon-agent-sa`）
 - Firestore `(default)`（Native / us-central1）。予算アラート 月3,000円。300ドルのクーポン適用済み
 - GitHub: https://github.com/ShoheiFujieda/agentic-ai-hackathon-2026 （ブランチ `main`）
+- 開発用: ruff（Python の編集後に自動実行）、pytest（作業の終了前に自動実行）、秘密情報の検査（`git config core.hooksPath .githooks` で有効）
 - `.env`（コミット対象外）: `GOOGLE_CLOUD_PROJECT=agentic-hackathon-2026-510706` / `GOOGLE_CLOUD_LOCATION=global`（gemini-3.x は global のみ。us-central1 は404）/ `GOOGLE_GENAI_USE_VERTEXAI=true`
 
 ### 完了済み
@@ -19,14 +20,14 @@
 - 題材の見直し（10/9）：個人向け・Webから漏れなく探す奨学金エージェント
 - 調査（10/9）：ガクシーの裏付け、Perplexity、網羅的な検索の先行研究、ハーネスエンジニアリング（`docs/research/`）
 - 検索方式を先行研究ベースに改訂（`DESIGN_SPEC.md` 1.3）
+- ハーネスの改善（10/9）：CLAUDE.md を指示だけに整理、作業の始め方・終わり方、機能リスト `docs/features.json`（下書き）、ruff と pytest の自動実行フック（`.claude/settings.json`）、秘密情報の pre-commit 検査（`.githooks/`）、区切りでの `/code-review`
 
 ### 未完了（優先順）
-1. ハーネスの改善（`docs/research/2026-10-09_harness_engineering.md` の 1〜6）← 作業中
-2. 比較実験：架空の学生1人で「種集め → 一覧ページの発見」が機能するか確認 → 全方式の比較（`DESIGN_SPEC.md` 1.4）
-3. 縦に1本通す（プロフィール入力 → 検索 → 照合 → 結果表示 → 監査ログ）
-4. 未決事項：高リスク操作を何にするか、ログイン方式（メール受信不要）とテスト用アカウント
-5. **提出までに**：Cloud Run を公開URLにし、アプリ側のログイン（テストアカウント）に切り替える
-6. ユーザーにお願い中：ガクシーにログインして「学年の選択肢」と「締切後の奨学金が出るか」をスクリーンショットで確認
+1. 比較実験：架空の学生1人で「種集め → 一覧ページの発見」が機能するか確認 → 全方式の比較（`DESIGN_SPEC.md` 1.4）
+2. 縦に1本通す（プロフィール入力 → 検索 → 照合 → 結果表示 → 監査ログ）
+3. 未決事項：高リスク操作を何にするか、ログイン方式（メール受信不要）とテスト用アカウント
+4. **提出までに**：Cloud Run を公開URLにし、アプリ側のログイン（テストアカウント）に切り替える
+5. ユーザーにお願い中：ガクシーにログインして「学年の選択肢」と「締切後の奨学金が出るか」をスクリーンショットで確認
 
 ### 日程の状況
 - 当初の日程より約1日遅れ（10/8 は作業なし、10/9 は調査と設計の見直し）。10/12 の機能凍結は維持する
