@@ -1,0 +1,2206 @@
+{
+  "summary": {
+    "today": "2026-10-09",
+    "profile": {
+      "school_type": "大学",
+      "grade": 2,
+      "field_keywords": [
+        "理工",
+        "工学",
+        "機械",
+        "理系",
+        "自然科学"
+      ],
+      "home_prefecture": "埼玉県",
+      "residence": "東京都",
+      "school_location": "東京都",
+      "guardian_residence": "埼玉県",
+      "receiving": [
+        "JASSO貸与"
+      ],
+      "is_international": false
+    },
+    "pdf_hubs": [
+      {
+        "url": "https://www.icu.ac.jp/admissions/finance/images/External_2024_JP.pdf",
+        "items": 74
+      },
+      {
+        "url": "https://www.chiba-u.ac.jp/students/files/pdf/minkansaishin.pdf",
+        "items": 227
+      },
+      {
+        "url": "https://www.tus.ac.jp/tuslife/campuslife/scholarship/type3/pdf/scholar_grant.pdf",
+        "items": 128
+      },
+      {
+        "url": "https://www.osaka-u.ac.jp/ja/campus/tuition/scholar/files/gz0lm6/@@download/file",
+        "items": 86
+      },
+      {
+        "url": "https://www.osaka-u.ac.jp/ja/campus/tuition/scholar/files/4tzvgl/@@download/file",
+        "items": 126
+      },
+      {
+        "url": "https://piloti.sophia.ac.jp/assets/uploads/2026/03/2026shogakukin_JPN.pdf",
+        "items": 212
+      },
+      {
+        "url": "https://www.waseda.jp/inst/scholarship/assets/uploads/2023/01/2023_gakubu_challenge.pdf",
+        "items": 19
+      }
+    ],
+    "candidates_total": 906,
+    "after_prefilter": 835,
+    "excluded": {
+      "他大学の学内制度": 25,
+      "他の地域": 36,
+      "留学生向け": 10
+    },
+    "checked": 30,
+    "by_status": {
+      "要確認": 14,
+      "募集終了": 12,
+      "エラー": 2,
+      "対象外": 1,
+      "公式情報なし": 1
+    },
+    "stats": {
+      "grounded_calls": 30,
+      "search_queries": 176,
+      "extract_calls": 42,
+      "fetches": 50
+    },
+    "minutes": 6.6
+  },
+  "results": [
+    {
+      "core": "川村育英会",
+      "scholarship": "奨学生給付金",
+      "organization": "公益財団法人川村育英会",
+      "hubs": 16,
+      "is_seed": true,
+      "sources": [
+        "https://kawamura-ikueikai.or.jp/outline.html",
+        "https://www.tsukuba.ac.jp/campuslife/support-scholarship/scholarship-links/pg/-2026471.html",
+        "https://www.tokyo-ct.ac.jp/wp-content/uploads/2025/04/%E5%85%AC%E8%B2%A1%E8%B2%A1%E5%9B%A3%E6%B3%95%E4%BA%BA%E5%B7%9D%E6%9D%91%E8%82%B2%E8%8B%B1%E4%BC%9A2025%E5%B9%B4%E5%BA%A6%E5%A5%A8%E5%AD%A6%E7%94%9F%E5%8B%9F%E9%9B%86%E3%81%AE%E3%81%94%E6%A1%88%E5%86%85.pdf",
+        "https://www.gakuseisupport.ynu.ac.jp/asset/docs/r8_%E5%8B%9F%E9%9B%86%E8%A6%81%E9%A0%85%EF%BC%88%E5%B7%9D%E6%9D%91%E8%82%B2%E8%8B%B1%E4%BC%9A%E3%83%BB%E5%AD%A6%E9%83%A8%EF%BC%89web.pdf",
+        "https://www.nagano-nct.ac.jp/hubfs/life/support/shogaku_kawamura_R8.pdf",
+        "https://www.u-tokyo.ac.jp/content/400285951.pdf"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "不明",
+          "start": null,
+          "deadline": null,
+          "fiscal_year": 2026,
+          "quote": ""
+        },
+        "international_only": null,
+        "application_route": "大学経由",
+        "route_quote": "毎年4月に学校長を経由して奨学生の募集を実施",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": [
+                2,
+                3,
+                4,
+                5,
+                6
+              ]
+            }
+          ],
+          "quote": "大学生(学部2年在籍以上)",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "不明",
+          "logic": "いずれか",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "不明",
+          "list": [],
+          "quote": ""
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 480000,
+          "quote": "大学生(学部2年在籍以上)\n月額40,000円"
+        },
+        "official": true,
+        "source_url": "https://kawamura-ikueikai.or.jp/outline.html",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "要確認",
+      "reasons": [
+        "学年: 条件に合っています",
+        "大学経由の応募です。指定校かどうかと学内締切を学生課に確認してください"
+      ],
+      "seconds": 18.6
+    },
+    {
+      "core": "アイザワ記念育英財団",
+      "scholarship": "奨学生給付金",
+      "organization": "公益財団法人アイザワ記念育英財団",
+      "hubs": 14,
+      "is_seed": true,
+      "sources": [
+        "https://aizawa-ikuei.org/shyougakukingaiyou.html",
+        "https://www2.u-gakugei.ac.jp/~syougaku/712.pdf"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": "2026-03-24",
+          "deadline": "2026-05-11",
+          "fiscal_year": 2026,
+          "quote": "出願時期\n3月24日〜5月11日",
+          "quote_verified": true
+        },
+        "international_only": false,
+        "application_route": "大学経由",
+        "route_quote": "当財団は、対象校を通じて奨学生を募集しております。",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": [
+                2,
+                3,
+                4,
+                5,
+                6
+              ]
+            }
+          ],
+          "quote": "・本年2年生在籍以上の者",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "不明",
+          "logic": "すべて",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "制限なし",
+          "list": [],
+          "quote": ""
+        },
+        "concurrent": {
+          "status": "確認",
+          "rules": {
+            "JASSO貸与": "可",
+            "JASSO給付": "可",
+            "他の民間給付": "可"
+          },
+          "quote": "併給は民間1団体に限り可",
+          "quote_verified": true
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 420000,
+          "quote": "一律35,000円/月"
+        },
+        "official": true,
+        "source_url": "https://aizawa-ikuei.org/shyougakukingaiyou.html",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "募集終了",
+      "reasons": [
+        "締切（2026-05-11）を過ぎています"
+      ],
+      "seconds": 13.4
+    },
+    {
+      "core": "大学生奨学財団",
+      "scholarship": "一般給付奨学生",
+      "organization": "一般財団法人大学生奨学財団",
+      "hubs": 8,
+      "is_seed": true,
+      "sources": [
+        "https://gakusho.or.jp/requirement",
+        "https://gakusho.or.jp/requirement",
+        "https://www.userlocal.jp/press/20250206gs/",
+        "https://gakusho.or.jp/",
+        "https://mylifefp.com/mylifefpmail/gakusho/"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": "2026-02-01",
+          "deadline": "2026-04-30",
+          "fiscal_year": 2026,
+          "quote": "2026年2月1日～2026年4月30日",
+          "quote_verified": true
+        },
+        "international_only": false,
+        "application_route": "直接応募",
+        "route_quote": "当財団HPの「当財団の「応募ログインと新規登録」から、まずは氏名・メールアドレスなどを登録してください。",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": [
+                2
+              ]
+            }
+          ],
+          "quote": "2026年4月に日本国内の大学の2年生となる。",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "制限あり",
+          "logic": "すべて",
+          "conditions": [
+            {
+              "type": "在学校の所在地",
+              "area": "日本国内"
+            }
+          ],
+          "quote": "日本国内の大学",
+          "quote_verified": true
+        },
+        "fields": {
+          "status": "制限なし",
+          "list": [],
+          "quote": "通常の4年間の多くの学部だけでなく、医学部・歯学部・薬学部といった6年制の学部も対象"
+        },
+        "concurrent": {
+          "status": "確認",
+          "rules": {
+            "JASSO貸与": "可",
+            "JASSO給付": "可",
+            "他の民間給付": "可"
+          },
+          "quote": "大学生に奨学金45万円を給付する「学奨財団」は併用可で使途不問",
+          "quote_verified": true
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 150000,
+          "quote": "年間15万円（返済不要）"
+        },
+        "official": true,
+        "source_url": "https://gakusho.or.jp/requirement",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "募集終了",
+      "reasons": [
+        "締切（2026-04-30）を過ぎています"
+      ],
+      "seconds": 20.7
+    },
+    {
+      "core": "前澤育英財団",
+      "scholarship": "奨学金給付制度",
+      "organization": "公益財団法人前澤育英財団",
+      "hubs": 4,
+      "is_seed": true,
+      "sources": [
+        "https://maezawa-foundation.or.jp/recruitment-of-scholarship-students/application-requirements/",
+        "https://maezawa-foundation.or.jp/recruitment-of-scholarship-students/flow/"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": null,
+          "deadline": "2026-05-29",
+          "fiscal_year": 2026,
+          "quote": "令和８年５月２９日（金）必着",
+          "quote_verified": true
+        },
+        "international_only": false,
+        "application_route": "大学経由",
+        "route_quote": "大学を通じて、以下の応募締切日までに、以下の送付先にお送り下さい。",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": [
+                1,
+                2
+              ]
+            },
+            {
+              "school_type": "大学院",
+              "grades": [
+                1
+              ]
+            }
+          ],
+          "quote": "原則１年生。ただし、２年生及び大学院１年生も可とする。",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "制限あり",
+          "logic": "すべて",
+          "conditions": [
+            {
+              "type": "在学校の所在地",
+              "area": "東京都"
+            }
+          ],
+          "quote": "東京都内の大学に在学している学生で、",
+          "quote_verified": true
+        },
+        "fields": {
+          "status": "制限なし",
+          "list": [],
+          "quote": "学部・学科及び国籍を問いません"
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 600000,
+          "quote": "給付・月額 50,000円\n（返還の必要はありません）"
+        },
+        "official": true,
+        "source_url": "https://maezawa-foundation.or.jp/recruitment-of-scholarship-students/application-requirements/",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "募集終了",
+      "reasons": [
+        "締切（2026-05-29）を過ぎています"
+      ],
+      "seconds": 11.9
+    },
+    {
+      "core": "キエンス財団",
+      "scholarship": "公益財団法人キーエンス財団 奨学金",
+      "organization": "公益財団法人 キーエンス財団",
+      "hubs": 15,
+      "is_seed": false,
+      "sources": [
+        "https://prtimes.jp/main/html/rd/p/000000022.000054948.html",
+        "https://55shingaku.jp/news/zenkoku/2022/07/43806/",
+        "https://www.keyence-foundation.or.jp/scholarship01/application/requirements/",
+        "https://gaxi.jp/organization/WEmzv6ZDzDRpXeyJ/project/lnpP1RYqKwR0wZ37",
+        "https://resemom.jp/article/2026/01/06/84510.html",
+        "https://suzukakyoei.ed.jp/suzuka6/wp-content/uploads/%E3%81%93%E3%81%A1%E3%82%89-9.pdf",
+        "https://www.keyence-foundation.or.jp/scholarship02/application/requirements/",
+        "https://www.keyence-foundation.or.jp/scholarship04/application/requirements/"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": "2023-02-01",
+          "deadline": "2023-04-07",
+          "fiscal_year": 2023,
+          "quote": "一次選考 Web 登録：2023 年2 月  1 日（水）～4 月 7 日（金）",
+          "quote_verified": true
+        },
+        "international_only": false,
+        "application_route": "直接応募",
+        "route_quote": "財団ホームページからの直接応募",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": [
+                1
+              ]
+            }
+          ],
+          "quote": "2023 年4 月に日本の大学に入学する者 （4 年制の学部・学科生に限る",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "制限なし",
+          "logic": "いずれか",
+          "conditions": [],
+          "quote": "対象大学 日本国内の4年制大学"
+        },
+        "fields": {
+          "status": "制限なし",
+          "list": [],
+          "quote": "※学部は文系・理系を問いません。"
+        },
+        "concurrent": {
+          "status": "確認",
+          "rules": {
+            "JASSO貸与": "可",
+            "JASSO給付": "不可",
+            "他の民間給付": "不可"
+          },
+          "quote": "貸与型奨学金：併用可 ・給付型奨学金：併用不可",
+          "quote_verified": true
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 1200000,
+          "quote": "給付月 額：10 万円（年額120 万円）"
+        },
+        "official": true,
+        "source_url": "https://55shingaku.jp/news/zenkoku/2022/07/43806/",
+        "source_kind": "運営団体",
+        "pdf_url": "https://www.keyence-foundation.or.jp/elements/pdf/application_requirements_2062_01.pdf"
+      },
+      "status": "募集終了",
+      "reasons": [
+        "締切（2023-04-07）を過ぎています"
+      ],
+      "seconds": 172.2
+    },
+    {
+      "core": "三菱UFJ信託奨学財団",
+      "scholarship": "公益財団法人　三菱UFJ信託奨学財団",
+      "organization": "公益財団法人　三菱UFJ信託奨学財団",
+      "hubs": 15,
+      "is_seed": false,
+      "sources": [
+        "https://gaxi.jp/organization/1QB5eDRer98KXEWd/project/0zGLmg4MpjR47Ovx",
+        "https://www.scholarship.or.jp/program/contents/application.html",
+        "https://www.scholarship.or.jp/?SmartPhonePCView=1",
+        "https://www.tsukuba.ac.jp/campuslife/support-scholarship/scholarship-links/pg/ufj2026313.html"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "不明",
+          "start": null,
+          "deadline": null,
+          "fiscal_year": null,
+          "quote": null
+        },
+        "international_only": false,
+        "application_route": "大学経由",
+        "route_quote": "当財団は指定大学を通じて奨学生を募集しています。",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": [
+                2,
+                3,
+                4
+              ]
+            }
+          ],
+          "quote": "出願する年の4月1日現在、4年制大学第2学年以上",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "不明",
+          "logic": null,
+          "conditions": [],
+          "quote": null
+        },
+        "fields": {
+          "status": "制限あり",
+          "list": [],
+          "quote": "財団指定の学部、研究科に在籍している正規学生",
+          "quote_verified": true
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": null
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 840000,
+          "quote": "原則として返還は不要です。大学生月額70,000円"
+        },
+        "official": true,
+        "source_url": "https://www.scholarship.or.jp/program/contents/application.html",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "要確認",
+      "reasons": [
+        "学年: 条件に合っています",
+        "大学経由の応募です。指定校かどうかと学内締切を学生課に確認してください"
+      ],
+      "seconds": 13.3
+    },
+    {
+      "core": "G7奨学財団",
+      "scholarship": "公益財団法人G-7奨学財団 奨学金",
+      "organization": "公益財団法人 G-7奨学財団",
+      "hubs": 14,
+      "is_seed": false,
+      "sources": [
+        "https://www.waseda.jp/fsci/gips/other/2026/03/16/34137/",
+        "https://gaxi.jp/organization/AkjlYDRkek6N5wqb/announce/xa5WJORv0z6vjPwr",
+        "https://www.salesio-sp.ac.jp/main/for_students/idx_scholarship.html",
+        "https://g-7foundation.or.jp/shuki-jyosei.html",
+        "https://www.tsukuba.ac.jp/campuslife/support-scholarship/scholarship-links/pg/g-720261151.html",
+        "https://www.shougakukin-note.com/scholarships/g7-shogakuzaidan",
+        "https://g-7foundation.or.jp/syougaku_reiwa08.html",
+        "https://g-7foundation.or.jp/syougaku.html",
+        "https://www.u-tokyo.ac.jp/content/400280159.pdf"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": null,
+          "deadline": "2026-04-10",
+          "fiscal_year": 2026,
+          "quote": "2026年4月10日(金)　奨学課必着",
+          "quote_verified": true
+        },
+        "international_only": null,
+        "application_route": "大学経由",
+        "route_quote": "奨学課へ提出（郵送）",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": []
+            },
+            {
+              "school_type": "大学院",
+              "grades": []
+            }
+          ],
+          "quote": "奨学金助成（大学生、大学院生）",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "不明",
+          "logic": "いずれか",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "不明",
+          "list": [],
+          "quote": ""
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 1200000,
+          "quote": "給付額：\n年額上限120万円"
+        },
+        "official": true,
+        "source_url": "https://www.waseda.jp/fsci/gips/other/2026/03/16/34137/",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "募集終了",
+      "reasons": [
+        "締切（2026-04-10）を過ぎています"
+      ],
+      "seconds": 81.0
+    },
+    {
+      "status": "エラー",
+      "error": "JSONDecodeError('Extra data: line 13 column 3 (char 314)')"
+    },
+    {
+      "core": "似鳥国際奨学財団",
+      "scholarship": "公益財団法人似鳥国際奨学財団 奨学金",
+      "organization": "公益財団法人 似鳥国際奨学財団",
+      "hubs": 14,
+      "is_seed": false,
+      "sources": [
+        "https://www.nitori-shougakuzaidan.com/application/",
+        "https://www.nitori-shougakuzaidan.com/wp-content/themes/shougakuzidan/pdf/application/2026-foreigner.pdf"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": "2026-01-20",
+          "deadline": "2026-04-20",
+          "fiscal_year": 2026,
+          "quote": "2026年1月20日（火） ～ 2026年4月20日（月）まで",
+          "quote_verified": true
+        },
+        "international_only": false,
+        "application_route": "直接応募",
+        "route_quote": "財団HP から マイページ登録 で 応募・学校推薦 不要",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": []
+            },
+            {
+              "school_type": "大学院",
+              "grades": []
+            }
+          ],
+          "quote": "日本国内の大学もしくは大学院に、在籍/在籍予定の日本国内大学生",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "制限あり",
+          "logic": "すべて",
+          "conditions": [
+            {
+              "type": "在学校の所在地",
+              "area": "日本国内"
+            }
+          ],
+          "quote": "日本国内の大学もしくは大学院に、在籍/在籍予定の日本国内大学生",
+          "quote_verified": true
+        },
+        "fields": {
+          "status": "制限なし",
+          "list": [],
+          "quote": ""
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 600000,
+          "quote": "月額5～8万円"
+        },
+        "official": true,
+        "source_url": "https://www.nitori-shougakuzaidan.com/application/",
+        "source_kind": "運営団体",
+        "pdf_url": "https://www.nitori-shougakuzaidan.com/wp-content/themes/shougakuzidan/pdf/application/2026-poster.pdf"
+      },
+      "status": "募集終了",
+      "reasons": [
+        "締切（2026-04-20）を過ぎています"
+      ],
+      "seconds": 12.8
+    },
+    {
+      "core": "フジシル財団",
+      "scholarship": "公益財団法人フジシール財団 奨学金",
+      "organization": "公益財団法人 フジシール財団",
+      "hubs": 13,
+      "is_seed": false,
+      "sources": [
+        "https://www.fujiseal.or.jp/business/scholarship.html",
+        "https://www.fujiseal.or.jp/business/scholarship.html",
+        "https://www.fujiseal.or.jp/business/apply.html",
+        "https://www.fujiseal.or.jp/business/apply.html",
+        "https://www.fujiseal.or.jp/business/index.html",
+        "https://www.fujiseal.or.jp/assets/pdf/business/2026_guideline.pdf",
+        "https://www.med.kyoto-u.ac.jp/news/19686",
+        "https://www.tamabi.ac.jp/news/60371/"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": null,
+          "deadline": "2026-04-22",
+          "fiscal_year": 2026,
+          "quote": "2026 年 4 月22 日（水）",
+          "quote_verified": true
+        },
+        "international_only": false,
+        "application_route": "大学経由",
+        "route_quote": "大学事務局が本財団奨学金ポータルサイトから Web 申請すること。",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": [
+                3
+              ]
+            }
+          ],
+          "quote": "大学生   26 名程度 （第 3 学年生：26 名）",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "制限なし",
+          "logic": "すべて",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "制限あり",
+          "list": [
+            "パッケージに関連のある分野"
+          ],
+          "quote": "パッケージに関連のある分野*を専攻する学生",
+          "quote_verified": true
+        },
+        "concurrent": {
+          "status": "確認",
+          "rules": {
+            "JASSO貸与": "可",
+            "JASSO給付": "可",
+            "他の民間給付": "不可"
+          },
+          "quote": "貸与型奨学金：併用可\n返済不要の給付型奨学金：下記例外を除き、併用不可",
+          "quote_verified": true
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 1200000,
+          "quote": "大学生    月額 10 万円"
+        },
+        "official": true,
+        "source_url": "https://www.fujiseal.or.jp/business/scholarship.html",
+        "source_kind": "運営団体",
+        "pdf_url": "https://www.fujiseal.or.jp/assets/pdf/business/2026_guideline.pdf"
+      },
+      "status": "募集終了",
+      "reasons": [
+        "締切（2026-04-22）を過ぎています"
+      ],
+      "seconds": 45.5
+    },
+    {
+      "core": "鷹野学術振興財団",
+      "scholarship": "一般財団法人鷹野学術振興財団 奨学金",
+      "organization": "一般財団法人 鷹野学術振興財団",
+      "hubs": 13,
+      "is_seed": false,
+      "sources": [
+        "https://www.takano-zaidan.com/%E5%A5%A8%E5%AD%A6%E9%87%91%E6%83%85%E5%A0%B1/2026%E5%B9%B4%E5%A5%A8%E5%AD%A6%E7%94%9F%E5%8B%9F%E9%9B%86%E8%A6%81%E9%A0%85-%E6%A7%98%E5%BC%8F%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89/",
+        "https://www.takano-zaidan.com/%E5%A5%A8%E5%AD%A6%E9%87%91%E6%83%85%E5%A0%B1/",
+        "https://www.isct.ac.jp/ja/news/wkodj1gsuqyw",
+        "https://gaxi.jp/organization/X79Yw2g5LA6vlm4E/project/EwXBOROY2M6P2oD1",
+        "https://www.tsukuba.ac.jp/campuslife/support-scholarship/scholarship-links/pg/2026311.html",
+        "https://www.shougakukin-note.com/scholarships/takano-gakujutsu",
+        "https://www.waseda.jp/fsci/gips/other/2026/03/26/29434/"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "不明",
+          "start": null,
+          "deadline": null,
+          "fiscal_year": 2026,
+          "quote": ""
+        },
+        "international_only": null,
+        "application_route": "不明",
+        "route_quote": "",
+        "targets": {
+          "status": "不明",
+          "list": [],
+          "quote": ""
+        },
+        "region": {
+          "status": "不明",
+          "logic": "いずれか",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "不明",
+          "list": [],
+          "quote": ""
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "不明",
+          "yearly_yen": 0,
+          "quote": ""
+        },
+        "official": true,
+        "source_url": "https://www.takano-zaidan.com/%E5%A5%A8%E5%AD%A6%E9%87%91%E6%83%85%E5%A0%B1/2026%E5%B9%B4%E5%A5%A8%E5%AD%A6%E7%94%9F%E5%8B%9F%E9%9B%86%E8%A6%81%E9%A0%85-%E6%A7%98%E5%BC%8F%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89/",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "要確認",
+      "reasons": [
+        "確認できなかった条件: 締切、対象学年、地域条件、学部・分野"
+      ],
+      "seconds": 15.4
+    },
+    {
+      "core": "中村積善会",
+      "scholarship": "公益財団法人　中村積善会",
+      "organization": "公益財団法人　中村積善会",
+      "hubs": 13,
+      "is_seed": false,
+      "sources": [
+        "https://nakamurasekizenkai.org/",
+        "https://www.tuat.ac.jp/documents/uni-grad/kobo/JapaneaseScholarship/2025/minkansyogakukin20250416.pdf",
+        "https://www.tamabi.ac.jp/news/60538/",
+        "https://gaxi.jp/organization/V0zGLmg4Kb647Ovx/project/XZA9YgNDj48n2jMq",
+        "https://www.shougakukin-note.com/scholarships/nakamura-sekizenkai",
+        "https://nakamurasekizenkai.org/scholarship/",
+        "https://www.senshu-u.ac.jp/news/nid00027916.html",
+        "https://gaxi.jp/organization/V0zGLmg4Kb647Ovx/project/XZA9YgNDj48n2jMq",
+        "http://nakamurasekizenkai.org/wp-content/uploads/2017/09/%E3%82%BF%E3%82%99%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%88%E3%82%99data-%E3%83%91%E3%83%B3%E3%83%95%E3%83%AC%E3%83%83%E3%83%88202303.pdf",
+        "https://www.meiji.ac.jp/cip/student_support/funding/6t5h7p00003f5lhm-att/a1776411965611.pdf"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "不明",
+          "start": null,
+          "deadline": null,
+          "fiscal_year": 2026,
+          "quote": null
+        },
+        "international_only": null,
+        "application_route": "不明",
+        "route_quote": null,
+        "targets": {
+          "status": "不明",
+          "list": [],
+          "quote": null
+        },
+        "region": {
+          "status": "不明",
+          "logic": null,
+          "conditions": [],
+          "quote": null
+        },
+        "fields": {
+          "status": "不明",
+          "list": [],
+          "quote": null
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": null
+        },
+        "amount": {
+          "type": "不明",
+          "yearly_yen": null,
+          "quote": null
+        },
+        "official": true,
+        "source_url": "https://nakamurasekizenkai.org/",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "要確認",
+      "reasons": [
+        "確認できなかった条件: 締切、対象学年、地域条件、学部・分野"
+      ],
+      "seconds": 20.3
+    },
+    {
+      "core": "日揮実吉奨学会",
+      "scholarship": "公益財団法人　日揮・実吉奨学会",
+      "organization": "公益財団法人　日揮・実吉奨学会",
+      "hubs": 13,
+      "is_seed": false,
+      "sources": [
+        "https://www.jgcs.or.jp/",
+        "https://www.jgcs.or.jp/question/",
+        "https://mylifefp.com/mylifefpmail/kyufu_nikisaneyoshi/",
+        "https://www.jgcs.or.jp/news/2026/04/2023-2.html",
+        "https://www.jwu.ac.jp/unv/seg_student/life_support/scholarship/cr5sr8000002rwc2-att/nikki_youkou.pdf",
+        "https://www.tsukuba.ac.jp/campuslife/support-scholarship/scholarship-links/pg/2026475.html",
+        "https://www.jgcs.or.jp/",
+        "https://www.gakuseisupport.ynu.ac.jp/asset/docs/2026%E6%97%A5%E6%8F%AE%E3%83%BB%E5%AE%9F%E5%90%89%E5%A5%A8%E5%AD%A6%E4%BC%9A%EF%BC%88%E6%8E%B2%E7%A4%BA%E7%94%A8%EF%BC%89.pdf",
+        "https://www.u-tokyo.ac.jp/content/400277549.pdf"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "不明",
+          "start": null,
+          "deadline": null,
+          "fiscal_year": 2026,
+          "quote": null
+        },
+        "international_only": false,
+        "application_route": "不明",
+        "route_quote": null,
+        "targets": {
+          "status": "不明",
+          "list": [],
+          "quote": null
+        },
+        "region": {
+          "status": "不明",
+          "logic": null,
+          "conditions": [],
+          "quote": null
+        },
+        "fields": {
+          "status": "制限あり",
+          "list": [
+            "理工系"
+          ],
+          "quote": "理工系の学生、留学生への奨学金給付事業",
+          "quote_verified": true
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": null
+        },
+        "amount": {
+          "type": "不明",
+          "yearly_yen": null,
+          "quote": null
+        },
+        "official": true,
+        "source_url": "https://www.jgcs.or.jp/",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "要確認",
+      "reasons": [
+        "分野: 条件に合っています",
+        "確認できなかった条件: 締切、対象学年、地域条件"
+      ],
+      "seconds": 22.8
+    },
+    {
+      "core": "大林財団",
+      "scholarship": "公益財団法人 大林財団",
+      "organization": "公益財団法人 大林財団",
+      "hubs": 13,
+      "is_seed": false,
+      "sources": [
+        "https://www.obayashifoundation.org/students/",
+        "https://gaxi.jp/organization/rlnpP1RYawR0wZ37/project/1vEXjgpWjd6k9poD",
+        "https://www.global.hosei.ac.jp/study_abroad/other/extramural/obayashi/"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "不明",
+          "start": null,
+          "deadline": null,
+          "fiscal_year": 2026,
+          "quote": ""
+        },
+        "international_only": false,
+        "application_route": "大学経由",
+        "route_quote": "指定校を経由して応募を受付け",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": [
+                1,
+                2
+              ]
+            }
+          ],
+          "quote": "指定校の大学1年生又は2年生であり、22歳以下である者",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "不明",
+          "logic": "いずれか",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "制限なし",
+          "list": [],
+          "quote": "学部・専攻は問いません"
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 600000,
+          "quote": "日本国籍を有する人　月額50,000円"
+        },
+        "official": true,
+        "source_url": "https://www.obayashifoundation.org/students/",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "要確認",
+      "reasons": [
+        "学年: 条件に合っています",
+        "大学経由の応募です。指定校かどうかと学内締切を学生課に確認してください"
+      ],
+      "seconds": 15.1
+    },
+    {
+      "core": "吉田育英会",
+      "scholarship": "マスター２１",
+      "organization": "公益財団法人 吉田育英会",
+      "hubs": 12,
+      "is_seed": false,
+      "sources": [
+        "https://www.ysf.or.jp/scholarship/visitor/internal/m21_guideline.html",
+        "https://www.ysf.or.jp/scholarship/visitor/internal/master21.php",
+        "https://www.tsukuba.ac.jp/campuslife/support-scholarship/scholarship-links/pg/2026219-1.html",
+        "https://www.ysf.or.jp/news/article_detail.php?newsId=169",
+        "https://gaxi.jp/organization/vlbDKZRBKy83Lk7x/project/QB5eDReMb4RKXEWd",
+        "https://www.ysf.or.jp/news/article_detail.php?newsId=171"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": null,
+          "deadline": "2026-05-13",
+          "fiscal_year": 2026,
+          "quote": "《提出期限》2026年５月１３日(水曜日) 当会必着",
+          "quote_verified": true
+        },
+        "international_only": false,
+        "application_route": "大学経由",
+        "route_quote": "推薦依頼校に在学する学生は、必ず大学を通じて応募してください。",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": [
+                4
+              ]
+            }
+          ],
+          "quote": "当会の指定する大学(推薦依頼校)の学部４年次に在学中の方。",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "制限なし",
+          "logic": "いずれか",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "制限あり",
+          "list": [
+            "自然科学系分野",
+            "工学",
+            "農学",
+            "医学等の応用科学の分野"
+          ],
+          "quote": "自然科学系分野（工学、農学、医学等の応用科学の分野を含みます。）",
+          "quote_verified": true
+        },
+        "concurrent": {
+          "status": "確認",
+          "rules": {
+            "JASSO貸与": "可",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "不可"
+          },
+          "quote": "民間団体が実施するもの 不可 不可 不可",
+          "quote_verified": true
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 960000,
+          "quote": "ア 奨学期間を通じて月額８万円"
+        },
+        "official": true,
+        "source_url": "https://www.ysf.or.jp/scholarship/visitor/internal/m21_guideline.html",
+        "source_kind": "運営団体",
+        "pdf_url": "https://www.ysf.or.jp/ysfpdf/sch2026_guideline01.pdf"
+      },
+      "status": "募集終了",
+      "reasons": [
+        "締切（2026-05-13）を過ぎています"
+      ],
+      "seconds": 13.5
+    },
+    {
+      "core": "CTC未来財団",
+      "scholarship": "公益財団法人CTC未来財団 奨学金",
+      "organization": "公益財団法人 CTC未来財団",
+      "hubs": 12,
+      "is_seed": false,
+      "sources": [
+        "https://mirai-zaidan.or.jp/news/",
+        "https://www.tsukuba.ac.jp/campuslife/support-scholarship/scholarship-links/pg/scholarship-027.html",
+        "https://mirai-zaidan.or.jp/file/scholar2026_summary.pdf",
+        "https://mirai-zaidan.or.jp/what-we-do/scholar/"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": "2026-03-01",
+          "deadline": null,
+          "fiscal_year": 2026,
+          "quote": "2026.03.01\n「ITを志す青少年に対する修学支援事業」の奨学金の募集を開始します。",
+          "quote_verified": true
+        },
+        "international_only": null,
+        "application_route": "不明",
+        "route_quote": "",
+        "targets": {
+          "status": "不明",
+          "list": [],
+          "quote": ""
+        },
+        "region": {
+          "status": "不明",
+          "logic": "いずれか",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "制限あり",
+          "list": [
+            "ITを志す"
+          ],
+          "quote": "「ITを志す青少年に対する修学支援事業」の奨学金",
+          "quote_verified": true
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "不明",
+          "yearly_yen": 0,
+          "quote": ""
+        },
+        "official": true,
+        "source_url": "https://mirai-zaidan.or.jp/news/",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "要確認",
+      "reasons": [
+        "確認できなかった条件: 締切、対象学年、地域条件、学部・分野"
+      ],
+      "seconds": 17.0
+    },
+    {
+      "core": "いであ環境文化財団",
+      "scholarship": "公益財団法人いであ環境・文化財団 奨学金",
+      "organization": "公益財団法人 いであ環境・文化財団",
+      "hubs": 11,
+      "is_seed": false,
+      "sources": [
+        "https://ieaf.or.jp/scholarship-2",
+        "https://www.tamabi.ac.jp/news/116253/",
+        "https://ieaf.or.jp/scholarship-2/r8-scholarship"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "不明",
+          "start": null,
+          "deadline": null,
+          "fiscal_year": 2026,
+          "quote": ""
+        },
+        "international_only": null,
+        "application_route": "不明",
+        "route_quote": "",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": []
+            }
+          ],
+          "quote": "日本国内の大学に在籍し",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "制限あり",
+          "logic": "すべて",
+          "conditions": [
+            {
+              "type": "在学校の所在地",
+              "area": "日本国内"
+            }
+          ],
+          "quote": "日本国内の大学に在籍し",
+          "quote_verified": true
+        },
+        "fields": {
+          "status": "制限あり",
+          "list": [
+            "環境分野",
+            "芸術分野"
+          ],
+          "quote": "環境分野又は芸術分野を専攻する学生を対象に",
+          "quote_verified": true
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": null,
+          "quote": "奨学金の支給事業を行います"
+        },
+        "official": true,
+        "source_url": "https://ieaf.or.jp/scholarship-2",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "要確認",
+      "reasons": [
+        "学年: 条件に合っています",
+        "確認できなかった条件: 締切、地域条件、学部・分野"
+      ],
+      "seconds": 14.4
+    },
+    {
+      "core": "大森昌三記念財団",
+      "scholarship": "一般財団法人大森昌三記念財団 奨学金",
+      "organization": "一般財団法人 大森昌三記念財団",
+      "hubs": 11,
+      "is_seed": false,
+      "sources": [
+        "http://www.omorishozo.or.jp/scholarship/index.html",
+        "http://www.omorishozo.or.jp/",
+        "https://www.tsukuba.ac.jp/campuslife/support-scholarship/scholarship-links/pg/20264218.html",
+        "https://scholarabo.com/omori-shozo-foundation-scholarship/",
+        "http://www.omorishozo.or.jp/faq/index.html",
+        "https://www.waseda.jp/fsci/gips/other/2026/05/20/34901/"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": "2026-04-01",
+          "deadline": "2026-06-19",
+          "fiscal_year": 2026,
+          "quote": "2026年4月1日（水）～6月19日（金）",
+          "quote_verified": true
+        },
+        "international_only": false,
+        "application_route": "大学経由",
+        "route_quote": "所属学校の奨学金担当窓口を通して、期日内にご応募ください",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": [
+                2,
+                3,
+                4,
+                5,
+                6
+              ]
+            }
+          ],
+          "quote": "日本国内の大学・大学院に在籍し（※除く大学1年生）",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "制限なし",
+          "logic": "すべて",
+          "conditions": [],
+          "quote": "日本国内の大学・大学院に在籍し"
+        },
+        "fields": {
+          "status": "制限あり",
+          "list": [
+            "もの作りに関する知識・技術"
+          ],
+          "quote": "もの作りに関する知識・技術について修学している者",
+          "quote_verified": true
+        },
+        "concurrent": {
+          "status": "確認",
+          "rules": {
+            "JASSO貸与": "可",
+            "JASSO給付": "可",
+            "他の民間給付": "可"
+          },
+          "quote": "当財団の奨学金は、他の奨学金との併給が可能です。",
+          "quote_verified": true
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 360000,
+          "quote": "【支給金額】月額30,000円"
+        },
+        "official": true,
+        "source_url": "http://www.omorishozo.or.jp/scholarship/index.html",
+        "source_kind": "運営団体",
+        "pdf_url": "http://www.omorishozo.or.jp/download/scholarship2026/download_a01.pdf"
+      },
+      "status": "募集終了",
+      "reasons": [
+        "締切（2026-06-19）を過ぎています"
+      ],
+      "seconds": 13.1
+    },
+    {
+      "core": "林レオロジ記念財団",
+      "scholarship": "公益財団法人林レオロジー記念財団 奨学金",
+      "organization": "公益財団法人 林レオロジー記念財団",
+      "hubs": 11,
+      "is_seed": false,
+      "sources": [
+        "https://www.nitech.ac.jp/campus/support/hayashireoroji2021.html",
+        "https://gaxi.jp/organization/rlnpP1RYnj80wZ37",
+        "https://www.hayashi-rheology.or.jp/recruitment/entrance/",
+        "https://www.hosei.ac.jp/application/files/8917/5368/6030/1.Youkou.hayashireoroji.20250728.pdf",
+        "https://www.doshisha.ac.jp/file/140-2026hayashirheologykinenzaidan.pdf",
+        "https://www.hayashi-rheology.or.jp/recruitment/entrance/college.html"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": "2026-09-01",
+          "deadline": "2026-10-23",
+          "fiscal_year": 2027,
+          "quote": "令和8年9月1日から10月23日まで",
+          "quote_verified": true
+        },
+        "international_only": null,
+        "application_route": "不明",
+        "route_quote": "",
+        "targets": {
+          "status": "確認",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": []
+            },
+            {
+              "school_type": "大学院",
+              "grades": []
+            }
+          ],
+          "quote": "奨学金希望者募集要領(大学院・大学)",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "不明",
+          "logic": "すべて",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "不明",
+          "list": [],
+          "quote": ""
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 0,
+          "quote": "応募から給付まで"
+        },
+        "official": true,
+        "source_url": "https://www.hayashi-rheology.or.jp/recruitment/entrance/",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "要確認",
+      "reasons": [
+        "確認できなかった条件: 対象学年、地域条件、学部・分野"
+      ],
+      "seconds": 19.2
+    },
+    {
+      "status": "エラー",
+      "error": "JSONDecodeError('Extra data: line 13 column 3 (char 344)')"
+    },
+    {
+      "core": "埼玉学生誘液会",
+      "scholarship": "公益財団法人埼玉学生誘液会 奨学金",
+      "organization": "公益財団法人埼玉学生誘液会",
+      "hubs": 1,
+      "is_seed": false,
+      "sources": [
+        "https://www.shibusawa.or.jp/museum/newsletter/329.html",
+        "https://saitama-yueki.jp/description/",
+        "https://saitama-yueki.jp/scholarship/",
+        "https://www.chiba-u.ac.jp/students/files/pdf/saitama-yuekikai.pdf"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "不明",
+          "start": null,
+          "deadline": null,
+          "fiscal_year": null,
+          "quote": ""
+        },
+        "international_only": null,
+        "application_route": "不明",
+        "route_quote": "",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": []
+            }
+          ],
+          "quote": "東京都内及びその近郊の大学に在学する有為な学生",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "制限あり",
+          "logic": "すべて",
+          "conditions": [
+            {
+              "type": "本人の出身",
+              "area": "埼玉県"
+            },
+            {
+              "type": "在学校の所在地",
+              "area": "東京都内及びその近郊"
+            }
+          ],
+          "quote": "埼玉県人及び埼玉出身者の子弟で、東京都内及びその近郊の大学",
+          "quote_verified": true
+        },
+        "fields": {
+          "status": "制限なし",
+          "list": [],
+          "quote": ""
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 250000,
+          "quote": "年額２５０，０００円（返還義務なし）"
+        },
+        "official": true,
+        "source_url": "https://saitama-yueki.jp/description/",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "要確認",
+      "reasons": [
+        "学年: 条件に合っています",
+        "確認できなかった条件: 締切、地域条件"
+      ],
+      "seconds": 46.5
+    },
+    {
+      "core": "ユニチャム共振財団",
+      "scholarship": "ユニ・チャーム共振財団奨学金",
+      "organization": "ユニ・チャーム共振財団",
+      "hubs": 4,
+      "is_seed": false,
+      "sources": [
+        "https://kyoshin-zaidan.or.jp/",
+        "https://www.okayama-u.ac.jp/up_load_files/shien-pdf/bosyuitiran/2026-1-23-2.pdf",
+        "https://www.nagasaki-u.ac.jp/ja/campuslife/support/free/private/file/R8.9.11list.pdf",
+        "https://www.tottori-u.ac.jp/campuslife/docs/2026syougaku27.pdf",
+        "https://en.apu.ac.jp/studentsupport/assets/file/scholarship_tuition/international/2027/2027_Unicharm_Kyoshin_Foundation_Scholarship_INFO.pdf",
+        "https://www.kagawa-u.ac.jp/files/9416/7903/5002/unicharm.pdf"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "不明",
+          "start": null,
+          "deadline": null,
+          "fiscal_year": 2026,
+          "quote": ""
+        },
+        "international_only": null,
+        "application_route": "大学経由",
+        "route_quote": "奨学金を担当する事務局に募集要項を照会してください",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": []
+            }
+          ],
+          "quote": "次代を担う大学生､大学院生の中から",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "不明",
+          "logic": "いずれか",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "制限あり",
+          "list": [
+            "モノ作り",
+            "福祉",
+            "グローバル"
+          ],
+          "quote": "モノ作り･福祉･グローバルを志向する学生の育成を目的に",
+          "quote_verified": true
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": null,
+          "quote": "優れた学生に対して奨学給付を行い"
+        },
+        "official": true,
+        "source_url": "https://kyoshin-zaidan.or.jp/",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "要確認",
+      "reasons": [
+        "学年: 条件に合っています",
+        "大学経由の応募です。指定校かどうかと学内締切を学生課に確認してください"
+      ],
+      "seconds": 25.5
+    },
+    {
+      "core": "ライフシフト",
+      "scholarship": "2026年度ライフシフト奨学金",
+      "organization": "ライフシフト",
+      "hubs": 1,
+      "is_seed": false,
+      "sources": [
+        "https://jyosei-navi.jfc.or.jp/search/search/assist/view/1mvgj3L6xzPaQNWq",
+        "https://www.kitanozaidan.or.jp/scholarship/lifeshift/",
+        "https://www.tsukuba.ac.jp/campuslife/support-scholarship/scholarship-links/pg/20262121.html"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "不明",
+          "start": null,
+          "deadline": null,
+          "fiscal_year": 2026,
+          "quote": null
+        },
+        "international_only": null,
+        "application_route": "大学経由",
+        "route_quote": "当財団指定大学からの推薦による応募となります。",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": [
+                2
+              ]
+            }
+          ],
+          "quote": "大学2年生または大学院生修士課程1年",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "不明",
+          "logic": null,
+          "conditions": [],
+          "quote": null
+        },
+        "fields": {
+          "status": "不明",
+          "list": [],
+          "quote": null
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": null
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 720000,
+          "quote": "①大学生2年～4年        60,000円　3年間"
+        },
+        "official": true,
+        "source_url": "https://www.kitanozaidan.or.jp/scholarship/lifeshift/",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "要確認",
+      "reasons": [
+        "学年: 条件に合っています",
+        "大学経由の応募です。指定校かどうかと学内締切を学生課に確認してください"
+      ],
+      "seconds": 12.4
+    },
+    {
+      "core": "公財和田財団",
+      "scholarship": "（公財）和田財団",
+      "organization": "（公財）和田財団",
+      "hubs": 1,
+      "is_seed": false,
+      "sources": [
+        "https://www.okayama-u.ac.jp/up_load_files/shien-pdf/bosyuitiran/2025-2-38.pdf",
+        "https://www.wada-zaidan.org/scholarship/",
+        "https://www.wada-zaidan.org/about/",
+        "https://www.wada-zaidan.org/",
+        "https://www.wada-zaidan.org/scholarship/",
+        "https://www.chiba-u.ac.jp/students/files/pdf/minkansaishin.pdf",
+        "https://www.waseda.jp/inst/scholarship/assets/uploads/2024/04/dc4ea6dd010efc4614a7b7fffeeb4d33.pdf"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": "2026-04-01",
+          "deadline": "2026-05-31",
+          "fiscal_year": 2026,
+          "quote": "令和８年４月１日～５月31日",
+          "quote_verified": true
+        },
+        "international_only": false,
+        "application_route": "直接応募",
+        "route_quote": "応募書類一式をこの法人宛に郵送してください。",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": [
+                3
+              ]
+            }
+          ],
+          "quote": "指定大学※に在籍する学部３年生であること",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "制限なし",
+          "logic": "いずれか",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "制限なし",
+          "list": [],
+          "quote": ""
+        },
+        "concurrent": {
+          "status": "確認",
+          "rules": {
+            "JASSO貸与": "可",
+            "JASSO給付": "可",
+            "他の民間給付": "可"
+          },
+          "quote": "他の奨学金を受けている場合でも応募いただけます。",
+          "quote_verified": true
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 480000,
+          "quote": "年額48万円"
+        },
+        "official": true,
+        "source_url": "https://www.wada-zaidan.org/scholarship/",
+        "source_kind": "運営団体",
+        "pdf_url": "https://www.wada-zaidan.org/wp-content/uploads/2026/03/%E5%8B%9F%E9%9B%86%E8%A6%81%E9%A0%85%EF%BC%88%E4%BB%A4%E5%92%8C%EF%BC%98%E5%B9%B4%E5%BA%A6%EF%BC%89.pdf"
+      },
+      "status": "募集終了",
+      "reasons": [
+        "締切（2026-05-31）を過ぎています"
+      ],
+      "seconds": 18.1
+    },
+    {
+      "core": "住友電工グルプ社会貢献基金",
+      "scholarship": "公益財団法人　住友電工グループ社会貢献基金",
+      "organization": "公益財団法人　住友電工グループ社会貢献基金",
+      "hubs": 7,
+      "is_seed": false,
+      "sources": [
+        "https://www.sei-group-csr.or.jp/business/research/data/fill_the_application_from_guidelines_D2026.pdf",
+        "https://www.sei-group-csr.or.jp/business/bursary/",
+        "https://www.tsukuba.ac.jp/campuslife/support-scholarship/scholarship-links/pg/202625.html",
+        "https://www.u-tokyo.ac.jp/content/400281825.pdf",
+        "https://www.yamagata-u.ac.jp/jp/download_file/view/23822/7695/",
+        "https://www.sei-group-csr.or.jp/business/bursary/2024.html",
+        "https://www.sei-group-csr.or.jp/business/research/",
+        "https://www.sei-group-csr.or.jp/business/course/",
+        "https://www.is.tohoku.ac.jp/jp/forstudents/detail---id-5712.html",
+        "https://www.waseda.jp/fsci/assets/uploads/2016/02/poster-23.pdf",
+        "https://www.tsukuba.ac.jp/campuslife/support-scholarship/scholarship-links/pg/20253.html"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "不明",
+          "start": null,
+          "deadline": null,
+          "fiscal_year": 2026,
+          "quote": ""
+        },
+        "international_only": true,
+        "application_route": "不明",
+        "route_quote": "",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": []
+            },
+            {
+              "school_type": "大学院",
+              "grades": []
+            }
+          ],
+          "quote": "大学・大学院においては科学技術分野を専攻する学生",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "不明",
+          "logic": "いずれか",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "制限あり",
+          "list": [
+            "科学技術分野"
+          ],
+          "quote": "科学技術分野を専攻する学生",
+          "quote_verified": true
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 0,
+          "quote": "奨学金を支給します。"
+        },
+        "official": true,
+        "source_url": "https://www.sei-group-csr.or.jp/business/bursary/",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "対象外",
+      "reasons": [
+        "留学生のみが対象です"
+      ],
+      "seconds": 24.0
+    },
+    {
+      "core": "北澤育英会",
+      "scholarship": "公益財団法人　北澤育英会",
+      "organization": "公益財団法人　北澤育英会",
+      "hubs": 6,
+      "is_seed": false,
+      "sources": [
+        "http://www.kitazawa-ikuei.or.jp/entry/"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": null,
+          "deadline": null,
+          "fiscal_year": null,
+          "quote": "4月上旬から5月中旬頃までです。",
+          "quote_verified": true
+        },
+        "international_only": false,
+        "application_route": "大学経由",
+        "route_quote": "当該窓口を通じて応募書類を提出してください。",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": [
+                1,
+                2,
+                3
+              ]
+            }
+          ],
+          "quote": "在学の１年生、２年生及び３年生（高等専門学校の卒業生に限る）",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "制限なし",
+          "logic": "いずれか",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "制限なし",
+          "list": [],
+          "quote": ""
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 720000,
+          "quote": "大学生：月額6万円"
+        },
+        "official": true,
+        "source_url": "http://www.kitazawa-ikuei.or.jp/entry/",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "要確認",
+      "reasons": [
+        "学年: 条件に合っています",
+        "大学経由の応募です。指定校かどうかと学内締切を学生課に確認してください"
+      ],
+      "seconds": 9.8
+    },
+    {
+      "core": "松尾建設技術振興財団",
+      "scholarship": "松尾建設技術振興財団",
+      "organization": "松尾建設技術振興財団",
+      "hubs": 1,
+      "is_seed": false,
+      "sources": [
+        "https://zaidan.matsuo.gr.jp/",
+        "https://zaidan.matsuo.gr.jp/index.php/menu002/page201-2/",
+        "https://zaidan.matsuo.gr.jp/index.php/menu002/page202-2/",
+        "https://compalyze.co.jp/company/1300005006985",
+        "https://zaidan.matsuo.gr.jp/index.php/menu002/page202-2/",
+        "https://zaidan.matsuo.gr.jp/index.php/menu002/page203-2/"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": "2026-01-13",
+          "deadline": "2026-02-27",
+          "fiscal_year": 2026,
+          "quote": "2026年01月13日　2026年奨学生募集を開始しました。",
+          "quote_verified": true
+        },
+        "international_only": null,
+        "application_route": "不明",
+        "route_quote": "",
+        "targets": {
+          "status": "不明",
+          "list": [],
+          "quote": ""
+        },
+        "region": {
+          "status": "不明",
+          "logic": "いずれか",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "不明",
+          "list": [],
+          "quote": ""
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": null,
+          "quote": "奨学金の給付を開始しました。"
+        },
+        "official": true,
+        "source_url": "https://zaidan.matsuo.gr.jp/",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "募集終了",
+      "reasons": [
+        "締切（2026-02-27）を過ぎています"
+      ],
+      "seconds": 21.2
+    },
+    {
+      "core": "生涯学習開発財団",
+      "scholarship": "一般財団法人　生涯学習開発財団",
+      "organization": "一般財団法人　生涯学習開発財団",
+      "hubs": 5,
+      "is_seed": false,
+      "sources": [
+        "https://www.gllc.or.jp/project/doctorate/doctorate-application/",
+        "https://www.gllc.or.jp/project/doctorate/"
+      ],
+      "conditions": null,
+      "status": "公式情報なし",
+      "reasons": [
+        "運営団体の公式情報を確認できませんでした"
+      ],
+      "seconds": 12.8
+    },
+    {
+      "core": "東京都医師会",
+      "scholarship": "医学生懸賞論文　プラタナス大賞",
+      "organization": "東京都医師会",
+      "hubs": 1,
+      "is_seed": false,
+      "sources": [
+        "https://www.tokyo.med.or.jp/41354",
+        "https://www.tokyo.med.or.jp/commitment/medical_student",
+        "https://www.tokyo.med.or.jp/wp-content/uploads/application/pdf/platanus-youkou2026-2.pdf",
+        "https://twmuishikai.jp/information/1077/"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "確認",
+          "start": "2026-07-01",
+          "deadline": "2026-10-09",
+          "fiscal_year": 2026,
+          "quote": "受付期間延長しました ⇒令和 8 年 10 月 9 日（金）",
+          "quote_verified": true
+        },
+        "international_only": null,
+        "application_route": "直接応募",
+        "route_quote": "東京都医師会広報学術課宛（gakujyutsu@tokyo.med.or.jp）メール添付にて提出すること",
+        "targets": {
+          "status": "制限あり",
+          "list": [
+            {
+              "school_type": "大学",
+              "grades": []
+            }
+          ],
+          "quote": "都内 13 大学の医学部に在籍し、臨床実習生（医学）として認定を受けた医学生であること",
+          "quote_verified": true
+        },
+        "region": {
+          "status": "制限あり",
+          "logic": "すべて",
+          "conditions": [
+            {
+              "type": "在学校の所在地",
+              "area": "都内"
+            }
+          ],
+          "quote": "都内 13 大学の医学部に在籍し",
+          "quote_verified": true
+        },
+        "fields": {
+          "status": "制限あり",
+          "list": [
+            "医学部",
+            "医学"
+          ],
+          "quote": "都内 13 大学の医学部に在籍し、臨床実習生（医学）として認定を受けた医学生であること",
+          "quote_verified": true
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "給付",
+          "yearly_yen": 200000,
+          "quote": "受賞者には賞状・副賞（大賞 20 万円、優秀賞 10 万円）を贈呈"
+        },
+        "official": true,
+        "source_url": "https://www.tokyo.med.or.jp/41354",
+        "source_kind": "運営団体",
+        "pdf_url": "https://www.tokyo.med.or.jp/wp-content/uploads/application/pdf/platanus-youkou2026-2.pdf"
+      },
+      "status": "要確認",
+      "reasons": [
+        "学年: 条件に合っています",
+        "確認できなかった条件: 地域条件、学部・分野"
+      ],
+      "seconds": 21.5
+    },
+    {
+      "core": "新見市",
+      "scholarship": "看護学生奨学支援金",
+      "organization": "新見市",
+      "hubs": 1,
+      "is_seed": false,
+      "sources": [
+        "https://www.nurse.okayama.okayama.jp/files/libs/12930/202603031357034651.pdf",
+        "https://www.city.niimi.okayama.jp/gyosei/gyosei_detail/index/19169.html",
+        "https://www.city.niimi.okayama.jp/gyosei/gyosei_detail/index/21799.html",
+        "https://www.city.niimi.okayama.jp/gyosei/gyosei_detail/index/17154.html",
+        "https://www.city.niimi.okayama.jp/media_images/0/files/kango.pdf",
+        "https://www.niimi-u.ac.jp/index.cfm/11,14091,c,html/14091/20250805-084651.pdf",
+        "https://www.niimi-u.ac.jp/index.cfm/22,0,59,html",
+        "https://www.nurse.okayama.okayama.jp/files/libs/12930/202603031357034651.pdf",
+        "https://washimaru-univ.com/minkankyufu-b/",
+        "https://school.js88.com/shogakukin/list/st4ma33",
+        "https://hojyokin-portal.jp/subsidies/list?pref_id=33&city_id=1463",
+        "https://www.city.niimi.okayama.jp/media_images_01/files/leaflet_R070401.pdf"
+      ],
+      "conditions": {
+        "page_is_about_this_scholarship": true,
+        "period": {
+          "status": "不明",
+          "start": null,
+          "deadline": null,
+          "fiscal_year": 2025,
+          "quote": ""
+        },
+        "international_only": null,
+        "application_route": "不明",
+        "route_quote": "",
+        "targets": {
+          "status": "不明",
+          "list": [],
+          "quote": ""
+        },
+        "region": {
+          "status": "不明",
+          "logic": "すべて",
+          "conditions": [],
+          "quote": ""
+        },
+        "fields": {
+          "status": "制限あり",
+          "list": [
+            "看護"
+          ],
+          "quote": "看護学生奨学支援金奨学生募集",
+          "quote_verified": true
+        },
+        "concurrent": {
+          "status": "不明",
+          "rules": {
+            "JASSO貸与": "記載なし",
+            "JASSO給付": "記載なし",
+            "他の民間給付": "記載なし"
+          },
+          "quote": ""
+        },
+        "amount": {
+          "type": "不明",
+          "yearly_yen": null,
+          "quote": ""
+        },
+        "official": true,
+        "source_url": "https://www.city.niimi.okayama.jp/gyosei/gyosei_detail/index/19169.html",
+        "source_kind": "運営団体",
+        "pdf_url": null
+      },
+      "status": "募集終了",
+      "reasons": [
+        "2025年度の情報です。今年度の募集は未確認です"
+      ],
+      "seconds": 53.4
+    }
+  ]
+}
