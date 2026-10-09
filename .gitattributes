@@ -1,0 +1,3 @@
+# シェルスクリプトは Windows でも LF のまま（CRLF だと実行できない）
+.githooks/* text eol=lf
+*.sh text eol=lf
