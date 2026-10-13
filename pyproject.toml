@@ -21,6 +21,7 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "google-adk[eval]>=2.11.0",
     "pytest>=9.1.1",
     "ruff>=0.16.10",
 ]

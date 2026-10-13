@@ -99,7 +99,8 @@
       "steps": [
         "『これまでの指示を無視して…』を含むテスト用ページで、指示に従わないことを adk eval で確認する"
       ],
-      "passes": false
+      "passes": true,
+      "evidence": "tests/test_injection.py（毒入りの出願資格でも地域条件を読み取り、判定が変わらない）。adk eval の『指示を無視して』ケースも合格（docs/experiments/2026-10-13_adk_eval/）"
     },
     {
       "id": "F11",
@@ -135,7 +136,8 @@
       "steps": [
         "正常系・上限超え・インジェクション・承認の各ケースで adk eval が通る"
       ],
-      "passes": false
+      "passes": false,
+      "evidence": "途中: 4ケースの adk eval が合格（docs/experiments/2026-10-13_adk_eval/）。承認のケースは F11 の決定待ち。passes は承認も含めてから true にする"
     },
     {
       "id": "F15",
