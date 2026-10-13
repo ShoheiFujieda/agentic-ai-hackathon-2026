@@ -106,6 +106,11 @@ def decide(*, approval_id: str, approver: str, approve: bool, comment: str = "")
     return _txn(_db().transaction())
 
 
+def get(approval_id: str) -> dict[str, Any] | None:
+    snap = _db().collection(COLLECTION).document(approval_id).get()
+    return snap.to_dict() if snap.exists else None
+
+
 def list_pending() -> list[dict[str, Any]]:
     docs = _db().collection(COLLECTION).where(filter=firestore.FieldFilter("status", "==", "pending")).stream()
     return [{"id": d.id, **d.to_dict()} for d in docs]

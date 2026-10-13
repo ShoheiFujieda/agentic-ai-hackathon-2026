@@ -1,11 +1,13 @@
 """エージェントが使うツール。検索の進め方と判定はコード（hackathon_agent.scholarship）が行う。"""
 
+import hashlib
 import logging
 import os
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta, timezone
 
 from google.adk.tools import ToolContext
 
+from .governance import approvals, audit
 from .scholarship import service, web
 from .scholarship.judge import Profile
 
@@ -97,3 +99,46 @@ def get_scholarship_detail(scholarship_id: int, tool_context: ToolContext) -> di
     if d is None:
         return {"status": "error", "reason": f"id {scholarship_id} の奨学金は見つかりませんでした"}
     return {"status": "ok", **d}
+
+
+SHARED_COLLECTION = "shared_scholarships"
+
+
+def register_shared_scholarship(
+    name: str,
+    official_url: str,
+    deadline_note: str,
+    reason: str,
+    tool_context: ToolContext,
+    approval_id: str = "",
+) -> dict:
+    """学生が見つけた奨学金を、他の学生にも見える共有データに「候補」として登録する。【高リスク】
+
+    管理者の承認が必要。最初の呼び出しは承認待ち（status が pending）になり、承認IDが返る。
+    学生に「管理者の承認を待つ必要がある」と伝え、承認されたと分かったら、同じ引数に approval_id を付けて呼び直す。
+
+    Args:
+        name: 奨学金の名前。
+        official_url: 公式ページのURL（https:// で始まるもの）。
+        deadline_note: 締切や募集時期のメモ（分からなければ「不明」）。
+        reason: 登録したい理由（監査ログに残る）。
+        approval_id: 承認済みのID。最初の呼び出しでは空にする。
+    """
+    doc_id = hashlib.sha256(official_url.encode()).hexdigest()[:16]
+    ap = approvals.get(approval_id) or {}
+    record = {
+        "name": name,
+        "official_url": official_url,
+        "deadline_note": deadline_note,
+        "reason": reason,
+        "registered_by": tool_context.user_id,
+        "approved_by": ap.get("decided_by"),
+        "approval_id": approval_id,
+        "status": "候補（要項の確認が必要）",
+    }
+    try:
+        audit._db().collection(SHARED_COLLECTION).document(doc_id).set({**record, "registered_at": datetime.now(UTC)})
+    except Exception as e:  # 書けなかったことを正しく伝える（安全なフォールバック）
+        logger.exception("共有データへの登録に失敗しました")
+        return {"status": "error", "reason": f"共有データに書き込めませんでした（{type(e).__name__}）"}
+    return {"status": "ok", "registered": record}

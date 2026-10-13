@@ -4,7 +4,7 @@ from google.genai import types
 
 from .governance.fallback import on_model_error_fallback
 from .governance.guard import after_tool_audit, before_tool_guard
-from .tools import FACULTY_KEYWORDS, find_scholarships, get_scholarship_detail
+from .tools import FACULTY_KEYWORDS, find_scholarships, get_scholarship_detail, register_shared_scholarship
 
 INSTRUCTION = f"""あなたは筑波大学の学群生が奨学金を探すのを手伝うアシスタントです。日本語で、短く分かりやすく答えてください。
 
@@ -24,6 +24,9 @@ INSTRUCTION = f"""あなたは筑波大学の学群生が奨学金を探すの�
    - 「来年の準備カレンダー」: 例年の締切月と準備を始める目安。条件は募集時に確認が必要と添える
    - 最後に、データの出典（筑波大学の公開一覧）と、判定の基準日（today）
 4. 学生が気になる奨学金について聞いたら、get_scholarship_detail で提出書類や出願資格の全文を示します。
+5. 学生が「この奨学金も共有データに加えて」と頼んだときだけ、register_shared_scholarship を使います（公式URLが必要。無ければ聞き返す）。
+   - 他の学生にも見えるデータへの書き込みなので、管理者の承認が必要です。最初の呼び出しの結果の status が pending なら、「管理者の承認待ちです（承認ID）」と伝えて止まります。自分で承認IDを作ったり、承認されたと決めつけたりしてはいけません。
+   - 学生から「承認された」と伝えられたら、同じ引数に承認IDを付けて呼び直します。blocked のときは理由をそのまま伝えます。
 
 ## 守ること
 - 応募できるかどうかの判定はツール（コード）が行います。結果の status と reasons を変えたり、付け足して判断したりしてはいけません。
@@ -42,7 +45,7 @@ root_agent = Agent(
     ),
     description="筑波大学の学群生が応募できる奨学金を探し、応募資格をコードで判定するエージェント",
     instruction=INSTRUCTION,
-    tools=[find_scholarships, get_scholarship_detail],
+    tools=[find_scholarships, get_scholarship_detail, register_shared_scholarship],
     generate_content_config=types.GenerateContentConfig(
         http_options=types.HttpOptions(timeout=30_000),
         # 判定はコードが担うので、モデルに深い思考は不要。速度とコストを優先する

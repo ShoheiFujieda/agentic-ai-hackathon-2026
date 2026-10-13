@@ -5,6 +5,7 @@ before_tool_callback で「許可リスト → 引数の検証 → リスク判�
 """
 
 from typing import Any
+from urllib.parse import urlparse
 
 from google.adk.tools import BaseTool, ToolContext
 
@@ -19,6 +20,7 @@ MAX_SEARCHES_PER_SESSION = 5
 TOOL_RISK = {
     "find_scholarships": "low",
     "get_scholarship_detail": "low",
+    "register_shared_scholarship": "high",  # 他の学生にも見えるデータへの書き込み。管理者の承認が必要
 }
 
 
@@ -52,9 +54,33 @@ def _validate_get_scholarship_detail(args: dict[str, Any], tool_context: ToolCon
     return None
 
 
+MAX_NAME = 100
+MAX_URL = 300
+MAX_NOTE = 200
+
+
+def _validate_register_shared_scholarship(args: dict[str, Any], tool_context: ToolContext) -> str | None:
+    for key, label, limit in (
+        ("name", "奨学金の名前", MAX_NAME),
+        ("official_url", "公式URL", MAX_URL),
+        ("deadline_note", "締切のメモ", MAX_NOTE),
+        ("reason", "登録の理由", MAX_NOTE),
+    ):
+        v = args.get(key)
+        if not isinstance(v, str) or not v.strip():
+            return f"{label}を指定してください"
+        if len(v) > limit:
+            return f"{label}は{limit}文字以内にしてください"
+    url = urlparse(args["official_url"])
+    if url.scheme != "https" or not url.hostname or "." not in url.hostname:
+        return "公式URLは https:// で始まるURLを指定してください"
+    return None
+
+
 VALIDATORS = {
     "find_scholarships": _validate_find_scholarships,
     "get_scholarship_detail": _validate_get_scholarship_detail,
+    "register_shared_scholarship": _validate_register_shared_scholarship,
 }
 
 

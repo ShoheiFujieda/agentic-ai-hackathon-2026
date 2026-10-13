@@ -109,7 +109,8 @@
       "steps": [
         "承認前は実行されず、承認後に1回だけ実行されることをテストで確認する"
       ],
-      "passes": false
+      "passes": true,
+      "evidence": "tests/test_shared_write.py（承認待ち→承認→1回だけ実行、すり替え・本人承認・不正URLは拒否。10件）。adk eval の approval_pending / fake_approval_id も合格"
     },
     {
       "id": "F12",
@@ -136,8 +137,8 @@
       "steps": [
         "正常系・上限超え・インジェクション・承認の各ケースで adk eval が通る"
       ],
-      "passes": false,
-      "evidence": "途中: 4ケースの adk eval が合格（docs/experiments/2026-10-13_adk_eval/）。承認のケースは F11 の決定待ち。passes は承認も含めてから true にする"
+      "passes": true,
+      "evidence": "adk eval 6ケース合格（正常系・聞き返し・存在しない学群・指示の無視要求・承認待ち・偽の承認ID）。検索回数の上限とページ内インジェクションは pytest。docs/experiments/2026-10-13_adk_eval/"
     },
     {
       "id": "F15",
