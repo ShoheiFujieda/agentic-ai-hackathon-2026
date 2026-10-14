@@ -2,6 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "adk-web",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": ["run", "adk", "web", "--port", "9000"],
+      "port": 9000
+    },
+    {
       "name": "admin-ui",
       "runtimeExecutable": "uv",
       "runtimeArgs": ["run", "uvicorn", "ui.app:app", "--port", "9100"],
