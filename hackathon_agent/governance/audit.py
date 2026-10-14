@@ -22,6 +22,13 @@ def _db() -> firestore.Client:
     return _client
 
 
+def recent(user_id: str, limit: int = 50, scan: int = 300) -> list[dict[str, Any]]:
+    """本人の直近の監査ログ（新しい順）。複合インデックスを避けるため、新しい順に scan 件読んで本人分を絞る。"""
+    docs = _db().collection(COLLECTION).order_by("at", direction=firestore.Query.DESCENDING).limit(scan).stream()
+    rows = [d.to_dict() for d in docs]
+    return [r for r in rows if r.get("user_id") == user_id][:limit]
+
+
 def record(
     *,
     user_id: str,

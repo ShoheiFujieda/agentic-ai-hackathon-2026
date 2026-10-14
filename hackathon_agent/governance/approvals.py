@@ -115,6 +115,13 @@ def get(approval_id: str) -> dict[str, Any] | None:
     return snap.to_dict() if snap.exists else None
 
 
+def list_for_user(user_id: str) -> list[dict[str, Any]]:
+    """本人の承認の一覧（新しい順）。"""
+    docs = _db().collection(COLLECTION).where(filter=firestore.FieldFilter("requested_by", "==", user_id)).stream()
+    items = [{"id": d.id, **d.to_dict()} for d in docs]
+    return sorted(items, key=lambda x: x["created_at"], reverse=True)
+
+
 def list_pending() -> list[dict[str, Any]]:
     docs = _db().collection(COLLECTION).where(filter=firestore.FieldFilter("status", "==", "pending")).stream()
     return [{"id": d.id, **d.to_dict()} for d in docs]

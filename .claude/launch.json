@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "admin-ui",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": ["run", "uvicorn", "ui.app:app", "--port", "9100"],
+      "port": 9100
+    }
+  ]
+}

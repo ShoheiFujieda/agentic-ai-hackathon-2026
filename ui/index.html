@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>奨学金エージェント 管理画面</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --panel: #ffffff; --text: #1d1d1b; --muted: #6a6a64; --line: #e2e2dc;
+    --accent: #1f5fbf; --ok: #1a7a45; --warn: #a15c00; --bad: #b3261e;
+    --ok-bg: #e4f4ea; --warn-bg: #fdf0d9; --bad-bg: #fbe4e2; --neutral-bg: #ececE6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151514; --panel: #1f1f1d; --text: #ecece8; --muted: #9a9a92; --line: #33332f;
+      --accent: #7aa7f0; --ok: #6fd09a; --warn: #f0b860; --bad: #f2928b;
+      --ok-bg: #1b3326; --warn-bg: #3a2d14; --bad-bg: #3b1f1c; --neutral-bg: #2a2a27;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.6 system-ui, "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif; }
+  header, main { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+  header { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; padding-top: 20px; padding-bottom: 8px; }
+  h1 { font-size: 20px; margin: 0; }
+  h2 { font-size: 16px; margin: 0 0 4px; }
+  .sub { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin: 16px 0; }
+  label { font-size: 13px; color: var(--muted); }
+  input[type=text] { font: inherit; color: inherit; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; width: 9em; }
+  button { font: inherit; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--text); padding: 4px 12px; cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button:disabled { opacity: .5; cursor: default; }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .stats { display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 8px 0 12px; font-size: 13px; color: var(--muted); }
+  .stats b { color: var(--text); font-size: 16px; margin-right: 2px; }
+  .card { border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin: 8px 0; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .grow { flex: 1 1 240px; min-width: 0; }
+  .args { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; margin: 4px 0; }
+  .badge { display: inline-block; font-size: 12px; border-radius: 999px; padding: 1px 10px; background: var(--neutral-bg); }
+  .badge.ok { background: var(--ok-bg); color: var(--ok); }
+  .badge.warn { background: var(--warn-bg); color: var(--warn); }
+  .badge.bad { background: var(--bad-bg); color: var(--bad); }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+  td.wrap { overflow-wrap: anywhere; min-width: 12em; }
+  .month { margin: 12px 0 4px; font-weight: 600; font-size: 14px; }
+  .empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
+  .msg { font-size: 13px; margin-top: 6px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1>奨学金エージェント 管理画面</h1>
+  <div class="row">
+    <label for="uid">ユーザーID</label>
+    <input id="uid" type="text" value="user" autocomplete="off">
+    <button id="reload" type="button">更新</button>
+  </div>
+</header>
+<main>
+  <p class="sub">会話は <code>adk web</code> で行います。ここは、AI とは別の経路で承認し、操作の記録を確かめる画面です。</p>
+
+  <section aria-labelledby="h-ap">
+    <h2 id="h-ap">承認待ち</h2>
+    <p class="sub">AI は承認できません。承認できるのは、依頼した本人だけです。</p>
+    <div class="stats" id="stats"></div>
+    <div id="pending"></div>
+    <details>
+      <summary>承認の履歴</summary>
+      <div class="scroll"><table><thead><tr><th>承認ID</th><th>操作</th><th>状態</th><th>依頼</th><th>判断</th><th>コメント</th></tr></thead><tbody id="history"></tbody></table></div>
+    </details>
+  </section>
+
+  <section aria-labelledby="h-cal">
+    <h2 id="h-cal">来年の準備カレンダー</h2>
+    <p class="sub" id="cal-sub"></p>
+    <div id="calendar"></div>
+  </section>
+
+  <section aria-labelledby="h-au">
+    <h2 id="h-au">監査ログ（直近50件）</h2>
+    <p class="sub">誰が・いつ・何を・なぜ・どうなったか。要項やログの文字列はテキストとして表示します。</p>
+    <div class="scroll"><table><thead><tr><th>時刻</th><th>操作</th><th>結果</th><th>理由</th><th>引数</th></tr></thead><tbody id="audit"></tbody></table></div>
+  </section>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const el = (tag, text, cls) => { const e = document.createElement(tag); if (text !== undefined) e.textContent = text; if (cls) e.className = cls; return e; };
+const fmt = (iso) => iso ? new Date(iso).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" }) : "—";
+const DECISION = { allowed: ["許可", "ok"], executed: ["実行", "ok"], pending: ["承認待ち", "warn"], blocked: ["拒否", "bad"], approved: ["承認", "ok"], rejected: ["却下", "bad"] };
+const STATUS = { pending: ["承認待ち", "warn"], approved: ["承認済み", "ok"], used: ["実行済み", "ok"], rejected: ["却下", "bad"] };
+const badge = (map, key) => { const [t, c] = map[key] || [key, ""]; return el("span", t, "badge " + c); };
+const short = (o) => { const s = JSON.stringify(o); return s && s.length > 160 ? s.slice(0, 160) + "…" : (s || ""); };
+const userId = () => $("uid").value.trim() || "user";
+
+async function load() {
+  let data;
+  try {
+    const r = await fetch("/api/state?user_id=" + encodeURIComponent(userId()));
+    if (!r.ok) throw new Error(r.status);
+    data = await r.json();
+  } catch (e) {
+    $("pending").replaceChildren(el("p", "読み込めませんでした（" + e.message + "）。時間をおいて「更新」を押してください。", "empty"));
+    return;
+  }
+  renderStats(data.stats);
+  renderApprovals(data.approvals);
+  renderCalendar(data.calendar);
+  renderAudit(data.audit);
+}
+
+function renderStats(s) {
+  const box = $("stats"); box.replaceChildren();
+  const item = (n, label) => { const d = el("span"); d.append(el("b", n), label); box.append(d); };
+  item(s.pending, " 件 承認待ち"); item(s.approved, " 件 承認"); item(s.rejected, " 件 却下");
+  item(s.median_seconds == null ? "—" : Math.round(s.median_seconds) + " 秒", " 承認までの中央値");
+}
+
+function renderApprovals(list) {
+  const box = $("pending"); box.replaceChildren();
+  const pending = list.filter(a => a.status === "pending");
+  if (!pending.length) box.append(el("p", "承認待ちはありません。", "empty"));
+  for (const a of pending) {
+    const card = el("div", undefined, "card");
+    const head = el("div", undefined, "row");
+    head.append(el("b", a.tool), badge(STATUS, a.status), el("span", a.id + " ・ " + fmt(a.created_at) + " に依頼", "args"));
+    const args = el("div", short(a.args), "args");
+    const comment = el("input"); comment.type = "text"; comment.placeholder = "コメント（任意）"; comment.maxLength = 200; comment.setAttribute("aria-label", "コメント"); comment.style.width = "14em";
+    const ok = el("button", "承認する", "primary"), ng = el("button", "却下する");
+    const msg = el("div", "", "msg"); msg.setAttribute("role", "status");
+    const act = (approve) => async () => {
+      ok.disabled = ng.disabled = true;
+      try {
+        const r = await fetch("/api/approvals/" + encodeURIComponent(a.id) + "/decide", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: userId(), approve, comment: comment.value })
+        });
+        const j = await r.json();
+        msg.textContent = j.message || j.detail || "処理しました";
+        if (j.ok) setTimeout(load, 600); else ok.disabled = ng.disabled = false;
+      } catch (e) { msg.textContent = "送信できませんでした（" + e.message + "）"; ok.disabled = ng.disabled = false; }
+    };
+    ok.onclick = act(true); ng.onclick = act(false);
+    const row = el("div", undefined, "row"); row.append(comment, ok, ng);
+    card.append(head, args, row, msg); box.append(card);
+  }
+  const tb = $("history"); tb.replaceChildren();
+  for (const a of list.filter(a => a.status !== "pending")) {
+    const tr = el("tr"); const td = (c) => { const d = el("td"); d.append(c); tr.append(d); };
+    td(a.id); td(a.tool); td(badge(STATUS, a.status)); td(fmt(a.created_at)); td(fmt(a.decided_at)); td(a.comment || "");
+    tb.append(tr);
+  }
+}
+
+function renderCalendar(cal) {
+  const box = $("calendar"); box.replaceChildren();
+  $("cal-sub").textContent = cal.at ? "直近の検索（" + fmt(cal.at) + (cal.today ? "、基準日 " + cal.today : "") + "）の結果です。条件は募集時に確認が必要です。" : "";
+  if (!cal.items.length) { box.append(el("p", "まだ検索結果がありません。adk web で奨学金を探すと、ここに出ます。", "empty")); return; }
+  const byMonth = {};
+  for (const it of cal.items) (byMonth[it.usual_deadline_month] ||= []).push(it);
+  // 基準日の月から近い順に並べる（締切が近い月が上）
+  const base = cal.today ? new Date(cal.today).getMonth() + 1 : new Date().getMonth() + 1;
+  for (const m of Object.keys(byMonth).map(Number).sort((a, b) => ((a - base + 12) % 12) - ((b - base + 12) % 12))) {
+    box.append(el("div", "例年の締切: " + m + "月", "month"));
+    for (const it of byMonth[m]) {
+      const row = el("div", undefined, "row");
+      row.append(el("span", it.organization, "grow"), badge({ x: [it.prepare_from === "今すぐ" ? "今すぐ準備" : it.prepare_from + "から準備", it.prepare_from === "今すぐ" ? "warn" : ""] }, "x"));
+      if (it.note) row.append(el("span", it.note, "args"));
+      if (typeof it.url === "string" && it.url.startsWith("https://")) { const a = el("a", "公式", ""); a.href = it.url; a.rel = "noopener noreferrer"; a.target = "_blank"; row.append(a); }
+      box.append(row);
+    }
+  }
+}
+
+function renderAudit(list) {
+  const tb = $("audit"); tb.replaceChildren();
+  if (!list.length) { const tr = el("tr"), d = el("td", "まだ記録がありません。"); d.colSpan = 5; tr.append(d); tb.append(tr); return; }
+  for (const r of list) {
+    const tr = el("tr"); const td = (c, cls) => { const d = el("td"); d.append(c); if (cls) d.className = cls; tr.append(d); };
+    td(fmt(r.at)); td(r.tool); td(badge(DECISION, r.decision)); td(r.reason || "", "wrap"); td(short(r.args), "wrap");
+    tb.append(tr);
+  }
+}
+
+$("reload").onclick = load;
+$("uid").addEventListener("keydown", (e) => { if (e.key === "Enter") load(); });
+load();
+</script>
+</body>
+</html>
