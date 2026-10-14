@@ -31,12 +31,12 @@
 
 - **人間の承認（10/13）**：対象は共有データへの書き込み、承認者は依頼した本人（10/14に管理者案から変更。`DESIGN_SPEC.md` 3.5、`docs/research/2026-10-13_human_approval.md`）。ツール `register_shared_scholarship`（高リスク）を実装。承認のテスト10件（`tests/test_shared_write.py`）、pytest は計77件
 - **管理画面（10/14）**：`ui/`（FastAPI＋1枚のHTML）。承認待ちの承認／却下、承認の履歴と所要時間、監査ログ、来年の準備カレンダー。起動は `uv run uvicorn ui.app:app --port 9100`。同一オリジンのPOSTのみ・本人のみ承認・Web由来の文字列はテキスト表示。テスト6件（`tests/test_ui.py`）。**公開前に IAP などの認証が必要**
-- **デプロイの準備（10/14、ローカルのみ）**：`main.py`（ADK の会話画面 `/` と管理画面 `/admin/` を1サービスに）、`ui/auth.py`（Basic 認証。未設定は全拒否）、`Dockerfile`、`.gcloudignore` の追加。構成は `DESIGN_SPEC.md` 3.7。ローカルで `APP_USER=… APP_PASSWORD=… uv run uvicorn main:app --port 8080` を起動し、認証なしは全経路401、会話は約42秒、承認→実行まで確認。認証のテスト13件、pytest は計97件。**Secret Manager（10/14）**：API を有効化し、秘密 `scholarship-app-password`（24文字、版1）を作成済み。値は Cloud Console の Secret Manager で確認する（ログイン用のユーザー名 `APP_USER` は環境変数で渡す）。専用SAへの `secretAccessor` 付与は未実施。**Dockerfile は Docker が無く未検証（Cloud Build で初めて確かめる）**
+- **デプロイの準備（10/14、ローカルのみ）**：`main.py`（ADK の会話画面 `/` と管理画面 `/admin/` を1サービスに）、`ui/auth.py`（Basic 認証。未設定は全拒否）、`Dockerfile`、`.gcloudignore` の追加。構成は `DESIGN_SPEC.md` 3.7。ローカルで `APP_USER=… APP_PASSWORD=… uv run uvicorn main:app --port 8080` を起動し、認証なしは全経路401、会話は約42秒、承認→実行まで確認。認証のテスト13件、pytest は計97件。**Secret Manager（10/14）**：API を有効化し、秘密 `scholarship-app-password`（24文字、版1）を作成済み。値は Cloud Console の Secret Manager で確認する（ログイン用のユーザー名 `APP_USER` は環境変数で渡す）。専用SA `hackathon-agent-sa` に、この秘密だけの `secretAccessor` を付与済み。ユーザー名は `tester`。**Dockerfile は Docker が無く未検証（Cloud Build で初めて確かめる）**
 - **評価セット（10/13）**：`hackathon_agent/evals/` に adk eval の4ケース（正常系・聞き返し・存在しない学群・指示の無視要求）。結果は `docs/experiments/2026-10-13_adk_eval/`。ページ内インジェクションは `tests/test_injection.py`（F10 合格）。検索回数の上限は `tests/test_guard.py`
 
 ### 未完了（優先順）
 1. **画面の残り**：結果の3区分と並べ替えの表示（F08）、検索語・止めた理由のログ表示（F12。F03・F07 が前提）。最小版は完了
-2. **Cloud Run へのデプロイ**（準備は完了。実行前にユーザーに確認：`secretmanager.secretAccessor` の付与（秘密の作成は済み）、公開（未認証の呼び出し許可）への変更、最大インスタンス1での新リビジョン）。提出までに公開URL＋アプリ側ログイン（テスト用アカウント）へ切り替える（F15）
+2. **Cloud Run へのデプロイ**（準備は完了。実行前にユーザーに確認：公開（未認証の呼び出し許可）への変更、最大インスタンス1での新リビジョン）。提出までに公開URL＋アプリ側ログイン（テスト用アカウント）へ切り替える（F15）
 3. 未決事項：ログイン方式（メール受信不要）。本人確認が今は `--by` のユーザーID の一致だけで弱い（ログインと合わせて直す）
 4. 比較実験の全方式の比較（`DESIGN_SPEC.md` 1.4、F13）と、Web 全体を探す部分（①〜⑤）を縦1本につなぐか（日程次第で「拡張予定」）
 5. ユーザーにお願い中：ガクシーにログインして「学年の選択肢」と「締切後の奨学金が出るか」をスクリーンショットで確認
@@ -68,3 +68,4 @@
 | 10/14 | 承認者を本人に変更、管理画面（承認・監査ログ・カレンダー）の最小版とテスト6件 | 約1時間 |
 | 10/14 | デプロイの準備（main.py、Basic 認証、Dockerfile）、ローカルでの通し確認、認証のテスト13件 | 約1時間 |
 | 10/14 | Secret Manager の API 有効化と、ログイン用パスワードの秘密を作成 | 数分 |
+| 10/14 | 専用SAに秘密1つだけの secretAccessor を付与 | 数分 |
