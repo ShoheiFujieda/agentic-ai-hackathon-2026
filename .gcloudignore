@@ -15,3 +15,8 @@ __pycache__/
 # ローカルの試行記録・Claude Code 設定（本番に含めない）
 **/.adk/
 .claude/
+.pytest_cache/
+.ruff_cache/
+tests/
+docs/
+scripts/

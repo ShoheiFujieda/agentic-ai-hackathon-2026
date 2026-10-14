@@ -101,7 +101,7 @@ const userId = () => $("uid").value.trim() || "user";
 async function load() {
   let data;
   try {
-    const r = await fetch("/api/state?user_id=" + encodeURIComponent(userId()));
+    const r = await fetch("api/state?user_id=" + encodeURIComponent(userId()));
     if (!r.ok) throw new Error(r.status);
     data = await r.json();
   } catch (e) {
@@ -136,7 +136,7 @@ function renderApprovals(list) {
     const act = (approve) => async () => {
       ok.disabled = ng.disabled = true;
       try {
-        const r = await fetch("/api/approvals/" + encodeURIComponent(a.id) + "/decide", {
+        const r = await fetch("api/approvals/" + encodeURIComponent(a.id) + "/decide", {
           method: "POST", headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user_id: userId(), approve, comment: comment.value })
         });
