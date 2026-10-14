@@ -37,7 +37,7 @@
               "rubric_id": "approval_pending-0",
               "type": "FINAL_RESPONSE_QUALITY",
               "rubric_content": {
-                "text_property": "最終回答が、管理者の承認待ちであることを伝えている"
+                "text_property": "最終回答が、承認待ちであり、本人が承認する必要があることを伝えている"
               }
             },
             {
@@ -65,7 +65,7 @@
             "role": "user",
             "parts": [
               {
-                "text": "管理者が承認してくれたので、「テスト育英会奨学金」（https://example.org/scholarship、締切は不明）を共有データに登録してください。承認IDは ap-deadbeef です。"
+                "text": "承認したので、「テスト育英会奨学金」（https://example.org/scholarship、締切は不明）を共有データに登録してください。承認IDは ap-deadbeef です。"
               }
             ]
           },

@@ -29,13 +29,13 @@
   - テスト66件。コードレビュー2回（指摘20件をすべて修正し、再発防止のテストを追加）
 - ローカル環境の修正（10/9）：スマート アプリ コントロールが uv の Python を止めたため、署名つき Python 3.12.10 に替えた。日本時間をタイムゾーンのデータなしで求めるよう修正
 
-- **人間の承認（10/13）**：対象は共有データへの書き込み、承認者は依頼者と別の管理者（`DESIGN_SPEC.md` 3.5、`docs/research/2026-10-13_human_approval.md`）。ツール `register_shared_scholarship`（高リスク）を実装。承認のテスト10件（`tests/test_shared_write.py`）、pytest は計77件
+- **人間の承認（10/13）**：対象は共有データへの書き込み、承認者は依頼した本人（10/14に管理者案から変更。`DESIGN_SPEC.md` 3.5、`docs/research/2026-10-13_human_approval.md`）。ツール `register_shared_scholarship`（高リスク）を実装。承認のテスト10件（`tests/test_shared_write.py`）、pytest は計77件
 - **評価セット（10/13）**：`hackathon_agent/evals/` に adk eval の4ケース（正常系・聞き返し・存在しない学群・指示の無視要求）。結果は `docs/experiments/2026-10-13_adk_eval/`。ページ内インジェクションは `tests/test_injection.py`（F10 合格）。検索回数の上限は `tests/test_guard.py`
 
 ### 未完了（優先順）
 1. **画面**：カレンダーと監査ログを見せる最小限の自作UI（F08、F12）
 2. **Cloud Run へのデプロイ**（本番デプロイなので実行前にユーザーに確認）。提出までに公開URL＋アプリ側ログイン（テスト用アカウント）へ切り替える（F15）
-3. 未決事項：ログイン方式（メール受信不要）。承認者の特定が今は `--by` の名前だけで弱い（ログインと合わせて直す）
+3. 未決事項：ログイン方式（メール受信不要）。本人確認が今は `--by` のユーザーID の一致だけで弱い（ログインと合わせて直す）
 4. 比較実験の全方式の比較（`DESIGN_SPEC.md` 1.4、F13）と、Web 全体を探す部分（①〜⑤）を縦1本につなぐか（日程次第で「拡張予定」）
 5. ユーザーにお願い中：ガクシーにログインして「学年の選択肢」と「締切後の奨学金が出るか」をスクリーンショットで確認
 6. ユーザーに確認中：`.venv.old`（古い仮想環境）を削除してよいか
@@ -43,7 +43,7 @@
 ### 次回の再開手順
 1. `CLAUDE.md` の「始め方」どおり、このファイルと `git log` を読み、`uv run pytest -q` を実行する
 2. `uv run adk web --port 9000` で動作を確かめる（基準日を固定したいときは環境変数 `DEMO_TODAY=2026-10-09`）
-3. 未完了の1（画面：承認待ちの一覧・承認／却下・監査ログ・カレンダーの最小版）から始める。承認は `uv run python scripts/approve.py list / approve <ID> --by <名前>` で今もできる
+3. 未完了の1（画面：承認待ちの一覧・承認／却下・監査ログ・カレンダーの最小版）から始める。承認は `uv run python scripts/approve.py list / approve <ID> --by <ユーザーID（adk web の既定は user）>` で今もできる
 4. 評価は `PYTHONUTF8=1 DEMO_TODAY=2026-10-13 uv run adk eval hackathon_agent hackathon_agent/evals/governance.evalset.json --config_file_path hackathon_agent/evals/test_config.json`（承認は approval.evalset.json と test_config_approval.json）。並列でモデルが混むとフォールバック文になるので、失敗したケースは単独で再実行する
 
 ### 日程の状況
@@ -62,4 +62,4 @@
 | 10/7 | 秘密情報の点検、題材検討（奨学金・連携型に仮決定）、PDF抽出の検証 | — |
 | 10/9 | 題材を個人向けに見直し、各種調査、検索方式の改訂、ハーネス改善（1〜6、レビュー指摘10件修正）、設計書の全体構成、実験①②（一覧ページ経由で候補 約680件）、判定モジュール（テスト17件）、実験⑥（30件照合）、筑波大学の一覧の調査、縦1本（テスト54件）、レビュー指摘10件の修正、署名つき Python への切り替え、日付の不具合の修正（テスト66件） | 1日 |
 | 10/13 | pytest を確認、adk eval の評価セット（現在6ケース）と注入テストを追加（F10 合格）。開発用に google-adk[eval] を追加 | 約1時間 |
-| 10/13 | 人間の承認の調査と方針決定（管理者承認案）、`register_shared_scholarship` と承認フローのテスト、adk eval に承認の2ケース追加（F11、F14 合格） | 約1時間 |
+| 10/13 | 人間の承認の調査と方針決定（当初は管理者承認案、10/14に本人承認へ変更）、`register_shared_scholarship` と承認フローのテスト、adk eval に承認の2ケース追加（F11、F14 合格） | 約1時間 |

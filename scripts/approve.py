@@ -25,7 +25,7 @@ def main() -> int:
     for name in ("approve", "reject"):
         s = sub.add_parser(name)
         s.add_argument("approval_id")
-        s.add_argument("--by", required=True, help="承認者名")
+        s.add_argument("--by", required=True, help="承認する人（依頼した本人のユーザーID。adk web の既定は user）")
         s.add_argument("--comment", default="")
     a = p.parse_args()
 

@@ -36,21 +36,21 @@ def test_承認前は実行できない(requester):
 
 def test_承認後に1回だけ実行できる(requester):
     ap = _new(requester)
-    assert approvals.decide(approval_id=ap, approver="manager", approve=True)[0]
+    assert approvals.decide(approval_id=ap, approver=requester, approve=True)[0]
     assert _consume(ap, requester)[0]
     ok, why = _consume(ap, requester)
     assert not ok and "使用済み" in why
 
 
-def test_依頼した本人は承認できない(requester):
+def test_本人以外は承認できない(requester):
     ap = _new(requester)
-    ok, why = approvals.decide(approval_id=ap, approver=requester, approve=True)
-    assert not ok and "職務分離" in why
+    ok, why = approvals.decide(approval_id=ap, approver="someone-else", approve=True)
+    assert not ok and "依頼した本人だけ" in why
 
 
 def test_承認後に金額を変えると実行できない(requester):
     ap = _new(requester)
-    approvals.decide(approval_id=ap, approver="manager", approve=True)
+    approvals.decide(approval_id=ap, approver=requester, approve=True)
     ok, why = _consume(ap, requester, {**ARGS, "amount": 90000})
     assert not ok and "一致しません" in why
     # すり替えに失敗しても、正しい内容ならまだ使える
@@ -59,14 +59,14 @@ def test_承認後に金額を変えると実行できない(requester):
 
 def test_別のユーザーは承認を使えない(requester):
     ap = _new(requester)
-    approvals.decide(approval_id=ap, approver="manager", approve=True)
+    approvals.decide(approval_id=ap, approver=requester, approve=True)
     ok, why = _consume(ap, "someone-else")
     assert not ok and "別のユーザー" in why
 
 
 def test_却下されたら実行できない(requester):
     ap = _new(requester)
-    approvals.decide(approval_id=ap, approver="manager", approve=False, comment="予算外")
+    approvals.decide(approval_id=ap, approver=requester, approve=False, comment="予算外")
     ok, why = _consume(ap, requester)
     assert not ok and "却下" in why and "予算外" in why
 

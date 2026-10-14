@@ -20,7 +20,7 @@ MAX_SEARCHES_PER_SESSION = 5
 TOOL_RISK = {
     "find_scholarships": "low",
     "get_scholarship_detail": "low",
-    "register_shared_scholarship": "high",  # 他の学生にも見えるデータへの書き込み。管理者の承認が必要
+    "register_shared_scholarship": "high",  # 共有データへの書き込み。本人の承認が必要
 }
 
 

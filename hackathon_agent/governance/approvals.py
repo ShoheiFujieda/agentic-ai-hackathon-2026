@@ -79,7 +79,11 @@ def consume(*, approval_id: str, user_id: str, tool: str, args: dict[str, Any]) 
 
 
 def decide(*, approval_id: str, approver: str, approve: bool, comment: str = "") -> tuple[bool, str]:
-    """承認者が承認または却下する。依頼した本人は承認できない（職務分離）。"""
+    """本人が承認または却下する。個人用のエージェントなので、承認できるのは依頼した本人だけ。
+
+    エージェント（AI）にはこの関数を呼ぶツールを渡さない。承認はチャットの発言ではなく、
+    承認用のCLI／画面という別の経路で行う（AI が「承認された」と言い張っても実行できない）。
+    """
     ref = _db().collection(COLLECTION).document(approval_id)
 
     @firestore.transactional
@@ -90,8 +94,8 @@ def decide(*, approval_id: str, approver: str, approve: bool, comment: str = "")
         ap = snap.to_dict()
         if ap["status"] != "pending":
             return False, f"承認待ちではありません（現在: {ap['status']}）"
-        if ap["requested_by"] == approver:
-            return False, "依頼した本人は承認できません（職務分離）"
+        if ap["requested_by"] != approver:
+            return False, "承認できるのは依頼した本人だけです"
         txn.update(
             ref,
             {
