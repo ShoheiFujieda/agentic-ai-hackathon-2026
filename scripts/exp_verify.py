@@ -1,16 +1,17 @@
 """比較実験の2歩目: 一覧ページの候補を絞り込み、公式の要項で1件ずつ照合して、応募できるかをコードで判定する。
 
-1. 前回の結果（docs/experiments/2026-10-09_seed_hub/result.json）に、PDF の一覧ページを追加する
+1. 前回の結果（docs/experiments/<EXP_DATE>_seed_hub/result.json）に、PDF の一覧ページを追加する
 2. 候補をまとめ、安い絞り込み（名前だけで分かる対象外）を行う
 3. 残りから N 件を選び、公式ページを探して要項を読み、条件を抜き出す（引用が原文にあるかをコードで確認）
 4. hackathon_agent.scholarship.judge で判定する（AIは判定しない）
 
 使い方: uv run python scripts/exp_verify.py [件数]
-結果: docs/experiments/2026-10-09_verify/ に保存する
+結果: docs/experiments/<EXP_DATE>_verify/ に保存する（EXP_DATE の既定は 2026-10-09）
 """
 
 import io
 import json
+import os
 import random
 import re
 import sys
@@ -37,9 +38,11 @@ from hackathon_agent.scholarship.prefilter import prefilter  # noqa: E402
 load_dotenv(".env")
 
 MODEL = "gemini-3.8-flash"
-TODAY = date(2026, 10, 9)
-PREV = Path("docs/experiments/2026-10-09_seed_hub/result.json")
-OUT_DIR = Path("docs/experiments/2026-10-09_verify")
+# 実験の日付。環境変数 EXP_DATE（YYYY-MM-DD）で変えられる（既定は最初に実施した 2026-10-09）。判定の基準日もこの日付
+EXP_DATE = os.environ.get("EXP_DATE", "2026-10-09")
+TODAY = date.fromisoformat(EXP_DATE)
+PREV = Path(f"docs/experiments/{EXP_DATE}_seed_hub/result.json")
+OUT_DIR = Path(f"docs/experiments/{EXP_DATE}_verify")
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 30
 MAX_PAGE_CHARS = 60_000
 WORKERS = 4

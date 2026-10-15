@@ -21,7 +21,7 @@
         "一覧ページを1つ以上見つけ、種以外の奨学金を5件以上抜き出す"
       ],
       "passes": true,
-      "evidence": "docs/experiments/2026-10-09_seed_hub/（11ページ、新規676団体、97%がページ内に実在） / 10/15: 一覧ページの展開は websearch.extract_hub に実装（実際の検索では一覧ページに当たらず未使用）"
+      "evidence": "docs/experiments/2026-10-09_seed_hub/（11ページ、新規676団体、97%がページ内に実在） / 10/15: 一覧ページの展開は websearch.extract_hub に実装（実際の検索では一覧ページに当たらず未使用） / 10/15 に再実験: 種5件→一覧ページ14件→新たに約570件（docs/experiments/2026-10-15_seed_hub/）"
     },
     {
       "id": "F03",
@@ -52,7 +52,7 @@
         "各項目に引用が付き、引用が原文に含まれることをコードで確認する"
       ],
       "passes": true,
-      "evidence": "docs/experiments/2026-10-09_verify/（引用60件がすべて原文と一致。作り話の引用を不一致として除外した実例あり） / 10/15: 本番の部品 websearch.py に移植（引用の原文照合・robots.txt遵守・テスト19件）"
+      "evidence": "docs/experiments/2026-10-09_verify/（引用60件がすべて原文と一致。作り話の引用を不一致として除外した実例あり） / 10/15: 本番の部品 websearch.py に移植（引用の原文照合・robots.txt遵守・テスト19件） / 10/15 に再実験: 引用81件がすべて原文と一致（docs/experiments/2026-10-15_verify/）"
     },
     {
       "id": "F06",

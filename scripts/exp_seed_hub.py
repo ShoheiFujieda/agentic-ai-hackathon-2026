@@ -5,11 +5,12 @@
    種の名前が2つ以上含まれるページだけを「一覧ページ」とする（判定はコード）。一覧ページから全項目を抜き出す
 
 使い方: uv run python scripts/exp_seed_hub.py
-結果: docs/experiments/2026-10-09_seed_hub/ に保存する
+結果: docs/experiments/<EXP_DATE>_seed_hub/ に保存する（EXP_DATE の既定は 2026-10-09）
 """
 
 import itertools
 import json
+import os
 import re
 import time
 from datetime import datetime
@@ -24,7 +25,9 @@ from google.genai import types
 load_dotenv(".env")
 
 MODEL = "gemini-3.8-flash"
-OUT_DIR = Path("docs/experiments/2026-10-09_seed_hub")
+# 実験の日付。環境変数 EXP_DATE（YYYY-MM-DD）で変えられる（既定は最初に実施した 2026-10-09）
+EXP_DATE = os.environ.get("EXP_DATE", "2026-10-09")
+OUT_DIR = Path(f"docs/experiments/{EXP_DATE}_seed_hub")
 MAX_GROUNDED_CALLS = 6  # 検索つき呼び出しの上限（費用の上限）
 MAX_FETCHES = 20  # ページ取得の上限
 MAX_PAGE_CHARS = 60_000  # 1ページから AI に渡す文字数の上限
