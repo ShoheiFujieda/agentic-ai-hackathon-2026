@@ -1,7 +1,7 @@
 ﻿# 読み上げ原稿（docs/submission/narration/script.json）を、Windows の日本語の音声で WAV にする（スライドごとに1ファイル）。
-# 使い方: powershell -File scripts/make_narration.ps1 [-Voice "Microsoft Haruka"] [-Rate 1.2]
+# 使い方: powershell -File scripts/make_narration.ps1 [-Voice "Microsoft Ichiro"] [-Rate 1.25]
 #   Voice: Microsoft Haruka / Ayumi / Ichiro（Windows の日本語の音声）。Rate: 話す速さ（1.0 が標準）
-param([string]$Voice = "Microsoft Haruka", [double]$Rate = 1.2)
+param([string]$Voice = "Microsoft Ichiro", [double]$Rate = 1.25)
 $env:PYTHONUTF8 = 1; [Console]::OutputEncoding = [Text.Encoding]::UTF8
 Add-Type -AssemblyName System.Runtime.WindowsRuntime
 [void][Windows.Media.SpeechSynthesis.SpeechSynthesizer, Windows.Media.SpeechSynthesis, ContentType = WindowsRuntime]

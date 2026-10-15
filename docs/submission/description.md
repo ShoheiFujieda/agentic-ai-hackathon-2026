@@ -2,7 +2,7 @@
 
 > 提出フォームの各欄に貼れるよう、短い版（A）と詳しい版（B）に分けてある。数字は 2026-10-15 時点の実測・実装に基づく。
 > ログインのパスワードはこのファイルに書かない（提出フォームのテスト用アカウント欄に、別途記入する）。
-> 図は3枚（全体像・検索の流れ・安全装置）。`architecture.png`、`architecture_pipeline.png`、`architecture_safety.png`。
+> 図は3枚（全体像・検索の流れ・安全装置）。`architecture.png`、`architecture_pipeline.png`、`architecture_safety.png`。提出フォームの「アーキテクチャ図」は1枚しか入れられないため、3枚を縦につなげた `architecture_all.png` を使う。
 
 ## A. 一言で（約200字）
 

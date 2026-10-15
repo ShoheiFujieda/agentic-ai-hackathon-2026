@@ -48,7 +48,7 @@
 - **取得の安全**: robots.txtを守り、内部アドレスは取得しない。Webページの文章は命令として扱わない
 - **評価**: 自動テスト176件、adk eval 7ケース
 ```
-**アーキテクチャ図**（画像）: `docs/submission/architecture.png`（図1 全体像）。続けて `architecture_pipeline.png`（図2 検索の流れ）、`architecture_safety.png`（図3 安全装置と承認）も追加できる。
+**アーキテクチャ図**（画像は**1枚だけ**入れられる）: `docs/submission/architecture_all.png`（図1 全体像・図2 検索の流れ・図3 安全装置と承認を、縦に1枚にまとめたもの。1600×2800px）を入れる。各図の単体（`architecture.png` など）は、説明文とリポジトリの README に載せてある。
 
 **Zenn記事URL（オプション）**: 無ければ空欄のままでよい。記事の有無は審査に影響しない。書く場合は「Idea」カテゴリで、公開予約を提出期限後にする。
 
