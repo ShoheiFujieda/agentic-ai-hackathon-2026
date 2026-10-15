@@ -288,10 +288,10 @@ def test_発見がすべて失敗したら例外にして隠さない(monkeypatc
 
 def test_一部が失敗した発見の結果は共有キャッシュに残さない(monkeypatch, _no_cache):
     found = [{"scholarship": "A", "organization": "公益財団法人テストA財団"}]
-    monkeypatch.setattr(websearch, "discover", lambda queries: (found, [], 2))
+    monkeypatch.setattr(websearch, "discover", lambda queries: (found, [], 3))
     _patch(monkeypatch, _cond())
     r = websearch.search(ME, "筑波大学", "理工学群", TODAY, websearch.Budget(verify=1, seconds=60))
-    assert r["stats"]["discover_failed"] == 2
+    assert r["stats"]["discover_failed"] == 3
     assert not any(k.startswith("webdisc-") for k in _no_cache)
 
 
@@ -301,3 +301,11 @@ def test_検証済みの件数に未確認の候補を含めない(monkeypatch):
     _patch(monkeypatch, _cond(), sources=[{"url": "https://shougakukin-note.com/a", "title": ""}])
     r = websearch.search(ME, "筑波大学", "理工学群", TODAY, websearch.Budget(verify=1, seconds=60))
     assert len(r["unverified"]) == 1 and r["stats"]["verified"] == 0
+
+
+def test_失敗が少なければ発見の結果をキャッシュする(monkeypatch, _no_cache):
+    found = [{"scholarship": "A", "organization": "公益財団法人テストA財団"}]
+    monkeypatch.setattr(websearch, "discover", lambda queries: (found, [], 1))
+    _patch(monkeypatch, _cond())
+    websearch.search(ME, "筑波大学", "理工学群", TODAY, websearch.Budget(verify=1, seconds=60))
+    assert any(k.startswith("webdisc-") for k in _no_cache)

@@ -31,6 +31,7 @@ logger = logging.getLogger(__name__)
 MODEL = extract.MODEL
 MAX_PAGE_CHARS = 40_000
 WORKERS = 16  # 照合の並列数（Gemini の応答が遅い日でも1回りで終わらせるため多め）
+MAX_FAILED_TO_CACHE = 2  # 発見の検索が6本中この本数まで失敗しても、結果は共有キャッシュに保存する（Gemini の一時的な時間切れは珍しくないため）
 CACHE_VERSION = "v2"  # 抜き出し方を変えたら上げて、古いキャッシュを使わないようにする
 UNVERIFIED = "未確認の候補"
 
@@ -501,7 +502,7 @@ def search(profile: Profile, university: str, field_text: str, today: date, budg
         found, sources, failed = discover(queries)
         if failed and failed >= len(queries):
             raise RuntimeError("Web 検索（Google検索つきのGemini）がすべて失敗しました")
-        if found and not failed:  # 一部が失敗した（候補が減っている）結果は、共有キャッシュに残さない
+        if found and failed <= MAX_FAILED_TO_CACHE:  # 失敗が多く候補が大きく減った結果は、共有キャッシュに残さない
             cache.put(dkey, {"found": found, "sources": sources[:40]})
     discover_sec = round(time.time() - t0, 1)
     groups = [found]
