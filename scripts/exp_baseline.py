@@ -95,7 +95,7 @@ STATUSES = ("応募できる", "要確認", "募集終了", "対象外", "目的
 def baseline_candidates(who: str) -> list[dict]:
     """普通のAI検索: 1回だけ聞いて、出てきた候補を受け取る。"""
     res = websearch._grounded(
-        f"次の人が応募できる奨学金・助成金を、{TODAY.year}年度の募集を中心に検索して教えてください。\\n対象者: {who}"
+        f"次の人が応募できる奨学金・助成金を、{TODAY.year}年度の募集を中心に、10件程度、検索して教えてください。\n対象者: {who}"
         + websearch.DISCOVER_FORMAT
     )
     return websearch._items(res["text"])
@@ -156,6 +156,10 @@ def run(name: str) -> dict:
             "by_status": b_counts,
             "applicable_or_check": len(b_valid),
             "stats": res["stats"],
+            "items": [
+                {k: r.get(k) for k in ("name", "organization", "status", "deadline", "official_url", "reasons")}
+                for r in b_all
+            ],
             "candidates_total": res["stats"].get("candidates"),
             "listed": len(b_all),
         },

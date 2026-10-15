@@ -1,0 +1,322 @@
+{
+  "today": "2026-10-15",
+  "profiles": {
+    "college": {
+      "profile": "筑波大学・理工学群・大学3年（学業・生活費）",
+      "baseline": {
+        "candidates": 4,
+        "checked": 4,
+        "by_status": {
+          "応募できる": 0,
+          "要確認": 0,
+          "募集終了": 2,
+          "対象外": 0,
+          "目的が違う": 0,
+          "未確認の候補": 2
+        },
+        "applicable_or_check": 0,
+        "items": [
+          {
+            "name": "第二種奨学金（在学採用）",
+            "organization": "独立行政法人日本学生支援機構",
+            "status": "募集終了",
+            "deadline": "2026-02-27",
+            "official_url": "https://ryugaku-nz.com/tobitate22026/",
+            "reasons": [
+              "締切（2026-02-27）を過ぎています"
+            ]
+          },
+          {
+            "name": "山村章育英奨学金",
+            "organization": "公益財団法人山村章奨学財団",
+            "status": "募集終了",
+            "deadline": "2026-05-31",
+            "official_url": "https://yamamura-scholarship.org/scholar.html",
+            "reasons": [
+              "締切（2026-05-31）を過ぎています"
+            ]
+          },
+          {
+            "name": "奨学生給付事業（大学3年生対象・理工科系）",
+            "organization": "公益財団法人中島記念国際交流財団",
+            "status": "未確認の候補",
+            "deadline": null,
+            "official_url": "",
+            "reasons": [
+              "運営団体の公式ページで募集要項を確認できませんでした。団体のサイトを直接確認してください"
+            ]
+          },
+          {
+            "name": "奨学生募集（理系学部3年生等対象）",
+            "organization": "公益財団法人COSINA奨学会",
+            "status": "未確認の候補",
+            "deadline": null,
+            "official_url": "",
+            "reasons": [
+              "公式ページの検索に失敗しました（ServerError）。団体のサイトを直接確認してください"
+            ]
+          }
+        ]
+      },
+      "agent": {
+        "by_status": {
+          "応募できる": 0,
+          "要確認": 0,
+          "募集終了": 10,
+          "目的が違う": 0,
+          "未確認の候補": 4,
+          "対象外": 0
+        },
+        "applicable_or_check": 0,
+        "stats": {
+          "queries": 6,
+          "hubs_read": 0,
+          "candidates": 14,
+          "verified": 10,
+          "from_cache": 1,
+          "discover_seconds": 46.9,
+          "discover_failed": 0,
+          "seconds": 140.0,
+          "truncated": true
+        },
+        "candidates_total": 14,
+        "listed": 14
+      },
+      "overlap": {
+        "both": 0,
+        "only_agent": 0,
+        "only_baseline": 0
+      },
+      "minutes": 4.1
+    },
+    "highschool": {
+      "profile": "高校3年生（学業・生活費）",
+      "baseline": {
+        "candidates": 3,
+        "checked": 3,
+        "by_status": {
+          "応募できる": 0,
+          "要確認": 1,
+          "募集終了": 2,
+          "対象外": 0,
+          "目的が違う": 0,
+          "未確認の候補": 0
+        },
+        "applicable_or_check": 1,
+        "items": [
+          {
+            "name": "貸与奨学金（第一種・第二種）（予約採用）",
+            "organization": "独立行政法人日本学生支援機構",
+            "status": "募集終了",
+            "deadline": "2026-02-27",
+            "official_url": "https://ryugaku-nz.com/tobitate22026/",
+            "reasons": [
+              "締切（2026-02-27）を過ぎています"
+            ]
+          },
+          {
+            "name": "埼玉県高等学校等奨学金",
+            "organization": "埼玉県教育委員会",
+            "status": "要確認",
+            "deadline": "2026-10-22",
+            "official_url": "https://www.pref.saitama.lg.jp/f2204/j-s/s-kyuhukin.html",
+            "reasons": [
+              "学年: 条件に合っています",
+              "地域: 条件に合っています",
+              "目的: 条件に合っています",
+              "あなたに当てはまるか確認してください: 児童養護施設入所措置費支給者は対象外"
+            ]
+          },
+          {
+            "name": "大学給付奨学金（予約型）",
+            "organization": "公益財団法人日本教育公務員弘済会 埼玉支部",
+            "status": "募集終了",
+            "deadline": "2026-09-30",
+            "official_url": "https://www.kyoko.or.jp/business/study/",
+            "reasons": [
+              "締切（2026-09-30）を過ぎています"
+            ]
+          }
+        ]
+      },
+      "agent": {
+        "by_status": {
+          "応募できる": 0,
+          "要確認": 3,
+          "募集終了": 9,
+          "目的が違う": 0,
+          "未確認の候補": 1,
+          "対象外": 1
+        },
+        "applicable_or_check": 3,
+        "stats": {
+          "queries": 5,
+          "hubs_read": 0,
+          "candidates": 16,
+          "verified": 13,
+          "from_cache": 16,
+          "discover_seconds": 0.2,
+          "discover_failed": 0,
+          "seconds": 1.3,
+          "truncated": false
+        },
+        "candidates_total": 16,
+        "listed": 13
+      },
+      "overlap": {
+        "both": 0,
+        "only_agent": 3,
+        "only_baseline": 1
+      },
+      "minutes": 0.1
+    },
+    "abroad": {
+      "profile": "東京大学・経済学部・大学3年（留学）",
+      "baseline": {
+        "candidates": 3,
+        "checked": 3,
+        "by_status": {
+          "応募できる": 0,
+          "要確認": 0,
+          "募集終了": 1,
+          "対象外": 0,
+          "目的が違う": 0,
+          "未確認の候補": 2
+        },
+        "applicable_or_check": 0,
+        "items": [
+          {
+            "name": "東京大学海外派遣奨学事業 短期・超短期海外留学等奨学金",
+            "organization": "国立大学法人東京大学",
+            "status": "未確認の候補",
+            "deadline": null,
+            "official_url": "",
+            "reasons": [
+              "公式ページの検索に失敗しました（ClientError）。団体のサイトを直接確認してください"
+            ]
+          },
+          {
+            "name": "官民協働海外留学支援制度～トビタテ！留学JAPAN 新・日本代表プログラム～【大学生等対象】",
+            "organization": "文部科学省・独立行政法人日本学生支援機構",
+            "status": "未確認の候補",
+            "deadline": null,
+            "official_url": "",
+            "reasons": [
+              "公式ページの検索に失敗しました（ClientError）。団体のサイトを直接確認してください"
+            ]
+          },
+          {
+            "name": "派遣留学奨学生（留学支援事業）",
+            "organization": "公益財団法人業務スーパージャパンドリーム財団",
+            "status": "募集終了",
+            "deadline": "2026-07-31",
+            "official_url": "https://www.kobebussan.or.jp/support/study_abroad.php",
+            "reasons": [
+              "締切（2026-07-31）を過ぎています"
+            ]
+          }
+        ]
+      },
+      "agent": {
+        "by_status": {
+          "応募できる": 0,
+          "要確認": 3,
+          "募集終了": 5,
+          "目的が違う": 0,
+          "未確認の候補": 2,
+          "対象外": 0
+        },
+        "applicable_or_check": 3,
+        "stats": {
+          "queries": 6,
+          "hubs_read": 0,
+          "candidates": 10,
+          "verified": 8,
+          "from_cache": 4,
+          "discover_seconds": 29.7,
+          "discover_failed": 0,
+          "seconds": 79.2,
+          "truncated": false
+        },
+        "candidates_total": 10,
+        "listed": 10
+      },
+      "overlap": {
+        "both": 0,
+        "only_agent": 3,
+        "only_baseline": 0
+      },
+      "minutes": 2.0
+    },
+    "graduate": {
+      "profile": "卒業後1年の社会人（研究・プロジェクト・活動）",
+      "baseline": {
+        "candidates": 2,
+        "checked": 2,
+        "by_status": {
+          "応募できる": 0,
+          "要確認": 1,
+          "募集終了": 0,
+          "対象外": 0,
+          "目的が違う": 1,
+          "未確認の候補": 0
+        },
+        "applicable_or_check": 1,
+        "items": [
+          {
+            "name": "孫正義育英財団 支援金（財団生募集）",
+            "organization": "公益財団法人孫正義育英財団",
+            "status": "目的が違う",
+            "deadline": null,
+            "official_url": "https://ryugaku.jasso.go.jp/scholarship/search/data_00165.html",
+            "reasons": [
+              "使途（留学）が、あなたの目的（プロジェクト・活動、研究）と違います"
+            ]
+          },
+          {
+            "name": "未踏IT人材発掘・育成事業",
+            "organization": "独立行政法人情報処理推進機構",
+            "status": "要確認",
+            "deadline": null,
+            "official_url": "https://www.ipa.go.jp/jinzai/mitou/it/about.html",
+            "reasons": [
+              "目的: 条件に合っています",
+              "その他の条件: 2026年4月1日時点で25歳未満",
+              "確認できなかった条件: 締切、対象学年、卒業後でも応募できるか、地域条件、学部・分野"
+            ]
+          }
+        ]
+      },
+      "agent": {
+        "by_status": {
+          "応募できる": 0,
+          "要確認": 2,
+          "募集終了": 5,
+          "目的が違う": 1,
+          "未確認の候補": 2,
+          "対象外": 0
+        },
+        "applicable_or_check": 2,
+        "stats": {
+          "queries": 6,
+          "hubs_read": 0,
+          "candidates": 10,
+          "verified": 8,
+          "from_cache": 3,
+          "discover_seconds": 46.7,
+          "discover_failed": 0,
+          "seconds": 114.6,
+          "truncated": false
+        },
+        "candidates_total": 10,
+        "listed": 10
+      },
+      "overlap": {
+        "both": 1,
+        "only_agent": 1,
+        "only_baseline": 0
+      },
+      "minutes": 2.4
+    }
+  }
+}
