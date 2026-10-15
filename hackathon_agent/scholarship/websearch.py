@@ -14,7 +14,7 @@ import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, timedelta
 from urllib.parse import urljoin, urlparse
 
 import httpx
@@ -31,6 +31,9 @@ logger = logging.getLogger(__name__)
 MODEL = extract.MODEL
 MAX_PAGE_CHARS = 40_000
 WORKERS = 16  # 照合の並列数（Gemini の応答が遅い日でも1回りで終わらせるため多め）
+NEGATIVE_TTL = timedelta(
+    hours=6
+)  # 「公式ページを確認できなかった」結果を覚えておく時間（後で見つかるかもしれないので短い）
 MAX_FAILED_TO_CACHE = 2  # 発見の検索が6本中この本数まで失敗しても、結果は共有キャッシュに保存する（Gemini の一時的な時間切れは珍しくないため）
 CACHE_VERSION = "v2"  # 抜き出し方を変えたら上げて、古いキャッシュを使わないようにする
 UNVERIFIED = "未確認の候補"
@@ -420,7 +423,20 @@ def cond_key(core: str, today: date) -> str:
     return f"web-{item_id(core)}-{today.year}-{CACHE_VERSION}"
 
 
-def check_candidate(core: str, cand: dict, profile: Profile, today: date, hit: dict | None = None) -> dict:
+def missing_key(core: str, today: date) -> str:
+    return f"webno-{item_id(core)}-{today.year}-{CACHE_VERSION}"
+
+
+def _unverified(base: dict, reason: str, sources: list[str] | None = None) -> dict:
+    return {**base, "status": UNVERIFIED, "reasons": [reason], "official_url": "", "sources": sources or []}
+
+
+NOT_FOUND = "運営団体の公式ページで募集要項を確認できませんでした。団体のサイトを直接確認してください"
+
+
+def check_candidate(
+    core: str, cand: dict, profile: Profile, today: date, hit: dict | None = None, known_missing: bool = False
+) -> dict:
     """1件の候補の公式ページを探して読み、判定する。公式ページを確認できなければ「未確認の候補」。"""
     name, org = cand["scholarship"], cand["organization"]
     base = {
@@ -436,6 +452,8 @@ def check_candidate(core: str, cand: dict, profile: Profile, today: date, hit: d
         hit = cache.get(key)
     if hit and hit.get("cond"):
         cond, sources = hit["cond"], hit.get("sources", [])
+    elif known_missing:  # 直近に探して見つからなかった候補は、すぐ「未確認」にする（毎回探し直さない）
+        return _unverified(base, NOT_FOUND)
     else:
         try:
             res = _grounded(
@@ -455,13 +473,8 @@ def check_candidate(core: str, cand: dict, profile: Profile, today: date, hit: d
         if cond is not None and (cond.get("period") or {}).get("quote_verified") is True:
             cache.put(key, {"cond": cond, "sources": sources})
     if cond is None:
-        return {
-            **base,
-            "status": UNVERIFIED,
-            "reasons": ["運営団体の公式ページで募集要項を確認できませんでした。団体のサイトを直接確認してください"],
-            "official_url": "",
-            "sources": sources,
-        }
+        cache.put(missing_key(core, today), {"missing": True})
+        return _unverified(base, NOT_FOUND, sources)
     j = judge(cond, profile, today)
     period = cond.get("period") or {}
     status = j.status
@@ -526,13 +539,19 @@ def search(profile: Profile, university: str, field_text: str, today: date, budg
         else:
             kept[core] = c
     ranked = sorted(kept.items(), key=lambda kv: -kv[1]["mentions"])
+
     # 確認済み（キャッシュあり）の候補はすぐ判定できるので先に処理し、照合の予算は未確認の分にだけ使う
+    def lookup(kc):
+        core = kc[0]
+        return cache.get(cond_key(core, today)), bool(cache.get(missing_key(core, today), ttl=NEGATIVE_TTL))
+
     with ThreadPoolExecutor(8) as reader:
-        hits = dict(
-            zip([k for k, _ in ranked], reader.map(lambda kc: cache.get(cond_key(kc[0], today)), ranked), strict=True)
-        )
-    cached = [(k, c) for k, c in ranked if (hits[k] or {}).get("cond")]
-    uncached = [(k, c) for k, c in ranked if not (hits[k] or {}).get("cond")]
+        looked_up = dict(zip([k for k, _ in ranked], reader.map(lookup, ranked), strict=True))
+    hits = {k: v[0] for k, v in looked_up.items()}
+    missing = {k for k, v in looked_up.items() if v[1] and not (v[0] or {}).get("cond")}
+    cached = [(k, c) for k, c in ranked if (hits[k] or {}).get("cond") or k in missing]
+    cached_keys = {k for k, _ in cached}
+    uncached = [(k, c) for k, c in ranked if k not in cached_keys]
     to_verify, over = cached + uncached[: budget.verify], uncached[budget.verify :]
 
     results: list[dict] = []
@@ -544,7 +563,9 @@ def search(profile: Profile, university: str, field_text: str, today: date, budg
             if budget.left() < 20:
                 skipped_time.append((core, c))
                 continue
-            futs.append((core, c, pool.submit(check_candidate, core, c, profile, today, hits.get(core))))
+            futs.append(
+                (core, c, pool.submit(check_candidate, core, c, profile, today, hits.get(core), core in missing))
+            )
         for core, c, fut in futs:
             try:
                 results.append(fut.result(timeout=max(5.0, budget.left())))

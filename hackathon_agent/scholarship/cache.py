@@ -24,7 +24,7 @@ def _db() -> firestore.Client:
     return _client
 
 
-def get(key: str) -> dict | None:
+def get(key: str, ttl: timedelta = TTL) -> dict | None:
     try:
         doc = _db().collection(COLLECTION).document(key).get()
     except Exception:
@@ -34,7 +34,7 @@ def get(key: str) -> dict | None:
         return None
     data = doc.to_dict() or {}
     saved = data.get("saved_at")
-    if saved and datetime.now(UTC) - saved > TTL:
+    if saved and datetime.now(UTC) - saved > ttl:
         return None
     return data.get("value")
 

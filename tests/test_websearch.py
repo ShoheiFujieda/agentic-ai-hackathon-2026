@@ -64,7 +64,7 @@ def _patch(monkeypatch, cond, page_text=PAGE, sources=None):
 @pytest.fixture(autouse=True)
 def _no_cache(monkeypatch):
     store = {}
-    monkeypatch.setattr(websearch.cache, "get", lambda key: store.get(key))
+    monkeypatch.setattr(websearch.cache, "get", lambda key, ttl=None: store.get(key))
     monkeypatch.setattr(websearch.cache, "put", lambda key, value: store.__setitem__(key, value))
     return store
 
@@ -225,7 +225,8 @@ def test_公式ページの確認結果は共有され_2回目は検索せず判
 def test_確認できなかった結果は共有しない(monkeypatch, _no_cache):
     _patch(monkeypatch, _cond(), page_text="")
     assert websearch.check_candidate("テスト財団", CAND, ME, TODAY)["status"] == websearch.UNVERIFIED
-    assert _no_cache == {}
+    # 共有するのは確認できた条件だけ。「見つからなかった」の印（短時間）以外は残さない
+    assert not any(k.startswith("web-") for k in _no_cache)
 
 
 def test_同じ条件の再検索は発見を使い回し_確認済みが積み上がる(monkeypatch):
@@ -309,3 +310,29 @@ def test_失敗が少なければ発見の結果をキャッシュする(monkeyp
     _patch(monkeypatch, _cond())
     websearch.search(ME, "筑波大学", "理工学群", TODAY, websearch.Budget(verify=1, seconds=60))
     assert any(k.startswith("webdisc-") for k in _no_cache)
+
+
+def test_公式ページが見つからなかった候補は短時間だけ覚えて_探し直さない(monkeypatch, _no_cache):
+    _patch(monkeypatch, _cond(), sources=[{"url": "https://shougakukin-note.com/a", "title": ""}])
+    assert websearch.check_candidate("テスト財団", CAND, ME, TODAY)["status"] == websearch.UNVERIFIED
+    assert any(k.startswith("webno-") for k in _no_cache)
+
+    def must_not_call(*a, **k):
+        raise AssertionError("探し直さないはず")
+
+    monkeypatch.setattr(websearch, "_grounded", must_not_call)
+    r = websearch.check_candidate("テスト財団", CAND, ME, TODAY, known_missing=True)
+    assert r["status"] == websearch.UNVERIFIED and r["reasons"] == [websearch.NOT_FOUND]
+
+
+def test_再検索では見つからなかった候補も待たずに未確認にする(monkeypatch):
+    found = [{"scholarship": "A", "organization": "公益財団法人テストA財団"}]
+    monkeypatch.setattr(websearch, "discover", lambda queries: (found, [], 0))
+    _patch(monkeypatch, _cond(), sources=[{"url": "https://shougakukin-note.com/a", "title": ""}])
+    first = websearch.search(ME, "筑波大学", "理工学群", TODAY, websearch.Budget(verify=1, seconds=60))
+    assert len(first["unverified"]) == 1
+
+    calls = []
+    monkeypatch.setattr(websearch, "_grounded", lambda prompt: calls.append(1) or {"text": "", "sources": []})
+    second = websearch.search(ME, "筑波大学", "理工学群", TODAY, websearch.Budget(verify=1, seconds=60))
+    assert not calls and len(second["unverified"]) == 1 and second["stats"]["from_cache"] == 1
