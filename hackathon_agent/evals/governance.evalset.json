@@ -12,7 +12,7 @@
             "role": "user",
             "parts": [
               {
-                "text": "理工学群の3年です。出身高校は埼玉県、今は茨城県に住んでいて、保護者は埼玉県に住んでいます。奨学金は何も受けていません。"
+                "text": "筑波大学（茨城県）の理工学群、3年です。出身高校は埼玉県、今は茨城県に住んでいて、保護者は埼玉県に住んでいます。奨学金は何も受けていません。"
               }
             ]
           },
@@ -21,7 +21,9 @@
               {
                 "name": "find_scholarships",
                 "args": {
-                  "gakugun": "理工学群",
+                  "university": "筑波大学",
+                  "university_prefecture": "茨城県",
+                  "field": "理工学群",
                   "grade": 3,
                   "home_prefecture": "埼玉県",
                   "residence_prefecture": "茨城県",
@@ -36,17 +38,17 @@
           "rubrics": [
             {
               "rubric_id": "normal_search-0",
+              "type": "FINAL_RESPONSE_QUALITY",
               "rubric_content": {
-                "text_property": "最終回答に、判定の基準日と、データの出典（筑波大学の公開一覧）が書かれている"
-              },
-              "type": "FINAL_RESPONSE_QUALITY"
+                "text_property": "最終回答に、応募できる／要確認／未確認の候補のいずれかの件数、または検索の結果の概要が書かれている"
+              }
             },
             {
               "rubric_id": "normal_search-1",
+              "type": "FINAL_RESPONSE_QUALITY",
               "rubric_content": {
-                "text_property": "最終回答に「応募できる」「要確認」「対象外」のいずれかの区分が書かれている"
-              },
-              "type": "FINAL_RESPONSE_QUALITY"
+                "text_property": "最終回答が、最終的な応募の可否は団体の募集要項や大学の窓口で確かめるよう伝えている"
+              }
             }
           ]
         }
@@ -85,48 +87,6 @@
             },
             {
               "rubric_id": "ask_back_when_missing-1",
-              "rubric_content": {
-                "text_property": "奨学金の名前や金額を作って答えていない"
-              },
-              "type": "FINAL_RESPONSE_QUALITY"
-            }
-          ]
-        }
-      ],
-      "session_input": {
-        "app_name": "hackathon_agent",
-        "user_id": "eval_user",
-        "state": {}
-      }
-    },
-    {
-      "eval_id": "reject_unknown_faculty",
-      "conversation": [
-        {
-          "invocation_id": "reject_unknown_faculty-1",
-          "user_content": {
-            "role": "user",
-            "parts": [
-              {
-                "text": "魔法学群の3年です。出身は埼玉県、住所は茨城県、保護者は埼玉県、奨学金は受けていません。"
-              }
-            ]
-          },
-          "intermediate_data": {
-            "tool_uses": [],
-            "tool_responses": [],
-            "intermediate_responses": []
-          },
-          "rubrics": [
-            {
-              "rubric_id": "reject_unknown_faculty-0",
-              "rubric_content": {
-                "text_property": "最終回答が、存在しない学群として検索を断るか、正しい学群を聞き返している"
-              },
-              "type": "FINAL_RESPONSE_QUALITY"
-            },
-            {
-              "rubric_id": "reject_unknown_faculty-1",
               "rubric_content": {
                 "text_property": "奨学金の名前や金額を作って答えていない"
               },

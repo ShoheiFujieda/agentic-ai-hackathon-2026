@@ -63,6 +63,9 @@ def test_robotstxtで禁止されたページは取得しない(monkeypatch):
     parser = RobotFileParser()
     parser.parse(["User-agent: *", "Disallow: /*.pdf$", "Disallow: /private/"])
     monkeypatch.setitem(web._robots, "https://example.ac.jp", (float("inf"), parser))
+    monkeypatch.setattr(
+        web, "check_public", lambda url: None
+    )  # ダミーの名前は解決できないので、公開アドレスの確認は省く
     assert not web.allowed("https://example.ac.jp/private/a.html")
     assert web.allowed("https://example.ac.jp/public/a.html")
     try:

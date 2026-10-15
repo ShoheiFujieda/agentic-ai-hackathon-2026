@@ -5,7 +5,9 @@ from types import SimpleNamespace
 from hackathon_agent.governance import guard
 
 OK = {
-    "gakugun": "理工学群",
+    "university": "筑波大学",
+    "university_prefecture": "茨城県",
+    "field": "理工学群",
     "grade": 2,
     "home_prefecture": "埼玉県",
     "residence_prefecture": "茨城県",
@@ -28,7 +30,10 @@ def test_正しいプロフィールは通す():
 
 
 def test_許可リストにない値は止める():
-    assert "学群名" in _check(gakugun="工学部")
+    assert "大学の所在地" in _check(university_prefecture="つくば市")
+    assert "大学名" in _check(university="")
+    assert "大学名" in _check(university="あ" * 51)
+    assert "学部・分野" in _check(field="  ")
     assert "都道府県名" in _check(residence_prefecture="つくば市")
     assert "受給中" in _check(receiving=["ガクシー"])
 

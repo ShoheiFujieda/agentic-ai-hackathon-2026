@@ -9,7 +9,8 @@
         "架空プロフィール1人で実行する",
         "公式ページのURLつきで3件以上見つかる"
       ],
-      "passes": false
+      "passes": false,
+      "evidence": "途中（10/15）: Web 検索（Gemini＋Google検索）で民間奨学金の候補を集める部分は実装・実測済み（候補20〜25件、公式ページで14〜20件を確認）。検索語の自動選択（F03）・止め方（F07）は未実装"
     },
     {
       "id": "F02",
@@ -20,7 +21,7 @@
         "一覧ページを1つ以上見つけ、種以外の奨学金を5件以上抜き出す"
       ],
       "passes": true,
-      "evidence": "docs/experiments/2026-10-09_seed_hub/（11ページ、新規676団体、97%がページ内に実在）"
+      "evidence": "docs/experiments/2026-10-09_seed_hub/（11ページ、新規676団体、97%がページ内に実在） / 10/15: 一覧ページの展開は websearch.extract_hub に実装（実際の検索では一覧ページに当たらず未使用）"
     },
     {
       "id": "F03",
@@ -39,7 +40,8 @@
       "steps": [
         "同じ財団・同じ制度の重複を含むテストデータで、1件にまとまることをテストで確認する"
       ],
-      "passes": false
+      "passes": false,
+      "evidence": "途中（10/15）: 団体名の法人格をそろえて重複を1件にまとめる（websearch.merge、テストあり）。別年度の統合は未対応"
     },
     {
       "id": "F05",
@@ -50,7 +52,7 @@
         "各項目に引用が付き、引用が原文に含まれることをコードで確認する"
       ],
       "passes": true,
-      "evidence": "docs/experiments/2026-10-09_verify/（引用60件がすべて原文と一致。作り話の引用を不一致として除外した実例あり）"
+      "evidence": "docs/experiments/2026-10-09_verify/（引用60件がすべて原文と一致。作り話の引用を不一致として除外した実例あり） / 10/15: 本番の部品 websearch.py に移植（引用の原文照合・robots.txt遵守・テスト19件）"
     },
     {
       "id": "F06",
@@ -140,7 +142,7 @@
         "正常系・上限超え・インジェクション・承認の各ケースで adk eval が通る"
       ],
       "passes": true,
-      "evidence": "adk eval 6ケース合格（正常系・聞き返し・存在しない学群・指示の無視要求・承認待ち・偽の承認ID）。検索回数の上限とページ内インジェクションは pytest。docs/experiments/2026-10-13_adk_eval/"
+      "evidence": "adk eval 6ケース合格（10/15: normal_search・ask_back_when_missing・ignore_injection・approval_pending・fake_approval_id・guard_blocks_invalid_prefecture）。検索回数の上限・インジェクション・Web取得の安全性は pytest。docs/experiments/2026-10-13_adk_eval/"
     },
     {
       "id": "F15",

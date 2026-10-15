@@ -49,20 +49,6 @@ def _entry(i, org, deadline, fy=2025):
     return tsukuba.Entry(i, fy, "学群", "給与", f"{org} 2025.9.1掲載", deadline, "民間奨学団体", f"https://x/{i}")
 
 
-def test_今月が例年の締切月ならまもなく():
-    entries = [_entry(1, "（公財）十月財団", date(2025, 10, 20))]
-    items = service._calendar(entries, ME, set(), date(2026, 10, 9), open_now=set())
-    assert items[0]["months_until"] == 0
-    assert items[0]["prepare_from"] == "今すぐ"
-
-
-def test_経済や医療を含む一般の財団名はカレンダーから消さない():
-    entries = [_entry(1, "（一社）○○経済同友会", date(2026, 4, 20)), _entry(2, "（公財）○○美術財団", date(2026, 4, 20))]
-    names = [x["organization"] for x in service._calendar(entries, ME, set(), date(2026, 10, 9), open_now=set())]
-    assert "（一社）○○経済同友会" in names
-    assert "（公財）○○美術財団" not in names
-
-
 def test_例年の締切月は団体名の完全一致で数える():
     entries = [_entry(1, "X財団", date(2025, 4, 1)), _entry(2, "X財団記念会", date(2025, 11, 1))]
     assert tsukuba.typical_months(entries, "X財団") == [4]
@@ -91,7 +77,9 @@ def test_監査ログが書けず中止した検索は回数に数えない(monk
     monkeypatch.setattr(guard.audit, "record", lambda **kw: False)
     ctx = SimpleNamespace(state={}, user_id="u", session=SimpleNamespace(id="s"), function_call_id="f")
     args = {
-        "gakugun": "情報学群",
+        "university": "筑波大学",
+        "university_prefecture": "茨城県",
+        "field": "情報学群",
         "grade": 2,
         "home_prefecture": "埼玉県",
         "residence_prefecture": "茨城県",
@@ -103,13 +91,31 @@ def test_監査ログが書けず中止した検索は回数に数えない(monk
     assert ctx.state.get("search_count", 0) == 0
 
 
+ARGS = ("筑波大学", "茨城県", "情報学群", 2, "埼玉県", "茨城県", "埼玉県", [])
+EMPTY_WEB = {
+    "eligible": [],
+    "needs_check": [],
+    "unverified": [],
+    "closed": [],
+    "ineligible_count": 0,
+    "stats": {"queries": 1},
+}
+
+
+def _find(*args):
+    import asyncio
+
+    return asyncio.run(tools.find_scholarships(*args, tool_context=None))
+
+
 def test_取得に失敗してもツールは例外を投げずerrorを返す(monkeypatch):
     def boom(*a, **kw):
         raise web.FetchError("取得できませんでした")
 
     monkeypatch.setattr(tools.service, "find", boom)
+    monkeypatch.setattr(tools.websearch, "search", boom)
     monkeypatch.setattr(tools.service, "detail", boom)
-    r = tools.find_scholarships("情報学群", 2, "埼玉県", "茨城県", "埼玉県", [], tool_context=None)
+    r = _find(*ARGS)
     assert r["status"] == "error"
     assert tools.get_scholarship_detail(1, tool_context=None)["status"] == "error"
 
@@ -125,5 +131,42 @@ def test_内部エラーを一覧の取得失敗と取り違えない(monkeypatc
         raise KeyError("x")
 
     monkeypatch.setattr(tools.service, "find", boom)
-    r = tools.find_scholarships("情報学群", 2, "埼玉県", "茨城県", "埼玉県", [], tool_context=None)
-    assert "内部エラー" in r["reason"]
+    monkeypatch.setattr(tools.websearch, "search", boom)
+    assert "内部エラー" in _find(*ARGS)["reason"]
+
+
+def test_Web検索だけ失敗しても大学の一覧の結果は返し_失敗を伝える(monkeypatch):
+    def boom(*a, **kw):
+        raise RuntimeError("down")
+
+    listed = {"eligible": [], "needs_check": [], "ineligible": [], "excluded_by_name": [], "not_checked_over_limit": 0}
+    monkeypatch.setattr(tools.websearch, "search", boom)
+    monkeypatch.setattr(tools.service, "find", lambda profile, day: listed)
+    r = _find(*ARGS)
+    assert r["status"] == "ok" and any("Web 全体の検索はできませんでした" in n for n in r["notes"])
+
+
+def test_筑波大学以外では大学の一覧を使わない(monkeypatch):
+    called = []
+    monkeypatch.setattr(tools.service, "find", lambda *a: called.append(1))
+    monkeypatch.setattr(tools.websearch, "search", lambda *a, **k: EMPTY_WEB)
+    r = _find("東京大学", "東京都", "工学部", 2, "埼玉県", "東京都", "埼玉県", [])
+    assert r["status"] == "ok" and not called and r["searched"]["university_list"] is None
+
+
+def test_大学の一覧にある団体はWebの結果より優先し重複させない(monkeypatch):
+    web_item = {"id": "w1", "name": "X", "organization": "公益財団法人テスト財団", "source": "Web検索", "reasons": []}
+    web = {**EMPTY_WEB, "eligible": [web_item]}
+    listed_row = {
+        "id": 5,
+        "organization": "（公財）テスト財団",
+        "status": "応募できる",
+        "reasons": [],
+        "deadline": "2026-11-01",
+        "url": "https://u/5",
+    }
+    listed = {"eligible": [listed_row], "needs_check": [], "ineligible": [], "excluded_by_name": [], "x": 0}
+    monkeypatch.setattr(tools.websearch, "search", lambda *a, **k: web)
+    monkeypatch.setattr(tools.service, "find", lambda profile, day: listed)
+    r = _find(*ARGS)
+    assert [i["source"] for i in r["eligible"]] == ["筑波大学の公開一覧"]

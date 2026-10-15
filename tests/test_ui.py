@@ -76,14 +76,78 @@ def test_利用者向けサイトもHTMLとして解釈しない書き方にな�
     assert "eval(" not in html
 
 
-def test_サイトの選択肢が本体の許可リストと一致している():
+def test_サイトの都道府県の選択肢が本体の許可リストと一致している():
     import re
 
     from hackathon_agent.scholarship.prefilter import PREFECTURES
-    from hackathon_agent.tools import FACULTY_KEYWORDS
 
     html = (Path("ui") / "site.html").read_text(encoding="utf-8")
-    gakugun = re.search(r"const GAKUGUN = \[(.*?)\];", html, re.S).group(1)
-    assert re.findall(r'"([^"]+)"', gakugun) == list(FACULTY_KEYWORDS)
     pref = re.search(r'const PREF = "(.*?)"\.split', html, re.S).group(1).split(" ")
     assert set(pref) == set(PREFECTURES)
+
+
+def test_準備カレンダーは画面にもAPIにもない(user):
+    s = client.get("/api/state", params={"user_id": user}).json()
+    assert "calendar" not in s
+    for name in ("site.html", "index.html"):
+        assert "カレンダー" not in (Path("ui") / name).read_text(encoding="utf-8")
+
+
+# ---------- 保存リスト ----------
+ITEM = {
+    "id": "abc123",
+    "name": "テスト財団奨学金",
+    "organization": "公益財団法人テスト財団",
+    "status": "応募できる",
+    "deadline": "2026-11-30",
+    "amount": "年額 480,000円（給付）",
+    "route": "直接応募",
+    "reasons": ["確認できました"],
+    "official_url": "https://example.org/x",
+    "source": "Web検索",
+}
+
+
+def test_保存して一覧とCSVで取り出せる(user):
+    r = client.post("/api/saved", json={"user_id": user, "items": [ITEM]}, headers=SAME)
+    assert r.json() == {"ok": True, "count": 1}
+    assert [i["name"] for i in client.get("/api/saved", params={"user_id": user}).json()["items"]] == [
+        "テスト財団奨学金"
+    ]
+    csv_body = client.get("/api/saved.csv", params={"user_id": user}).content.decode("utf-8-sig")
+    assert "テスト財団奨学金" in csv_body and "公式ページ" in csv_body.splitlines()[0]
+    # 同じ項目をもう一度保存しても重複しない
+    client.post("/api/saved", json={"user_id": user, "items": [ITEM]}, headers=SAME)
+    assert len(client.get("/api/saved", params={"user_id": user}).json()["items"]) == 1
+    # 外すと消える。他のユーザーのものは見えない
+    assert client.get("/api/saved", params={"user_id": "x-" + user}).json()["items"] == []
+    client.delete(f"/api/saved/{ITEM['id']}", params={"user_id": user}, headers=SAME)
+    assert client.get("/api/saved", params={"user_id": user}).json()["items"] == []
+
+
+def test_保存は同じオリジンからだけ受け付ける(user):
+    body = {"user_id": user, "items": [ITEM]}
+    assert client.post("/api/saved", json=body).status_code == 403
+    assert client.post("/api/saved", json=body, headers={"Origin": "https://evil.example.com"}).status_code == 403
+    assert client.delete(f"/api/saved/{ITEM['id']}", params={"user_id": user}).status_code == 403
+
+
+def test_保存の入力は検証される(user):
+    too_long = {**ITEM, "name": "あ" * 201}
+    assert client.post("/api/saved", json={"user_id": user, "items": [too_long]}, headers=SAME).status_code == 422
+    assert client.post("/api/saved", json={"user_id": user, "items": []}, headers=SAME).status_code == 422
+
+
+def test_https以外のURLは保存しない(user):
+    bad = {**ITEM, "official_url": "javascript:alert(1)"}
+    client.post("/api/saved", json={"user_id": user, "items": [bad]}, headers=SAME)
+    assert client.get("/api/saved", params={"user_id": user}).json()["items"][0]["official_url"] == ""
+    client.delete(f"/api/saved/{ITEM['id']}", params={"user_id": user}, headers=SAME)
+
+
+def test_CSVは式として実行されないようにする(user):
+    evil = {**ITEM, "name": '=HYPERLINK("http://evil")', "organization": "+cmd"}
+    client.post("/api/saved", json={"user_id": user, "items": [evil]}, headers=SAME)
+    body = client.get("/api/saved.csv", params={"user_id": user}).content.decode("utf-8-sig")
+    assert "'=HYPERLINK" in body and "'+cmd" in body
+    client.delete(f"/api/saved/{ITEM['id']}", params={"user_id": user}, headers=SAME)

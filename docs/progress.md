@@ -31,6 +31,7 @@
 
 - **人間の承認（10/13）**：対象は共有データへの書き込み、承認者は依頼した本人（10/14に管理者案から変更。`DESIGN_SPEC.md` 3.5、`docs/research/2026-10-13_human_approval.md`）。ツール `register_shared_scholarship`（高リスク）を実装。承認のテスト10件（`tests/test_shared_write.py`）、pytest は計77件
 - **管理画面（10/14）**：`ui/`（FastAPI＋1枚のHTML）。承認待ちの承認／却下、承認の履歴と所要時間、監査ログ、来年の準備カレンダー。起動は `uv run uvicorn ui.app:app --port 9100`。同一オリジンのPOSTのみ・本人のみ承認・Web由来の文字列はテキスト表示。テスト6件（`tests/test_ui.py`）。**公開前に IAP などの認証が必要**
+- **検索特化・汎用化（10/15、ユーザー指示。`DESIGN_SPEC.md` 3.9）**：準備カレンダーを廃止し、Web 全体（Gemini＋Google検索）で民間奨学金まで探して一覧にする。`scholarship/websearch.py`（発見6通り→一覧ページ展開→重複統合→公式ページで照合→コード判定。上限: 検索6回・照合16件・約140秒。超えた分は「未確認の候補」）。大学名・大学の所在地・分野を自由入力に（筑波大学なら公開一覧も併用）。結果は画面の表で出し、本人の保存リスト（Firestore `saved_scholarships`）に保存・CSV 出力。発見の結果と抜き出した条件は共有キャッシュ（同じ条件の再検索は速くなる）。実測: 初回 約150秒、再検索 約40〜70秒。Gemini の混雑が今日は目立つ。テスト145件（コードレビュー10件を修正）。`adk eval` は6ケース合格。内訳: normal_search、ask_back、ignore_injection（governance）と approval_pending、fake_approval_id、guard_blocks_invalid_prefecture（approval）
 - **利用者向けサイト（10/15）**：`ui/site.html` を `/` に出し、ADK の開発者向け画面は本番から外した（`main.py` の `web=False`。ローカルの開発は `adk web` のまま）。プロフィール入力フォーム、会話（`/run_sse` の逐次受信、処理中の進捗表示、安全な Markdown 表示）、チャット内の承認カード（本人が承認すると続きを自動送信。生成中に押しても順番待ちにする）、サイドパネル（カレンダー・承認待ち・操作の記録）。ローカルと本番（HTTP）で通し確認済み。テスト99件。公開（allUsers の run.invoker）に切り替え済みで、未認証は401
 - **デプロイ（10/14）**：リビジョン `hackathon-agent-00003-c4l`（最大インスタンス1、`APP_USER=tester`、`APP_PASSWORD` は Secret Manager から注入、まだ未認証の呼び出しは許可していない＝IAM で非公開）。Dockerfile は Cloud Build で成功。本番で検索19秒、承認→実行、監査ログ、未認証401／誤った認証401／403を確認。公開前の確認は `X-Serverless-Authorization: Bearer $(gcloud auth print-identity-token)` を付ける（`Authorization` は Basic 認証が使うため）。サービス全体の `maxScale` 注釈は20のまま（リビジョンは1）
 - **デプロイの準備（10/14、ローカルのみ）**：`main.py`（ADK の会話画面 `/` と管理画面 `/admin/` を1サービスに）、`ui/auth.py`（Basic 認証。未設定は全拒否）、`Dockerfile`、`.gcloudignore` の追加。構成は `DESIGN_SPEC.md` 3.7。ローカルで `APP_USER=… APP_PASSWORD=… uv run uvicorn main:app --port 8080` を起動し、認証なしは全経路401、会話は約42秒、承認→実行まで確認。認証のテスト13件、pytest は計97件。**Secret Manager（10/14）**：API を有効化し、秘密 `scholarship-app-password`（24文字、版1）を作成済み。値は Cloud Console の Secret Manager で確認する（ログイン用のユーザー名 `APP_USER` は環境変数で渡す）。専用SA `hackathon-agent-sa` に、この秘密だけの `secretAccessor` を付与済み。ユーザー名は `tester`。**Dockerfile は Docker が無く未検証（Cloud Build で初めて確かめる）**
@@ -75,3 +76,4 @@
 | 10/14 | Cloud Run へデプロイ（リビジョン00003）、本番で通しの確認（検索・承認・監査ログ） | 約20分 |
 | 10/14 | ローカルでユーザーが試用（会話画面・管理画面）。残ったデータなし。改善ポイントは後で共有予定 | — |
 | 10/15 | 公開へ切り替え、利用者向けの統合サイト（フォーム・会話・承認カード・サイドパネル）を作成しローカルで通し確認 | 約1.5時間 |
+| 10/15 | 方針変更（検索特化・汎用化）: Web 全体の検索、結果の表・保存・CSV、カレンダー廃止、キャッシュ、テスト124件、評価ケースの更新 | 約3時間 |

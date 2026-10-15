@@ -79,6 +79,18 @@
   .empty { color: var(--muted); font-size: 14px; margin: 4px 0; }
   .scrollbox { max-height: 280px; overflow-y: auto; }
   .small { font-size: 12px; color: var(--muted); }
+  .results { align-self: stretch; }
+  .item { border-top: 1px solid var(--line); padding: 10px 0; }
+  .item:first-of-type { border-top: 0; }
+  .item .title { font-weight: 600; overflow-wrap: anywhere; }
+  .item .meta { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; margin: 2px 0; font-size: 13px; color: var(--muted); }
+  .item ul { margin: 4px 0 4px 1.2em; padding: 0; font-size: 13px; }
+  .item .acts { display: flex; gap: 10px; align-items: center; margin-top: 4px; }
+  .item button { padding: 2px 12px; font-size: 13px; }
+  .rhead { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+  details.sec { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 8px; }
+  details.sec > summary { cursor: pointer; font-weight: 600; font-size: 15px; }
+  details.sec > p.small { margin: 2px 0 6px; }
   a { color: var(--accent); }
   footer { max-width: 1160px; margin: 0 auto; padding: 0 16px 28px; color: var(--muted); font-size: 12px; }
 </style>
@@ -86,17 +98,19 @@
 <body>
 <header>
   <h1>奨学金エージェント</h1>
-  <span class="tagline">応募できる奨学金を、期限に間に合ううちに。</span>
+  <span class="tagline">民間まで含めて、応募できる奨学金を漏れなく探す。</span>
 </header>
 
 <div class="layout">
   <main>
     <section class="card" id="profile" aria-labelledby="h-prof">
       <h2 id="h-prof">あなたの条件</h2>
-      <p class="sub">筑波大学の学群生向けです。入力した内容だけを使って、応募資格をコードで判定します。</p>
+      <p class="sub">民間財団・企業・自治体の奨学金まで、Web から探します。入力した内容だけを使って、応募資格をコードで判定します。</p>
       <form id="form">
         <div class="grid">
-          <div><label for="gakugun">学群</label><select id="gakugun" required></select></div>
+          <div><label for="uni">大学名</label><input type="text" id="uni" maxlength="50" placeholder="例: 筑波大学" autocomplete="off" required></div>
+          <div><label for="upref">大学の所在地</label><select id="upref" required></select></div>
+          <div><label for="fld">学部・学群・分野</label><input type="text" id="fld" maxlength="50" placeholder="例: 理工学群" autocomplete="off" required></div>
           <div><label for="grade">学年</label><select id="grade" required></select></div>
           <div><label for="home">出身高校の所在地</label><select id="home" required></select></div>
           <div><label for="res">今住んでいる都道府県</label><select id="res" required></select></div>
@@ -131,10 +145,10 @@
   </main>
 
   <aside class="side" aria-label="関連する情報">
-    <section class="card" aria-labelledby="h-cal">
-      <h2 id="h-cal">来年の準備カレンダー</h2>
-      <p class="sub" id="cal-sub">探したあとに表示されます。</p>
-      <div class="scrollbox" id="calendar"></div>
+    <section class="card" aria-labelledby="h-sv">
+      <h2 id="h-sv">保存した一覧</h2>
+      <p class="sub">結果の「保存」で、ここに溜まります。 <a href="/admin/api/saved.csv?user_id=user" id="csv">CSV でダウンロード</a></p>
+      <div class="scrollbox" id="saved"></div>
     </section>
     <section class="card" aria-labelledby="h-ap">
       <h2 id="h-ap">承認待ち</h2>
@@ -148,15 +162,14 @@
     </section>
   </aside>
 </div>
-<footer>判定の出典は筑波大学の公開一覧です。最終的な応募の可否は、各団体の募集要項と大学の窓口で確かめてください。</footer>
+<footer>判定は、各団体の公式ページの募集要項（引用を原文と照合）をもとに、コードで行っています。最終的な応募の可否は、各団体の募集要項と大学の窓口で確かめてください。</footer>
 
 <script>
 const $ = (id) => document.getElementById(id);
 const el = (tag, text, cls) => { const e = document.createElement(tag); if (text !== undefined) e.textContent = text; if (cls) e.className = cls; return e; };
 const USER = "user", APP = "hackathon_agent";
-const GAKUGUN = ["人文・文化学群", "社会・国際学群", "人間学群", "生命環境学群", "理工学群", "情報学群", "医学群", "体育専門学群", "芸術専門学群"];
 const PREF = "北海道 青森県 岩手県 宮城県 秋田県 山形県 福島県 茨城県 栃木県 群馬県 埼玉県 千葉県 東京都 神奈川県 新潟県 富山県 石川県 福井県 山梨県 長野県 岐阜県 静岡県 愛知県 三重県 滋賀県 京都府 大阪府 兵庫県 奈良県 和歌山県 鳥取県 島根県 岡山県 広島県 山口県 徳島県 香川県 愛媛県 高知県 福岡県 佐賀県 長崎県 熊本県 大分県 宮崎県 鹿児島県 沖縄県".split(" ");
-const STEP = { find_scholarships: "筑波大学の公開一覧から、条件に合う奨学金を探しています（初回は数十秒かかります）", get_scholarship_detail: "詳細ページを確認しています", register_shared_scholarship: "共有データへの登録を確認しています" };
+const STEP = { find_scholarships: "Web 全体（民間財団・企業・自治体）と大学の一覧から、条件に合う奨学金を探しています（1〜2分かかります）", get_scholarship_detail: "詳細ページを確認しています", register_shared_scholarship: "共有データへの登録を確認しています" };
 const DECISION = { allowed: ["許可", "ok"], executed: ["実行", "ok"], pending: ["承認待ち", "warn"], blocked: ["停止", "bad"], approved: ["承認", "ok"], rejected: ["却下", "bad"] };
 
 let sid = null, busy = false;
@@ -167,7 +180,7 @@ function fill(sel, items, ph) {
   if (ph) { const o = el("option", ph); o.value = ""; s.append(o); }
   for (const x of items) { const o = el("option", String(x)); o.value = x; s.append(o); }
 }
-fill("gakugun", GAKUGUN, "選んでください");
+fill("upref", PREF, "選んでください");
 fill("grade", [1, 2, 3, 4, 5, 6], "選んでください");
 for (const id of ["home", "res", "guard"]) fill(id, PREF, "選んでください");
 
@@ -247,7 +260,8 @@ async function send(text) {
         } else if (p.functionResponse) {
           const res = p.functionResponse.response || {};
           done();
-          if (res.status === "pending" && res.approval_id) addApproval(res.approval_id, p.functionResponse.name);
+          if (p.functionResponse.name === "find_scholarships" && res.status === "ok") renderResults(res);
+          else if (res.status === "pending" && res.approval_id) addApproval(res.approval_id, p.functionResponse.name);
           else if (res.status === "blocked") addStatus("安全のため止めました：" + (res.reason || ""), "stop");
           status = addStatus("結果をまとめています");
         } else if (p.text && !p.thought && ev.content.role !== "user") {
@@ -290,13 +304,102 @@ function showChat() {
 $("form").addEventListener("submit", (e) => {
   e.preventDefault();
   const rec = [...document.querySelectorAll("#receiving input:checked")].map(i => i.value);
-  const msg = `${$("gakugun").value}の${$("grade").value}年です。出身高校は${$("home").value}、今は${$("res").value}に住んでいて、保護者は${$("guard").value}に住んでいます。` + (rec.length ? `今受けている奨学金は${rec.join("、")}です。` : "奨学金は何も受けていません。");
+  const msg = `${$("uni").value.trim()}（${$("upref").value}）の${$("fld").value.trim()}、${$("grade").value}年です。出身高校は${$("home").value}、今は${$("res").value}に住んでいて、保護者は${$("guard").value}に住んでいます。` + (rec.length ? `今受けている奨学金は${rec.join("、")}です。` : "奨学金は何も受けていません。");
   showChat(); send(msg);
 });
-$("sample").onclick = () => { $("gakugun").value = "理工学群"; $("grade").value = "3"; $("home").value = "埼玉県"; $("res").value = "茨城県"; $("guard").value = "埼玉県"; };
+$("sample").onclick = () => { $("uni").value = "筑波大学"; $("upref").value = "茨城県"; $("fld").value = "理工学群"; $("grade").value = "3"; $("home").value = "埼玉県"; $("res").value = "茨城県"; $("guard").value = "埼玉県"; };
 $("composer").addEventListener("submit", (e) => { e.preventDefault(); const t = $("text").value.trim(); if (!t) return; $("text").value = ""; send(t); });
 $("text").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); $("composer").requestSubmit(); } });
 $("reset").onclick = () => { if (busy) return; queue.length = 0; sid = null; log.replaceChildren(); $("chat").hidden = true; $("profile").hidden = false; refresh(); window.scrollTo({ top: 0 }); };
+
+/* ---------- 結果の一覧と保存 ---------- */
+const SECTIONS = [["eligible", "応募できる"], ["needs_check", "要確認"], ["unverified", "未確認の候補"], ["closed", "募集終了"]];
+const NOTE = { eligible: "公式ページの募集要項で、すべての条件を確認できたものです。", needs_check: "条件の一部が確認できていません。理由の項目を、公式ページで確かめてください。", unverified: "見つけましたが、運営団体の公式ページで募集要項を確認できていないものです。団体のサイトで確かめてください。", closed: "締切を過ぎているものです。来年の参考になります。" };
+function officialLink(url) {
+  if (typeof url !== "string" || !url.startsWith("https://")) return null;
+  const a = el("a", "公式ページ"); a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer"; return a;
+}
+function itemRow(it, label) {
+  const row = el("div", undefined, "item");
+  row.append(el("div", it.name, "title"));
+  const meta = el("div", undefined, "meta");
+  if (it.organization && it.organization !== it.name) meta.append(it.organization);
+  if (it.deadline) meta.append(el("span", "締切 " + it.deadline, "badge" + (label === "応募できる" ? " ok" : "")));
+  if (it.amount) meta.append(el("span", it.amount, "badge"));
+  if (it.route && it.route !== "不明") meta.append(el("span", it.route, "badge"));
+  if (it.source) meta.append(el("span", it.source, "badge"));
+  row.append(meta);
+  if (it.reasons && it.reasons.length) {
+    const ul = el("ul"); for (const r of it.reasons.slice(0, 2)) ul.append(el("li", r));
+    if (it.reasons.length > 2) ul.append(el("li", "ほか " + (it.reasons.length - 2) + " 件の確認事項"));
+    row.append(ul);
+  }
+  const acts = el("div", undefined, "acts");
+  const link = officialLink(it.official_url); if (link) acts.append(link);
+  const b = el("button", "保存"); b.type = "button";
+  b.onclick = async () => { b.disabled = true; const ok = await saveItems([[it, label]]); b.textContent = ok ? "保存済み" : "保存できませんでした"; if (!ok) b.disabled = false; };
+  acts.append(b); row.append(acts);
+  return row;
+}
+function renderResults(res) {
+  const card = el("div", undefined, "card results");
+  const head = el("div", undefined, "rhead");
+  head.append(el("h2", "検索結果"));
+  card.append(head);
+  const w = (res.searched && res.searched.web) || {};
+  const how = [];
+  if (w.queries) how.push("Web を " + w.queries + " 通りの検索で探し、候補 " + w.candidates + " 件のうち " + w.verified + " 件を公式ページで確認");
+  if (res.searched && res.searched.university_list) how.push(res.searched.university_list + "も確認");
+  card.append(el("p", "基準日 " + res.today + "。" + how.join("。") + (w.seconds ? "（" + Math.round(w.seconds) + "秒）" : "") + "。", "sub"));
+  for (const n of res.notes || []) card.append(el("p", n, "error"));
+  const all = [];
+  let total = 0;
+  for (const [key, label] of SECTIONS) {
+    const list = res[key] || [];
+    if (!list.length) continue;
+    total += list.length;
+    const box = el("details", undefined, "sec");
+    if (key === "eligible" || key === "needs_check") box.open = true;
+    box.append(el("summary", label + "（" + list.length + "件）"));
+    box.append(el("p", NOTE[key], "small"));
+    for (const it of list) { box.append(itemRow(it, label)); if (key !== "closed") all.push([it, label]); }
+    card.append(box);
+  }
+  if (!total) card.append(el("p", "条件に合う候補は見つかりませんでした。", "empty"));
+  if (res.ineligible_count) card.append(el("p", "条件に合わず対象外と判定したもの: " + res.ineligible_count + "件", "small"));
+  if (all.length) {
+    const b = el("button", "表示中の " + all.length + " 件をすべて保存", "primary"); b.type = "button";
+    b.onclick = async () => { b.disabled = true; const ok = await saveItems(all); b.textContent = ok ? "保存しました" : "保存できませんでした"; if (!ok) b.disabled = false; };
+    head.append(b);
+  }
+  log.append(card); reveal(card, "start");
+}
+async function saveItems(pairs) {
+  const items = pairs.map(([it, label]) => ({
+    id: String(it.id), name: String(it.name || it.organization).slice(0, 200), organization: String(it.organization || "").slice(0, 200), status: label,
+    deadline: it.deadline || null, amount: it.amount ? String(it.amount).slice(0, 60) : null, route: it.route || null,
+    reasons: (it.reasons || []).slice(0, 6).map(r => String(r).slice(0, 200)), official_url: it.official_url || "", source: String(it.source || "").slice(0, 40)
+  }));
+  try {
+    const r = await fetch("/admin/api/saved", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ user_id: USER, items }) });
+    if (!r.ok) return false;
+    loadSaved(); return true;
+  } catch (e) { return false; }
+}
+async function loadSaved() {
+  let d; try { const r = await fetch("/admin/api/saved?user_id=" + USER); if (!r.ok) throw 0; d = await r.json(); } catch (e) { return; }
+  const box = $("saved"); box.replaceChildren();
+  if (!d.items.length) { box.append(el("p", "まだ保存していません。", "empty")); return; }
+  for (const it of d.items) {
+    const row = el("div", undefined, "row");
+    row.append(el("span", it.name, "name"), el("span", it.status, "badge" + (it.status === "応募できる" ? " ok" : it.status === "要確認" ? " warn" : "")));
+    if (it.deadline) row.append(el("span", it.deadline, "small"));
+    const link = officialLink(it.official_url); if (link) { link.textContent = "公式"; row.append(link); }
+    const rm = el("button", "外す", "ghost"); rm.type = "button";
+    rm.onclick = async () => { rm.disabled = true; await fetch("/admin/api/saved/" + encodeURIComponent(it.id) + "?user_id=" + USER, { method: "DELETE" }); loadSaved(); };
+    row.append(rm); box.append(row);
+  }
+}
 
 /* ---------- 承認 ---------- */
 async function decide(id, approve, comment) {
@@ -327,20 +430,7 @@ const short = (o) => { const s = JSON.stringify(o); return s && s.length > 90 ? 
 async function refresh() {
   let d;
   try { const r = await fetch("/admin/api/state?user_id=" + USER); if (!r.ok) throw 0; d = await r.json(); } catch (e) { return; }
-  // カレンダー
-  const cal = $("calendar"); cal.replaceChildren();
-  $("cal-sub").textContent = d.calendar.items.length ? "例年の締切月から逆算した、準備を始める目安です。条件は募集時に確認が必要です。" : "探したあとに表示されます。";
-  const by = {}; for (const it of d.calendar.items) (by[it.usual_deadline_month] ||= []).push(it);
-  const base = d.calendar.today ? new Date(d.calendar.today).getMonth() + 1 : new Date().getMonth() + 1;
-  for (const m of Object.keys(by).map(Number).sort((a, b) => ((a - base + 12) % 12) - ((b - base + 12) % 12))) {
-    cal.append(el("div", "例年の締切: " + m + "月", "month"));
-    for (const it of by[m]) {
-      const row = el("div", undefined, "row"); row.append(el("span", it.organization, "name"));
-      row.append(el("span", it.prepare_from === "今すぐ" ? "今すぐ準備" : it.prepare_from + "から準備", "badge" + (it.prepare_from === "今すぐ" ? " warn" : "")));
-      if (typeof it.url === "string" && it.url.startsWith("https://")) { const a = el("a", "公式"); a.href = it.url; a.target = "_blank"; a.rel = "noopener noreferrer"; row.append(a); }
-      cal.append(row);
-    }
-  }
+  loadSaved();
   // 承認待ち
   const pd = $("pending"); pd.replaceChildren();
   const pend = d.approvals.filter(a => a.status === "pending");

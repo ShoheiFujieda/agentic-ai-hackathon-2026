@@ -1,16 +1,15 @@
-"""奨学金の検索の中心。筑波大学の公開一覧を使い、締切前のものを判定し、締切後のものから来年の準備カレンダーを作る。
+"""筑波大学の公開一覧（大学経由の奨学金）から、締切前のものを判定する。
 
 AI を使うのは「出願資格」の文章の読み取りだけ。締切・申請方法・併給・金額はコードで読み、判定もコードで行う。
 """
 
 import logging
-import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date
 
 from . import cache, extract, tsukuba, web
-from .judge import ELIGIBLE, INELIGIBLE, NEEDS_CHECK, Profile, fiscal_year, judge
+from .judge import ELIGIBLE, INELIGIBLE, NEEDS_CHECK, Profile, judge
 from .prefilter import prefilter
 
 logger = logging.getLogger(__name__)
@@ -18,10 +17,6 @@ logger = logging.getLogger(__name__)
 UNIVERSITY = "筑波大学"
 CACHE_VERSION = "v3"  # 抜き出し方を変えたら上げて、古いキャッシュを使わないようにする
 WORKERS = 4
-# 団体名だけで「その分野の学生向け」と分かる言葉（経済・医療などは一般の財団名にも使われるので入れない）
-NAME_ONLY_FIELDS = re.compile(r"美術|芸術|音楽|スポーツ|体育|医学|歯学|薬学|看護|獣医")
-# 名前から「一部の人だけが対象」と推定できる言葉（カレンダーで印を付ける）
-SPECIAL_HINTS = re.compile(r"障害|遺児|被災|震災|ひとり親|母子|父子|児童養護|里親|難病|がん")
 INDEX_TTL_SEC = 3600
 
 _index: tuple[float, list[tsukuba.Entry]] | None = None
@@ -99,66 +94,6 @@ def _fallback(entry: tsukuba.Entry, reason: str) -> dict:
     }
 
 
-def _calendar(
-    entries: list[tsukuba.Entry],
-    profile: Profile,
-    profile_prefs: set[str],
-    today: date,
-    open_now: set[str],
-    limit: int = 15,
-) -> list[dict]:
-    """今年度と昨年度に締切が過ぎたものから、準備カレンダーを作る（条件は募集時に確認）。
-    今まさに募集中の団体は「今応募できる」の側に出るので、ここには入れない。名前から明らかに別分野と分かるものも除く。"""
-    fy = fiscal_year(today)
-    seen: dict[str, tsukuba.Entry] = {}
-    skipped_by_name: list[str] = []
-    for e in entries:
-        if not (e.for_undergraduates and e.deadline and e.deadline < today and e.fiscal_year in (fy - 1, fy)):
-            continue
-        if tsukuba.org_key(e.organization) in open_now:
-            continue
-        if prefilter({"organization": e.organization}, profile_prefs, UNIVERSITY):
-            continue
-        name = e.organization
-        if NAME_ONLY_FIELDS.search(name) and not any(k in name for k in profile.field_keywords):
-            skipped_by_name.append(name)
-            continue
-        key = tsukuba.org_key(e.organization)
-        if key not in seen or (seen[key].deadline or date.min) < e.deadline:
-            seen[key] = e
-    items = []
-    for e in seen.values():
-        months = tsukuba.typical_months(entries, e.organization)
-        if not months:
-            continue
-        years = len(
-            {x.fiscal_year for x in entries if tsukuba.org_key(x.organization) == tsukuba.org_key(e.organization)}
-        )
-        # 次に来る締切月までの月数（今月より後の月を先に）
-        until = (months[0] - today.month) % 12  # 今月が例年の締切月なら 0（まもなく）
-        soon = until <= 2  # 推薦書などの準備に約2か月かかるので、2か月以内なら今すぐ動く
-        items.append(
-            {
-                "organization": e.organization,
-                "usual_deadline_month": months[0],
-                "last_deadline": e.deadline.isoformat(),
-                "kind": e.kind,
-                "years_listed": years,
-                "months_until": until,
-                "timing": "まもなく今年の募集が始まる見込み" if soon else "次回の募集に向けて準備",
-                "prepare_from": "今すぐ" if soon else f"{(months[0] - 2 - 1) % 12 + 1}月ごろ",
-                "note": "名前から、特別な条件（障害・遺児など）の可能性があります"
-                if SPECIAL_HINTS.search(name)
-                else "",
-                "url": e.url,
-            }
-        )
-    items.sort(key=lambda x: (x["months_until"], -x["years_listed"]))
-    if skipped_by_name:
-        logger.info("カレンダーから名前で除いた団体: %s", skipped_by_name)
-    return items[:limit]
-
-
 def find(profile: Profile, today: date, max_checks: int = 20) -> dict:
     entries = load_entries()
     prefs = {profile.home_prefecture, profile.residence, profile.school_location, profile.guardian_residence}
@@ -208,9 +143,6 @@ def find(profile: Profile, today: date, max_checks: int = 20) -> dict:
         "ineligible": pick(INELIGIBLE),
         "excluded_by_name": excluded,
         "not_checked_over_limit": skipped,
-        "next_year_calendar": _calendar(
-            entries, profile, prefs, today, {tsukuba.org_key(e.organization) for e in open_now}
-        ),
     }
 
 

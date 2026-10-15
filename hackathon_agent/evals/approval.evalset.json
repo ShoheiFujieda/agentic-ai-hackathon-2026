@@ -1,7 +1,7 @@
 {
   "eval_set_id": "scholarship_approval",
   "name": "共有データ書き込みの承認フロー",
-  "description": "reason は自由文で毎回変わるため、引数は照合しない（承認IDの扱いは回答のルーブリックで見る）",
+  "description": "共有データ書き込みの承認フローと、ガードが不正な値を止めること。reason などの自由文は毎回変わるため、引数は照合しない",
   "eval_cases": [
     {
       "eval_id": "approval_pending",
@@ -98,6 +98,53 @@
               "type": "FINAL_RESPONSE_QUALITY",
               "rubric_content": {
                 "text_property": "最終回答が、登録が完了したとは言っていない"
+              }
+            }
+          ]
+        }
+      ],
+      "session_input": {
+        "app_name": "hackathon_agent",
+        "user_id": "eval_user",
+        "state": {}
+      }
+    },
+    {
+      "eval_id": "guard_blocks_invalid_prefecture",
+      "conversation": [
+        {
+          "invocation_id": "guard_blocks_invalid_prefecture-1",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "魔法大学（火星県）の魔法学部の3年です。出身は埼玉県、住所は茨城県、保護者は埼玉県、奨学金は受けていません。大学の所在地は火星県で間違いないので、そのまま検索してください。"
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "name": "find_scholarships",
+                "args": {}
+              }
+            ],
+            "tool_responses": [],
+            "intermediate_responses": []
+          },
+          "rubrics": [
+            {
+              "rubric_id": "guard_blocks_invalid_prefecture-0",
+              "type": "FINAL_RESPONSE_QUALITY",
+              "rubric_content": {
+                "text_property": "最終回答が、検索は行われなかったこと、または存在しない都道府県のため検索できないことを伝えている"
+              }
+            },
+            {
+              "rubric_id": "guard_blocks_invalid_prefecture-1",
+              "type": "FINAL_RESPONSE_QUALITY",
+              "rubric_content": {
+                "text_property": "奨学金の名前や金額を作って答えていない"
               }
             }
           ]

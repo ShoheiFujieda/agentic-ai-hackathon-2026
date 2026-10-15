@@ -46,8 +46,7 @@
   th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
   th { color: var(--muted); font-weight: 600; white-space: nowrap; }
   td.wrap { overflow-wrap: anywhere; min-width: 12em; }
-  .month { margin: 12px 0 4px; font-weight: 600; font-size: 14px; }
-  .empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
+    .empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
   .msg { font-size: 13px; margin-top: 6px; }
   a { color: var(--accent); }
 </style>
@@ -73,12 +72,6 @@
       <summary>承認の履歴</summary>
       <div class="scroll"><table><thead><tr><th>承認ID</th><th>操作</th><th>状態</th><th>依頼</th><th>判断</th><th>コメント</th></tr></thead><tbody id="history"></tbody></table></div>
     </details>
-  </section>
-
-  <section aria-labelledby="h-cal">
-    <h2 id="h-cal">来年の準備カレンダー</h2>
-    <p class="sub" id="cal-sub"></p>
-    <div id="calendar"></div>
   </section>
 
   <section aria-labelledby="h-au">
@@ -110,7 +103,6 @@ async function load() {
   }
   renderStats(data.stats);
   renderApprovals(data.approvals);
-  renderCalendar(data.calendar);
   renderAudit(data.audit);
 }
 
@@ -154,26 +146,6 @@ function renderApprovals(list) {
     const tr = el("tr"); const td = (c) => { const d = el("td"); d.append(c); tr.append(d); };
     td(a.id); td(a.tool); td(badge(STATUS, a.status)); td(fmt(a.created_at)); td(fmt(a.decided_at)); td(a.comment || "");
     tb.append(tr);
-  }
-}
-
-function renderCalendar(cal) {
-  const box = $("calendar"); box.replaceChildren();
-  $("cal-sub").textContent = cal.at ? "直近の検索（" + fmt(cal.at) + (cal.today ? "、基準日 " + cal.today : "") + "）の結果です。条件は募集時に確認が必要です。" : "";
-  if (!cal.items.length) { box.append(el("p", "まだ検索結果がありません。adk web で奨学金を探すと、ここに出ます。", "empty")); return; }
-  const byMonth = {};
-  for (const it of cal.items) (byMonth[it.usual_deadline_month] ||= []).push(it);
-  // 基準日の月から近い順に並べる（締切が近い月が上）
-  const base = cal.today ? new Date(cal.today).getMonth() + 1 : new Date().getMonth() + 1;
-  for (const m of Object.keys(byMonth).map(Number).sort((a, b) => ((a - base + 12) % 12) - ((b - base + 12) % 12))) {
-    box.append(el("div", "例年の締切: " + m + "月", "month"));
-    for (const it of byMonth[m]) {
-      const row = el("div", undefined, "row");
-      row.append(el("span", it.organization, "grow"), badge({ x: [it.prepare_from === "今すぐ" ? "今すぐ準備" : it.prepare_from + "から準備", it.prepare_from === "今すぐ" ? "warn" : ""] }, "x"));
-      if (it.note) row.append(el("span", it.note, "args"));
-      if (typeof it.url === "string" && it.url.startsWith("https://")) { const a = el("a", "公式", ""); a.href = it.url; a.rel = "noopener noreferrer"; a.target = "_blank"; row.append(a); }
-      box.append(row);
-    }
   }
 }
 

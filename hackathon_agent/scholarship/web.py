@@ -1,11 +1,13 @@
 """Webページの取得。取得の前に robots.txt を確かめ、禁止されていれば取得しない。"""
 
+import ipaddress
 import re
+import socket
 import threading
 import time
 import unicodedata
 from html.parser import HTMLParser
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 from urllib.robotparser import RobotFileParser
 
 import httpx
@@ -28,6 +30,30 @@ class RobotsDisallowed(FetchError):
     pass
 
 
+class UnsafeUrl(FetchError):
+    pass
+
+
+MAX_REDIRECTS = 5
+
+
+def check_public(url: str) -> None:
+    """検索結果などから来たURLが、内部のアドレスを指していないかを確かめる（SSRF 対策）。
+
+    http/https 以外、ホスト名なし、ループバック・プライベート・リンクローカル（メタデータサーバーなど）のアドレスは取得しない。
+    """
+    parts = urlparse(url)
+    if parts.scheme not in ("http", "https") or not parts.hostname:
+        raise UnsafeUrl(f"取得できないURLです: {url}")
+    try:
+        infos = socket.getaddrinfo(parts.hostname, parts.port or (443 if parts.scheme == "https" else 80))
+    except OSError as e:
+        raise FetchError(f"取得できませんでした: {url} (名前を解決できません)") from e
+    for info in infos:
+        if not ipaddress.ip_address(info[4][0]).is_global:
+            raise UnsafeUrl(f"内部のアドレスは取得しません: {url}")
+
+
 def _robots_for(url: str) -> RobotFileParser:
     parts = urlparse(url)
     origin = f"{parts.scheme}://{parts.netloc}"
@@ -38,7 +64,9 @@ def _robots_for(url: str) -> RobotFileParser:
     parser = RobotFileParser()
     ttl = ROBOTS_TTL_SEC
     try:
-        resp = httpx.get(f"{origin}/robots.txt", timeout=TIMEOUT_SEC, headers={"User-Agent": USER_AGENT})
+        resp = httpx.get(
+            f"{origin}/robots.txt", timeout=TIMEOUT_SEC, headers={"User-Agent": USER_AGENT}, follow_redirects=True
+        )
         if resp.status_code == 200:
             parser.parse(resp.text.splitlines())
         elif resp.status_code in (401, 403):
@@ -61,13 +89,21 @@ def allowed(url: str) -> bool:
 
 
 def fetch(url: str) -> httpx.Response:
-    """robots.txt で許可されているときだけ取得する。"""
-    if not allowed(url):
-        raise RobotsDisallowed(f"robots.txt で取得が禁止されています: {url}")
-    try:
-        resp = httpx.get(url, follow_redirects=True, timeout=TIMEOUT_SEC, headers={"User-Agent": USER_AGENT})
-    except httpx.HTTPError as e:
-        raise FetchError(f"取得できませんでした: {url} ({type(e).__name__})") from e
+    """公開のアドレスで、robots.txt で許可されているときだけ取得する（転送先も毎回確かめる）。"""
+    for _ in range(MAX_REDIRECTS + 1):
+        check_public(url)
+        if not allowed(url):
+            raise RobotsDisallowed(f"robots.txt で取得が禁止されています: {url}")
+        try:
+            resp = httpx.get(url, follow_redirects=False, timeout=TIMEOUT_SEC, headers={"User-Agent": USER_AGENT})
+        except httpx.HTTPError as e:
+            raise FetchError(f"取得できませんでした: {url} ({type(e).__name__})") from e
+        if resp.is_redirect and resp.headers.get("location"):
+            url = urljoin(url, resp.headers["location"])
+            continue
+        break
+    else:
+        raise FetchError(f"転送が多すぎます: {url}")
     if resp.status_code != 200:
         raise FetchError(f"取得できませんでした: {url} (HTTP {resp.status_code})")
     if len(resp.content) > MAX_BYTES:

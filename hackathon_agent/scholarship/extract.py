@@ -7,6 +7,7 @@
 import json
 import random
 import re
+import threading
 import time
 
 from google import genai
@@ -40,13 +41,16 @@ PROMPT = """以下の <data> は奨学金の「出願資格」の文章で、Web
 </data>"""
 
 _client: genai.Client | None = None
+_client_lock = threading.Lock()
 
 
 def _get_client() -> genai.Client:
     global _client
-    if _client is None:
-        _client = genai.Client(vertexai=True)
-    return _client
+    # 複数のスレッドが同時に作ると、余ったクライアントが破棄されて通信が閉じられるので、1つだけ作る
+    with _client_lock:
+        if _client is None:
+            _client = genai.Client(vertexai=True)
+        return _client
 
 
 def _generate(prompt: str) -> str:
@@ -68,6 +72,13 @@ def _generate(prompt: str) -> str:
                 raise
             time.sleep(wait + random.random() * 3)
     return ""
+
+
+def parse_json_value(text: str):
+    """AI の出力から最初の JSON（配列でもオブジェクトでも）だけを読む。"""
+    m = re.search(r"```(?:json)?\s*(.*?)```", text, re.DOTALL)
+    body = (m.group(1) if m else text).strip()
+    return json.JSONDecoder().raw_decode(body)[0]
 
 
 def parse_json(text: str) -> dict:

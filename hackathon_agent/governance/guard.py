@@ -10,11 +10,12 @@ from urllib.parse import urlparse
 from google.adk.tools import BaseTool, ToolContext
 
 from ..scholarship.prefilter import PREFECTURES
-from ..tools import FACULTY_KEYWORDS, RECEIVING
+from ..tools import RECEIVING
 from . import approvals, audit
 
-# 1セッションで find_scholarships を呼べる回数（Gemini の費用の上限）
-MAX_SEARCHES_PER_SESSION = 5
+MAX_TEXT = 50  # 大学名・分野の長さの上限
+# 1セッションで find_scholarships を呼べる回数（1回で Web 検索と Gemini を多く使うので少なめ。Gemini の費用の上限）
+MAX_SEARCHES_PER_SESSION = 3
 
 # 許可リスト: ここにないツールは実行させない
 TOOL_RISK = {
@@ -26,8 +27,14 @@ TOOL_RISK = {
 
 def _validate_find_scholarships(args: dict[str, Any], tool_context: ToolContext) -> str | None:
     """問題があれば理由を返す。問題なければ None。"""
-    if args.get("gakugun") not in FACULTY_KEYWORDS:
-        return f"学群名「{args.get('gakugun')}」は使えません（使える値: {'、'.join(FACULTY_KEYWORDS)}）"
+    for key, label in (("university", "大学名"), ("field", "学部・分野")):
+        v = args.get(key)
+        if not isinstance(v, str) or not v.strip():
+            return f"{label}を指定してください"
+        if len(v) > MAX_TEXT or any(ord(c) < 32 for c in v):
+            return f"{label}は{MAX_TEXT}文字以内の文字で指定してください"
+    if args.get("university_prefecture") not in PREFECTURES:
+        return f"大学の所在地「{args.get('university_prefecture')}」は都道府県名（例: 茨城県）で指定してください"
     grade = args.get("grade")
     if not isinstance(grade, int) or isinstance(grade, bool) or not 1 <= grade <= 6:
         return "学年は1〜6の整数で指定してください"
