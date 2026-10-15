@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="'Noto Sans JP','Yu Gothic UI','Hiragino Sans',Meiryo,sans-serif">
+<defs>
+<marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#49454F"/></marker>
+<marker id="h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#C77700"/></marker>
+</defs>
+<rect width="1600" height="900" fill="#FEF7FF"/>
+<text x="40" y="52" font-size="30" font-weight="700" fill="#1D1B20">奨学金エージェント ― 検索の流れ（図2/3）</text>
+<text x="40" y="84" font-size="16" fill="#49454F">find_scholarships の中身。探すのは AI＋Google 検索、応募できるかの判定は AI ではなくコード。左から右へ</text>
+<rect x="40" y="150" width="230" height="210" rx="12" fill="#FFE8CC" stroke="#C77700" stroke-width="2"/>
+<text x="54" y="178" font-size="16" font-weight="700" fill="#4A2800">入力（本人の条件）</text>
+<text x="54" y="205" font-size="13" fill="#4A2800" fill-opacity="0.82">・立場（高校生〜社会人）</text>
+<text x="54" y="224" font-size="13" fill="#4A2800" fill-opacity="0.82">・学校・学年／卒業後の年数</text>
+<text x="54" y="243" font-size="13" fill="#4A2800" fill-opacity="0.82">・出身・住所・保護者の地域</text>
+<text x="54" y="262" font-size="13" fill="#4A2800" fill-opacity="0.82">・受給中の奨学金</text>
+<text x="54" y="281" font-size="13" fill="#4A2800" fill-opacity="0.82">・目的（学業・留学・研究・活動）</text>
+<line x1="270" y1="255" x2="310" y2="255" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<rect x="310" y="150" width="250" height="210" rx="12" fill="#EADDFF" stroke="#6750A4" stroke-width="2"/>
+<text x="324" y="178" font-size="16" font-weight="700" fill="#21005D">1 検索語を作る</text>
+<text x="324" y="205" font-size="13" fill="#21005D" fill-opacity="0.82">立場・地域・目的から、</text>
+<text x="324" y="224" font-size="13" fill="#21005D" fill-opacity="0.82">6本の検索語を組み立てる。</text>
+<text x="324" y="243" font-size="13" fill="#21005D" fill-opacity="0.82">年度は固定せず、「いま応募</text>
+<text x="324" y="262" font-size="13" fill="#21005D" fill-opacity="0.82">できる（募集中・次年度採用）」</text>
+<text x="324" y="281" font-size="13" fill="#21005D" fill-opacity="0.82">を探す。</text>
+<rect x="494" y="160" width="56" height="22" rx="11" fill="#6750A4"/>
+<text x="522.0" y="176" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">コード</text>
+<line x1="560" y1="255" x2="600" y2="255" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<rect x="600" y="150" width="250" height="210" rx="12" fill="#D3E3FD" stroke="#1A73E8" stroke-width="2"/>
+<text x="614" y="178" font-size="16" font-weight="700" fill="#041E49">2 候補を集める</text>
+<text x="614" y="205" font-size="13" fill="#041E49" fill-opacity="0.82">6本を並列に Google 検索し、</text>
+<text x="614" y="224" font-size="13" fill="#041E49" fill-opacity="0.82">奨学金の名前と団体を集める</text>
+<text x="614" y="243" font-size="13" fill="#041E49" fill-opacity="0.82">（推測では作らせない）。</text>
+<rect x="756" y="160" width="84" height="22" rx="11" fill="#1A73E8"/>
+<text x="798.0" y="176" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">AI＋検索</text>
+<line x1="850" y1="255" x2="890" y2="255" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<rect x="890" y="150" width="250" height="210" rx="12" fill="#EADDFF" stroke="#6750A4" stroke-width="2"/>
+<text x="904" y="178" font-size="16" font-weight="700" fill="#21005D">3 統合・絞り込み</text>
+<text x="904" y="205" font-size="13" fill="#21005D" fill-opacity="0.82">別名・重複を1件にまとめる。</text>
+<text x="904" y="224" font-size="13" fill="#21005D" fill-opacity="0.82">他大学・他地域・留学生向け</text>
+<text x="904" y="243" font-size="13" fill="#21005D" fill-opacity="0.82">など、明らかな対象外を、</text>
+<text x="904" y="262" font-size="13" fill="#21005D" fill-opacity="0.82">名前の段階で除く。</text>
+<rect x="1074" y="160" width="56" height="22" rx="11" fill="#6750A4"/>
+<text x="1102.0" y="176" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">コード</text>
+<rect x="1180" y="150" width="380" height="210" rx="12" fill="#F4EFF4" stroke="#CAC4D0" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="1194" y="178" font-size="16" font-weight="700" fill="#79747E">（拡張予定）一覧ページの展開</text>
+<text x="1194" y="205" font-size="13" fill="#79747E" fill-opacity="0.82">まとめページを読んで項目を増やす。</text>
+<text x="1194" y="224" font-size="13" fill="#79747E" fill-opacity="0.82">実験では効いたが、現在の本番では</text>
+<text x="1194" y="243" font-size="13" fill="#79747E" fill-opacity="0.82">検索の出典が返らず、働いていない。</text>
+<text x="1194" y="262" font-size="13" fill="#79747E" fill-opacity="0.82">提出時点の機能には含めない。</text>
+<rect x="40" y="410" width="1100" height="300" rx="16" fill="#FFFFFF" fill-opacity="0.6" stroke="#6750A4" stroke-width="2"/>
+<text x="56" y="438" font-size="17" font-weight="700" fill="#1D1B20">4 候補ごとに、運営団体の公式ページで確かめる（最大16件・並列）</text>
+<rect x="64" y="455" width="250" height="230" rx="12" fill="#EADDFF" stroke="#6750A4" stroke-width="2"/>
+<text x="78" y="483" font-size="16" font-weight="700" fill="#21005D">4a 公式ページを取得</text>
+<text x="78" y="510" font-size="13" fill="#21005D" fill-opacity="0.82">Google 検索で公式ページを探し、</text>
+<text x="78" y="529" font-size="13" fill="#21005D" fill-opacity="0.82">取得する（PDF も可）。</text>
+<text x="78" y="548" font-size="13" fill="#21005D" fill-opacity="0.82">robots.txt を守る。</text>
+<text x="78" y="567" font-size="13" fill="#21005D" fill-opacity="0.82">内部アドレスは取得しない。</text>
+<text x="78" y="586" font-size="13" fill="#21005D" fill-opacity="0.82">転送先も毎回確認。</text>
+<rect x="248" y="465" width="56" height="22" rx="11" fill="#6750A4"/>
+<text x="276.0" y="481" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">コード</text>
+<line x1="314" y1="570" x2="354" y2="570" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<rect x="354" y="455" width="250" height="230" rx="12" fill="#D3E3FD" stroke="#1A73E8" stroke-width="2"/>
+<text x="368" y="483" font-size="16" font-weight="700" fill="#041E49">4b 条件を引用つきで抜く</text>
+<text x="368" y="510" font-size="13" fill="#041E49" fill-opacity="0.82">学年・地域・分野・併給・</text>
+<text x="368" y="529" font-size="13" fill="#041E49" fill-opacity="0.82">締切・卒業後・使途を、</text>
+<text x="368" y="548" font-size="13" fill="#041E49" fill-opacity="0.82">原文の引用つきで抜き出す。</text>
+<text x="368" y="567" font-size="13" fill="#041E49" fill-opacity="0.82">ページ内の指示には従わない。</text>
+<rect x="552" y="465" width="42" height="22" rx="11" fill="#1A73E8"/>
+<text x="573.0" y="481" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">AI</text>
+<line x1="604" y1="570" x2="644" y2="570" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<rect x="644" y="455" width="250" height="230" rx="12" fill="#EADDFF" stroke="#6750A4" stroke-width="2"/>
+<text x="658" y="483" font-size="16" font-weight="700" fill="#21005D">4c 引用を原文と照合</text>
+<text x="658" y="510" font-size="13" fill="#21005D" fill-opacity="0.82">引用が、取得したページに</text>
+<text x="658" y="529" font-size="13" fill="#21005D" fill-opacity="0.82">本当にあるかを確かめる。</text>
+<text x="658" y="548" font-size="13" fill="#21005D" fill-opacity="0.82">無い引用（作り話）は、</text>
+<text x="658" y="567" font-size="13" fill="#21005D" fill-opacity="0.82">判定に使わない。</text>
+<rect x="828" y="465" width="56" height="22" rx="11" fill="#6750A4"/>
+<text x="856.0" y="481" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">コード</text>
+<rect x="918" y="455" width="198" height="230" rx="12" fill="#FFFFFF" stroke="#79747E" stroke-width="2"/>
+<text x="932" y="483" font-size="16" font-weight="700" fill="#1D1B20">共有キャッシュ</text>
+<text x="932" y="510" font-size="13" fill="#1D1B20" fill-opacity="0.82">確認済みの条件を保存。</text>
+<text x="932" y="529" font-size="13" fill="#1D1B20" fill-opacity="0.82">再検索は約30秒。</text>
+<text x="932" y="548" font-size="13" fill="#1D1B20" fill-opacity="0.82">判定は人ごとに、</text>
+<text x="932" y="567" font-size="13" fill="#1D1B20" fill-opacity="0.82">そのつどやり直す。</text>
+<line x1="894" y1="570" x2="918" y2="570" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<line x1="1015" y1="360" x2="1015" y2="410" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<line x1="1140" y1="560" x2="1180" y2="560" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<rect x="1180" y="410" width="380" height="300" rx="12" fill="#EADDFF" stroke="#6750A4" stroke-width="2"/>
+<text x="1194" y="438" font-size="16" font-weight="700" fill="#21005D">5 判定（コード）→ 出力</text>
+<text x="1194" y="465" font-size="13" fill="#21005D" fill-opacity="0.82">応募できる　：条件がそろい、募集中</text>
+<text x="1194" y="484" font-size="13" fill="#21005D" fill-opacity="0.82">要確認　　　：確認できない条件がある</text>
+<text x="1194" y="503" font-size="13" fill="#21005D" fill-opacity="0.82">　　　　　　　（何を確認するかを表示）</text>
+<text x="1194" y="522" font-size="13" fill="#21005D" fill-opacity="0.82">目的が違う　：使いみちが目的と違う</text>
+<text x="1194" y="541" font-size="13" fill="#21005D" fill-opacity="0.82">未確認の候補：公式ページを読めなかった</text>
+<text x="1194" y="560" font-size="13" fill="#21005D" fill-opacity="0.82">募集終了　　：締切が過ぎている</text>
+<text x="1194" y="579" font-size="13" fill="#21005D" fill-opacity="0.82">対象外　　　：学年・地域などが合わない</text>
+<rect x="1494" y="420" width="56" height="22" rx="11" fill="#6750A4"/>
+<text x="1522.0" y="436" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">コード</text>
+<line x1="1370" y1="710" x2="1370" y2="750" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<rect x="1180" y="750" width="380" height="70" rx="12" fill="#FFE8CC" stroke="#C77700" stroke-width="2"/>
+<text x="1194" y="778" font-size="16" font-weight="700" fill="#4A2800">結果の表（画面）・保存リスト・CSV</text>
+<rect x="40" y="740" width="1100" height="80" rx="12" fill="#F4EFF4" stroke="#CAC4D0" stroke-width="2"/>
+<text x="54" y="768" font-size="16" font-weight="700" fill="#79747E">上限と、確認できないものの扱い</text>
+<text x="54" y="795" font-size="13" fill="#79747E" fill-opacity="0.82">検索6回／照合16件／全体で約140秒。超えた分も隠さず「未確認の候補」として出す。確認できない条件は「合っている」とは言わず、「要確認」に倒す。</text>
+<text x="40" y="880" font-size="14" font-weight="700" text-anchor="start" fill="#1D1B20">凡例</text>
+<rect x="90" y="866" width="22" height="16" rx="4" fill="#EADDFF" stroke="#6750A4" stroke-width="2"/>
+<text x="120" y="880" font-size="13" font-weight="400" text-anchor="start" fill="#49454F">コード（自作）</text>
+<rect x="280" y="866" width="22" height="16" rx="4" fill="#D3E3FD" stroke="#1A73E8" stroke-width="2"/>
+<text x="310" y="880" font-size="13" font-weight="400" text-anchor="start" fill="#49454F">AI（Gemini）</text>
+<rect x="470" y="866" width="22" height="16" rx="4" fill="#FFFFFF" stroke="#79747E" stroke-width="2"/>
+<text x="500" y="880" font-size="13" font-weight="400" text-anchor="start" fill="#49454F">Google Cloud・外部</text>
+<rect x="660" y="866" width="22" height="16" rx="4" fill="#FFE8CC" stroke="#C77700" stroke-width="2"/>
+<text x="690" y="880" font-size="13" font-weight="400" text-anchor="start" fill="#49454F">人（本人）</text>
+<line x1="850" y1="874" x2="886" y2="874" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<text x="894" y="880" font-size="13" font-weight="400" text-anchor="start" fill="#49454F">呼び出し・データ</text>
+<line x1="1020" y1="874" x2="1056" y2="874" stroke="#C77700" stroke-width="2.5" stroke-dasharray="8 5" marker-end="url(#h)"/>
+<text x="1064" y="880" font-size="13" font-weight="400" text-anchor="start" fill="#49454F">人間の承認（別の経路）</text>
+</svg>

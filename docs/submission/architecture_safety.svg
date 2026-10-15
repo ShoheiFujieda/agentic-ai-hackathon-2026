@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 880" width="1600" height="880" font-family="'Noto Sans JP','Yu Gothic UI','Hiragino Sans',Meiryo,sans-serif">
+<defs>
+<marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#49454F"/></marker>
+<marker id="h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#C77700"/></marker>
+</defs>
+<rect width="1600" height="880" fill="#FEF7FF"/>
+<text x="40" y="52" font-size="30" font-weight="700" fill="#1D1B20">奨学金エージェント ― 安全装置と人間の承認（図3/3）</text>
+<text x="40" y="84" font-size="16" fill="#49454F">ツールを呼ぶたびに必ず通る検査と、他の人にも影響する操作（共有リストへの追加）の承認の流れ。左から右へ</text>
+<rect x="40" y="150" width="220" height="130" rx="12" fill="#D3E3FD" stroke="#1A73E8" stroke-width="2"/>
+<text x="54" y="178" font-size="16" font-weight="700" fill="#041E49">1 AI がツールを呼ぶ</text>
+<text x="54" y="205" font-size="13" fill="#041E49" fill-opacity="0.82">ユーザーの依頼に応じて、</text>
+<text x="54" y="224" font-size="13" fill="#041E49" fill-opacity="0.82">ツール名と引数を決める。</text>
+<rect x="208" y="160" width="42" height="22" rx="11" fill="#1A73E8"/>
+<text x="229.0" y="176" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">AI</text>
+<line x1="260" y1="215" x2="300" y2="215" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<rect x="300" y="150" width="340" height="200" rx="12" fill="#EADDFF" stroke="#6750A4" stroke-width="2"/>
+<text x="314" y="178" font-size="16" font-weight="700" fill="#21005D">2 実行の直前の検査（before）</text>
+<text x="314" y="205" font-size="13" fill="#21005D" fill-opacity="0.82">・許可リストにあるツールか</text>
+<text x="314" y="224" font-size="13" fill="#21005D" fill-opacity="0.82">・引数は正しいか（都道府県・学年など）</text>
+<text x="314" y="243" font-size="13" fill="#21005D" fill-opacity="0.82">・検索回数は上限（3回／会話）内か</text>
+<text x="314" y="262" font-size="13" fill="#21005D" fill-opacity="0.82">・高リスクか（共有リストへの書き込み）</text>
+<rect x="574" y="160" width="56" height="22" rx="11" fill="#6750A4"/>
+<text x="602.0" y="176" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">コード</text>
+<line x1="640" y1="190" x2="700" y2="190" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<text x="670" y="178" font-size="12.5" text-anchor="middle" fill="#49454F">問題あり</text>
+<rect x="700" y="150" width="260" height="80" rx="12" fill="#EADDFF" stroke="#6750A4" stroke-width="2"/>
+<text x="714" y="178" font-size="16" font-weight="700" fill="#21005D">停止し、理由を伝える</text>
+<text x="714" y="205" font-size="13" fill="#21005D" fill-opacity="0.82">勝手に条件を変えて再試行しない</text>
+<line x1="640" y1="250" x2="700" y2="280" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<text x="668" y="250" font-size="12.5" text-anchor="middle" fill="#49454F">低リスク</text>
+<rect x="700" y="270" width="260" height="80" rx="12" fill="#EADDFF" stroke="#6750A4" stroke-width="2"/>
+<text x="714" y="298" font-size="16" font-weight="700" fill="#21005D">そのまま実行</text>
+<text x="714" y="325" font-size="13" fill="#21005D" fill-opacity="0.82">検索など（自動）</text>
+<line x1="470" y1="350" x2="470" y2="420" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<text x="470" y="385" font-size="12.5" text-anchor="middle" fill="#49454F">高リスク</text>
+<rect x="40" y="420" width="920" height="330" rx="16" fill="#FFFFFF" fill-opacity="0.6" stroke="#6750A4" stroke-width="2"/>
+<text x="56" y="448" font-size="17" font-weight="700" fill="#1D1B20">高リスクの操作：本人が許可するまで実行しない</text>
+<rect x="64" y="465" width="260" height="255" rx="12" fill="#EADDFF" stroke="#6750A4" stroke-width="2"/>
+<text x="78" y="493" font-size="16" font-weight="700" fill="#21005D">3 承認待ちで止まる</text>
+<text x="78" y="519.5" font-size="12.5" fill="#21005D" fill-opacity="0.82">Firestore の approvals に保存。</text>
+<text x="78" y="538.0" font-size="12.5" fill="#21005D" fill-opacity="0.82">操作・引数・本人・期限（24時間）</text>
+<text x="78" y="556.5" font-size="12.5" fill="#21005D" fill-opacity="0.82">に結びつく。</text>
+<text x="78" y="575.0" font-size="12.5" fill="#21005D" fill-opacity="0.82">AI には「承認」のツールが無い。</text>
+<text x="78" y="593.5" font-size="12.5" fill="#21005D" fill-opacity="0.82">AI が「承認された」と言っても</text>
+<text x="78" y="612.0" font-size="12.5" fill="#21005D" fill-opacity="0.82">実行されない。</text>
+<rect x="258" y="475" width="56" height="22" rx="11" fill="#6750A4"/>
+<text x="286.0" y="491" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">コード</text>
+<line x1="324" y1="590" x2="364" y2="590" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<rect x="364" y="465" width="260" height="255" rx="12" fill="#FFE8CC" stroke="#C77700" stroke-width="2"/>
+<text x="378" y="493" font-size="16" font-weight="700" fill="#4A2800">4 本人がダイアログで許可</text>
+<text x="378" y="520" font-size="13" fill="#4A2800" fill-opacity="0.82">画面に確認ダイアログが出る。</text>
+<text x="378" y="539" font-size="13" fill="#4A2800" fill-opacity="0.82">押せるのは、依頼した本人だけ。</text>
+<text x="378" y="558" font-size="13" fill="#4A2800" fill-opacity="0.82">内容（何を・どこへ）を見て、</text>
+<text x="378" y="577" font-size="13" fill="#4A2800" fill-opacity="0.82">許可または拒否する。</text>
+<rect x="586" y="475" width="28" height="22" rx="11" fill="#C77700"/>
+<text x="600.0" y="491" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">人</text>
+<line x1="624" y1="590" x2="664" y2="590" stroke="#C77700" stroke-width="2.5" stroke-dasharray="8 5" marker-end="url(#h)"/>
+<rect x="664" y="465" width="276" height="255" rx="12" fill="#EADDFF" stroke="#6750A4" stroke-width="2"/>
+<text x="678" y="493" font-size="16" font-weight="700" fill="#21005D">5 許可された1回だけ実行</text>
+<text x="678" y="520" font-size="13" fill="#21005D" fill-opacity="0.82">許可は1回限り。使い回し・</text>
+<text x="678" y="539" font-size="13" fill="#21005D" fill-opacity="0.82">内容のすり替えは拒否。</text>
+<text x="678" y="558" font-size="13" fill="#21005D" fill-opacity="0.82">公式 URL 必須・https のみ。</text>
+<text x="678" y="577" font-size="13" fill="#21005D" fill-opacity="0.82">登録内容に、承認者・依頼者・</text>
+<text x="678" y="596" font-size="13" fill="#21005D" fill-opacity="0.82">理由を残す。</text>
+<rect x="874" y="475" width="56" height="22" rx="11" fill="#6750A4"/>
+<text x="902.0" y="491" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">コード</text>
+<line x1="960" y1="310" x2="1010" y2="310" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<line x1="940" y1="590" x2="1010" y2="400" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<rect x="1010" y="150" width="550" height="300" rx="12" fill="#EADDFF" stroke="#6750A4" stroke-width="2"/>
+<text x="1024" y="178" font-size="16" font-weight="700" fill="#21005D">6 実行の直後に記録（after）</text>
+<text x="1024" y="205.5" font-size="13.5" fill="#21005D" fill-opacity="0.82">監査ログ（Firestore の audit_logs）に、1操作ごとに残す。</text>
+<text x="1024" y="225.0" font-size="13.5" fill="#21005D" fill-opacity="0.82"></text>
+<text x="1024" y="244.5" font-size="13.5" fill="#21005D" fill-opacity="0.82">　誰が：ユーザーID</text>
+<text x="1024" y="264.0" font-size="13.5" fill="#21005D" fill-opacity="0.82">　いつ：時刻</text>
+<text x="1024" y="283.5" font-size="13.5" fill="#21005D" fill-opacity="0.82">　何を：ツール名と引数</text>
+<text x="1024" y="303.0" font-size="13.5" fill="#21005D" fill-opacity="0.82">　なぜ：理由</text>
+<text x="1024" y="322.5" font-size="13.5" fill="#21005D" fill-opacity="0.82">　結果：許可／停止／実行</text>
+<text x="1024" y="342.0" font-size="13.5" fill="#21005D" fill-opacity="0.82"></text>
+<text x="1024" y="361.5" font-size="13.5" fill="#21005D" fill-opacity="0.82">画面の「操作の記録」で、本人が見られる。</text>
+<rect x="1494" y="160" width="56" height="22" rx="11" fill="#6750A4"/>
+<text x="1522.0" y="176" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">コード</text>
+<rect x="1010" y="480" width="550" height="270" rx="12" fill="#F4EFF4" stroke="#CAC4D0" stroke-width="2"/>
+<text x="1024" y="508" font-size="16" font-weight="700" fill="#79747E">そのほかの安全策</text>
+<text x="1024" y="535" font-size="13" fill="#79747E" fill-opacity="0.82">・Web ページの内容は、命令として扱わない（データとして渡す）</text>
+<text x="1024" y="554" font-size="13" fill="#79747E" fill-opacity="0.82">・引用は原文と照合し、判定はコードで行う</text>
+<text x="1024" y="573" font-size="13" fill="#79747E" fill-opacity="0.82">・取得は robots.txt を守り、内部アドレスは拒否</text>
+<text x="1024" y="592" font-size="13" fill="#79747E" fill-opacity="0.82">・画面は、Web 由来の文字列を HTML として解釈しない</text>
+<text x="1024" y="611" font-size="13" fill="#79747E" fill-opacity="0.82">・CSV の式の実行を防ぐ。書き込みは同一オリジンのみ</text>
+<text x="1024" y="630" font-size="13" fill="#79747E" fill-opacity="0.82">・専用サービスアカウントに最小権限</text>
+<text x="1024" y="649" font-size="13" fill="#79747E" fill-opacity="0.82">・混雑・失敗時は、安全な文面にフォールバック</text>
+<text x="40" y="840" font-size="14" font-weight="700" text-anchor="start" fill="#1D1B20">凡例</text>
+<rect x="90" y="826" width="22" height="16" rx="4" fill="#EADDFF" stroke="#6750A4" stroke-width="2"/>
+<text x="120" y="840" font-size="13" font-weight="400" text-anchor="start" fill="#49454F">コード（自作）</text>
+<rect x="280" y="826" width="22" height="16" rx="4" fill="#D3E3FD" stroke="#1A73E8" stroke-width="2"/>
+<text x="310" y="840" font-size="13" font-weight="400" text-anchor="start" fill="#49454F">AI（Gemini）</text>
+<rect x="470" y="826" width="22" height="16" rx="4" fill="#FFFFFF" stroke="#79747E" stroke-width="2"/>
+<text x="500" y="840" font-size="13" font-weight="400" text-anchor="start" fill="#49454F">Google Cloud・外部</text>
+<rect x="660" y="826" width="22" height="16" rx="4" fill="#FFE8CC" stroke="#C77700" stroke-width="2"/>
+<text x="690" y="840" font-size="13" font-weight="400" text-anchor="start" fill="#49454F">人（本人）</text>
+<line x1="850" y1="834" x2="886" y2="834" stroke="#49454F" stroke-width="2.5" marker-end="url(#a)"/>
+<text x="894" y="840" font-size="13" font-weight="400" text-anchor="start" fill="#49454F">呼び出し・データ</text>
+<line x1="1020" y1="834" x2="1056" y2="834" stroke="#C77700" stroke-width="2.5" stroke-dasharray="8 5" marker-end="url(#h)"/>
+<text x="1064" y="840" font-size="13" font-weight="400" text-anchor="start" fill="#49454F">人間の承認（別の経路）</text>
+</svg>
