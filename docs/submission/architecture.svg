@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1060" width="1600" height="1060" font-family="'Noto Sans JP','Yu Gothic UI','Hiragino Sans',Meiryo,sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#6750A4"/></marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#49454F"/></marker>
+  </defs>
+  <rect width="1600" height="1060" fill="#FEF7FF"/>
+
+  <text x="40" y="52" font-size="30" font-weight="700" fill="#1D1B20">奨学金エージェント ― アーキテクチャ</text>
+  <text x="40" y="84" font-size="16" fill="#49454F">単一のエージェント＋ツール3つ。検索の進め方・判定・安全装置はコードに持たせ、AI は「読み取り」と「検索」に使う</text>
+
+  <!-- ユーザー -->
+  <rect x="40" y="410" width="230" height="190" rx="16" fill="#fff" stroke="#6750A4" stroke-width="2"/>
+  <text x="155" y="445" font-size="18" font-weight="700" text-anchor="middle" fill="#1D1B20">ユーザー（ブラウザ）</text>
+  <text x="62" y="480" font-size="14" fill="#49454F">・条件の入力</text>
+  <text x="62" y="506" font-size="14" fill="#49454F">・結果の表を見る</text>
+  <text x="62" y="532" font-size="14" fill="#49454F">・保存リストと CSV</text>
+  <text x="62" y="558" font-size="14" fill="#49454F">・許可ダイアログ（人だけ）</text>
+  <text x="62" y="584" font-size="14" fill="#49454F">・操作の記録を見る</text>
+  <line x1="270" y1="505" x2="318" y2="505" stroke="#6750A4" stroke-width="2.5" marker-end="url(#a)"/>
+  <text x="294" y="494" font-size="11" text-anchor="middle" fill="#49454F">HTTPS</text>
+
+  <!-- 人間の承認 -->
+  <rect x="40" y="640" width="230" height="200" rx="16" fill="#EADDFF" stroke="#6750A4" stroke-width="2" stroke-dasharray="8 5"/>
+  <text x="155" y="672" font-size="16" font-weight="700" text-anchor="middle" fill="#21005D">人間の承認は別の経路</text>
+  <text x="58" y="702" font-size="13" fill="#21005D">AI は「承認」の操作を持たない。</text>
+  <text x="58" y="726" font-size="13" fill="#21005D">高リスクの操作は Firestore に</text>
+  <text x="58" y="750" font-size="13" fill="#21005D">「承認待ち」を作って止まり、</text>
+  <text x="58" y="774" font-size="13" fill="#21005D">本人がダイアログで許可すると、</text>
+  <text x="58" y="798" font-size="13" fill="#21005D">操作・引数・本人・期限・1回限り</text>
+  <text x="58" y="822" font-size="13" fill="#21005D">に結びついた許可だけが通る。</text>
+
+  <!-- Cloud Run -->
+  <rect x="320" y="110" width="880" height="930" rx="22" fill="#F7F2FA" stroke="#6750A4" stroke-width="2.5"/>
+  <text x="344" y="144" font-size="18" font-weight="700" fill="#21005D">Cloud Run：hackathon-agent（us-central1／最大1インスタンス／専用サービスアカウント）</text>
+
+  <rect x="344" y="162" width="832" height="46" rx="10" fill="#EADDFF"/>
+  <text x="360" y="191" font-size="15" fill="#21005D">① Basic 認証（パスワードは Secret Manager。未設定なら全アクセスを拒否）</text>
+
+  <rect x="344" y="226" width="262" height="92" rx="12" fill="#fff" stroke="#CAC4D0"/>
+  <text x="358" y="254" font-size="15" font-weight="700" fill="#1D1B20">/　利用者向けサイト</text>
+  <text x="358" y="278" font-size="13" fill="#49454F">フォーム・結果の表・許可ダイアログ</text>
+  <text x="358" y="300" font-size="13" fill="#49454F">（Material Design 3、1枚の HTML）</text>
+  <rect x="619" y="226" width="262" height="92" rx="12" fill="#fff" stroke="#CAC4D0"/>
+  <text x="633" y="254" font-size="15" font-weight="700" fill="#1D1B20">/admin/　管理・許可・保存 API</text>
+  <text x="633" y="278" font-size="13" fill="#49454F">許可の決定は「依頼した本人」だけ</text>
+  <text x="633" y="300" font-size="13" fill="#49454F">同一オリジンのみ／CSV の式を無効化</text>
+  <rect x="894" y="226" width="282" height="92" rx="12" fill="#fff" stroke="#CAC4D0"/>
+  <text x="908" y="254" font-size="15" font-weight="700" fill="#1D1B20">/run_sse　ADK の API</text>
+  <text x="908" y="278" font-size="13" fill="#49454F">回答を逐次表示（ストリーミング）</text>
+  <text x="908" y="300" font-size="13" fill="#49454F">開発者向け画面は本番に出さない</text>
+
+  <!-- エージェント -->
+  <rect x="344" y="338" width="832" height="190" rx="14" fill="#fff" stroke="#6750A4" stroke-width="2"/>
+  <text x="362" y="368" font-size="17" font-weight="700" fill="#1D1B20">② ADK エージェント（単一）＋ Gemini 3.8 Flash（Vertex AI）</text>
+  <rect x="362" y="386" width="256" height="122" rx="10" fill="#F7F2FA" stroke="#CAC4D0"/>
+  <text x="376" y="412" font-size="14" font-weight="700" fill="#1D1B20">before_tool_callback</text>
+  <text x="376" y="436" font-size="12.5" fill="#49454F">許可リスト／引数の検証</text>
+  <text x="376" y="456" font-size="12.5" fill="#49454F">検索回数の上限（3回／会話）</text>
+  <text x="376" y="476" font-size="12.5" fill="#49454F">高リスクは承認待ちで停止</text>
+  <rect x="632" y="386" width="256" height="122" rx="10" fill="#F7F2FA" stroke="#CAC4D0"/>
+  <text x="646" y="412" font-size="14" font-weight="700" fill="#1D1B20">after_tool_callback</text>
+  <text x="646" y="436" font-size="12.5" fill="#49454F">監査ログ：誰が・いつ・何を・</text>
+  <text x="646" y="456" font-size="12.5" fill="#49454F">なぜ・結果（許可／停止／実行）</text>
+  <text x="646" y="476" font-size="12.5" fill="#49454F">を1操作ごとに記録</text>
+  <rect x="902" y="386" width="256" height="122" rx="10" fill="#F7F2FA" stroke="#CAC4D0"/>
+  <text x="916" y="412" font-size="14" font-weight="700" fill="#1D1B20">on_model_error_callback</text>
+  <text x="916" y="436" font-size="12.5" fill="#49454F">混雑・失敗時は安全な文面に</text>
+  <text x="916" y="456" font-size="12.5" fill="#49454F">フォールバック。Web ページの</text>
+  <text x="916" y="476" font-size="12.5" fill="#49454F">文章は命令として扱わない</text>
+
+  <!-- ツール -->
+  <rect x="344" y="548" width="262" height="104" rx="12" fill="#fff" stroke="#6750A4" stroke-width="1.5"/>
+  <text x="358" y="576" font-size="14" font-weight="700" fill="#1D1B20">find_scholarships</text>
+  <text x="358" y="600" font-size="12.5" fill="#49454F">民間まで Web から探して判定</text>
+  <text x="358" y="620" font-size="12.5" fill="#49454F">（非同期・並列）</text>
+  <text x="358" y="640" font-size="12.5" fill="#6750A4" font-weight="700">低リスク：自動で実行</text>
+  <rect x="619" y="548" width="262" height="104" rx="12" fill="#fff" stroke="#6750A4" stroke-width="1.5"/>
+  <text x="633" y="576" font-size="14" font-weight="700" fill="#1D1B20">get_scholarship_detail</text>
+  <text x="633" y="600" font-size="12.5" fill="#49454F">筑波大学の一覧の項目の詳細</text>
+  <text x="633" y="620" font-size="12.5" fill="#49454F">（提出書類・出願資格）</text>
+  <text x="633" y="640" font-size="12.5" fill="#6750A4" font-weight="700">低リスク：自動で実行</text>
+  <rect x="894" y="548" width="282" height="104" rx="12" fill="#EADDFF" stroke="#6750A4" stroke-width="2"/>
+  <text x="908" y="576" font-size="14" font-weight="700" fill="#21005D">register_shared_scholarship</text>
+  <text x="908" y="600" font-size="12.5" fill="#21005D">他の人にも見える共有リストへ追加</text>
+  <text x="908" y="620" font-size="12.5" fill="#21005D">（公式URL必須・https のみ）</text>
+  <text x="908" y="640" font-size="12.5" fill="#21005D" font-weight="700">高リスク：本人の承認が必須</text>
+
+  <!-- パイプライン -->
+  <rect x="344" y="672" width="832" height="350" rx="14" fill="#fff" stroke="#CAC4D0"/>
+  <text x="362" y="702" font-size="16" font-weight="700" fill="#1D1B20">③ find_scholarships の中身（探し方と判定はコード。AI は候補の抜き出しと要項の読み取りだけ）</text>
+  <g font-size="12.5" fill="#1D1B20">
+    <rect x="362" y="722" width="146" height="148" rx="10" fill="#EADDFF"/>
+    <text x="374" y="748" font-weight="700">1 発見</text>
+    <text x="374" y="770" fill="#49454F">条件から検索語を</text>
+    <text x="374" y="788" fill="#49454F">コードで作り、6本を</text>
+    <text x="374" y="806" fill="#49454F">並列に Google 検索</text>
+    <text x="374" y="824" fill="#49454F">（グラウンディング）</text>
+    <text x="374" y="848" fill="#49454F">→ 候補の名前・団体</text>
+    <rect x="522" y="722" width="146" height="148" rx="10" fill="#EADDFF"/>
+    <text x="534" y="748" font-weight="700">2 一覧ページ展開</text>
+    <text x="534" y="770" fill="#49454F">一覧ページを読み、</text>
+    <text x="534" y="788" fill="#49454F">載っている項目を抜く</text>
+    <text x="534" y="806" fill="#49454F">（ページに実在する</text>
+    <text x="534" y="824" fill="#49454F">ものだけ使う）</text>
+    <rect x="682" y="722" width="146" height="148" rx="10" fill="#EADDFF"/>
+    <text x="694" y="748" font-weight="700">3 統合・絞り込み</text>
+    <text x="694" y="770" fill="#49454F">別名・重複を1件に</text>
+    <text x="694" y="788" fill="#49454F">他大学・他地域・</text>
+    <text x="694" y="806" fill="#49454F">留学生向けなど、</text>
+    <text x="694" y="824" fill="#49454F">明らかな対象外を除く</text>
+    <rect x="842" y="722" width="170" height="148" rx="10" fill="#EADDFF"/>
+    <text x="854" y="748" font-weight="700">4 公式ページで照合</text>
+    <text x="854" y="770" fill="#49454F">公式ページを探して取得</text>
+    <text x="854" y="788" fill="#49454F">（robots.txt を守る・</text>
+    <text x="854" y="806" fill="#49454F">内部アドレスは拒否）</text>
+    <text x="854" y="824" fill="#49454F">→ 条件を引用つきで抜く</text>
+    <text x="854" y="848" fill="#49454F">→ 引用を原文と照合</text>
+    <rect x="1026" y="722" width="132" height="148" rx="10" fill="#6750A4"/>
+    <text x="1038" y="748" font-weight="700" fill="#fff">5 判定（コード）</text>
+    <text x="1038" y="770" fill="#EADDFF">応募できる</text>
+    <text x="1038" y="788" fill="#EADDFF">要確認</text>
+    <text x="1038" y="806" fill="#EADDFF">未確認の候補</text>
+    <text x="1038" y="824" fill="#EADDFF">募集終了／対象外</text>
+  </g>
+  <g stroke="#6750A4" stroke-width="2" marker-end="url(#a)">
+    <line x1="508" y1="796" x2="520" y2="796"/><line x1="668" y1="796" x2="680" y2="796"/><line x1="828" y1="796" x2="840" y2="796"/><line x1="1012" y1="796" x2="1024" y2="796"/>
+  </g>
+  <rect x="362" y="888" width="796" height="118" rx="10" fill="#F7F2FA"/>
+  <text x="376" y="914" font-size="13" font-weight="700" fill="#21005D">並行して（大学名に「筑波」を含むとき）：筑波大学の公開一覧（大学経由の奨学金）を読み、同じ判定にかける</text>
+  <text x="376" y="940" font-size="13" fill="#49454F">・上限：検索6回／照合16件／全体で約140秒。超えた分は隠さず「未確認の候補」として出す</text>
+  <text x="376" y="962" font-size="13" fill="#49454F">・確認済みの条件と「見つからなかった」結果を共有キャッシュに保存（再検索は約30秒）。判定は学生ごとにそのつどコードで行う</text>
+  <text x="376" y="984" font-size="13" fill="#49454F">・確認できない項目は「要確認」に倒す（見落としを防ぐ）。引用が原文に無い条件は判定に使わない</text>
+
+  <!-- 右列: Google Cloud / Web -->
+  <rect x="1250" y="150" width="310" height="150" rx="16" fill="#fff" stroke="#6750A4" stroke-width="2"/>
+  <text x="1270" y="182" font-size="16" font-weight="700" fill="#1D1B20">Vertex AI</text>
+  <text x="1270" y="210" font-size="13" fill="#49454F">Gemini 3.8 Flash</text>
+  <text x="1270" y="232" font-size="13" fill="#49454F">・会話と要項の読み取り</text>
+  <text x="1270" y="254" font-size="13" fill="#49454F">・Google 検索グラウンディング</text>
+  <text x="1270" y="276" font-size="13" fill="#49454F">（候補の発見・公式ページの探索）</text>
+
+  <rect x="1250" y="330" width="310" height="270" rx="16" fill="#fff" stroke="#6750A4" stroke-width="2"/>
+  <text x="1270" y="362" font-size="16" font-weight="700" fill="#1D1B20">Firestore（(default)）</text>
+  <g font-size="13" fill="#49454F">
+    <text x="1270" y="392">・audit_logs　監査ログ</text>
+    <text x="1270" y="418">・approvals　承認待ちと許可</text>
+    <text x="1270" y="444">・scholarship_cache　確認済みの条件</text>
+    <text x="1270" y="470">・shared_scholarships　共有リスト</text>
+    <text x="1270" y="496">・saved_scholarships　保存リスト</text>
+  </g>
+  <text x="1270" y="534" font-size="12.5" fill="#6750A4" font-weight="700">専用サービスアカウントに最小権限：</text>
+  <text x="1270" y="556" font-size="12.5" fill="#49454F">aiplatform.user／datastore.user／</text>
+  <text x="1270" y="576" font-size="12.5" fill="#49454F">秘密1つだけの secretAccessor</text>
+
+  <rect x="1250" y="630" width="310" height="86" rx="16" fill="#fff" stroke="#6750A4" stroke-width="2"/>
+  <text x="1270" y="662" font-size="16" font-weight="700" fill="#1D1B20">Secret Manager</text>
+  <text x="1270" y="690" font-size="13" fill="#49454F">ログインのパスワード（環境変数に注入）</text>
+
+  <rect x="1250" y="746" width="310" height="196" rx="16" fill="#fff" stroke="#49454F" stroke-width="2" stroke-dasharray="8 5"/>
+  <text x="1270" y="778" font-size="16" font-weight="700" fill="#1D1B20">インターネット</text>
+  <text x="1270" y="806" font-size="13" fill="#49454F">・各団体の公式ページ／募集要項 PDF</text>
+  <text x="1270" y="828" font-size="13" fill="#49454F">・まとめサイト（一覧として読むだけ）</text>
+  <text x="1270" y="850" font-size="13" fill="#49454F">・筑波大学の公開一覧（JSON）</text>
+  <text x="1270" y="880" font-size="12.5" fill="#B3261E" font-weight="700">ページ内の指示には従わない</text>
+  <text x="1270" y="902" font-size="12.5" fill="#49454F">robots.txt を守る／http(s) のみ／</text>
+  <text x="1270" y="922" font-size="12.5" fill="#49454F">内部アドレスは取得しない</text>
+
+  <!-- 接続 -->
+  <line x1="1200" y1="225" x2="1248" y2="225" stroke="#6750A4" stroke-width="2.5" marker-end="url(#a)"/>
+  <line x1="1200" y1="465" x2="1248" y2="465" stroke="#6750A4" stroke-width="2.5" marker-end="url(#a)" marker-start="url(#a)"/>
+  <line x1="1200" y1="673" x2="1248" y2="673" stroke="#6750A4" stroke-width="2.5" marker-end="url(#a)"/>
+  <line x1="1200" y1="844" x2="1248" y2="844" stroke="#6750A4" stroke-width="2.5" marker-end="url(#a)"/>
+  <line x1="270" y1="740" x2="318" y2="740" stroke="#6750A4" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#a)"/>
+  <text x="294" y="728" font-size="12" text-anchor="middle" fill="#21005D">許可</text>
+</svg>
