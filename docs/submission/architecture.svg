@@ -96,12 +96,12 @@
     <text x="374" y="806" fill="#49454F">並列に Google 検索</text>
     <text x="374" y="824" fill="#49454F">（グラウンディング）</text>
     <text x="374" y="848" fill="#49454F">→ 候補の名前・団体</text>
-    <rect x="522" y="722" width="146" height="148" rx="10" fill="#EADDFF"/>
-    <text x="534" y="748" font-weight="700">2 一覧ページ展開</text>
-    <text x="534" y="770" fill="#49454F">一覧ページを読み、</text>
-    <text x="534" y="788" fill="#49454F">載っている項目を抜く</text>
-    <text x="534" y="806" fill="#49454F">（ページに実在する</text>
-    <text x="534" y="824" fill="#49454F">ものだけ使う）</text>
+    <rect x="522" y="722" width="146" height="148" rx="10" fill="#F4EFF4" stroke="#CAC4D0" stroke-dasharray="5 4"/>
+    <text x="534" y="748" font-weight="700" fill="#79747E">2 一覧ページ展開</text>
+    <text x="534" y="770" fill="#79747E">【拡張予定】</text>
+    <text x="534" y="788" fill="#79747E">一覧ページを読み、</text>
+    <text x="534" y="806" fill="#79747E">載っている項目を抜く</text>
+    <text x="534" y="824" fill="#79747E">（現在は未稼働）</text>
     <rect x="682" y="722" width="146" height="148" rx="10" fill="#EADDFF"/>
     <text x="694" y="748" font-weight="700">3 統合・絞り込み</text>
     <text x="694" y="770" fill="#49454F">別名・重複を1件に</text>
@@ -120,7 +120,8 @@
     <text x="1038" y="770" fill="#EADDFF">応募できる</text>
     <text x="1038" y="788" fill="#EADDFF">要確認</text>
     <text x="1038" y="806" fill="#EADDFF">未確認の候補</text>
-    <text x="1038" y="824" fill="#EADDFF">募集終了／対象外</text>
+    <text x="1038" y="824" fill="#EADDFF">目的が違う</text>
+    <text x="1038" y="842" fill="#EADDFF">募集終了／対象外</text>
   </g>
   <g stroke="#6750A4" stroke-width="2" marker-end="url(#a)">
     <line x1="508" y1="796" x2="520" y2="796"/><line x1="668" y1="796" x2="680" y2="796"/><line x1="828" y1="796" x2="840" y2="796"/><line x1="1012" y1="796" x2="1024" y2="796"/>

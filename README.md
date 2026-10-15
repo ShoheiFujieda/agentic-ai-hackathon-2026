@@ -18,14 +18,14 @@
 |---|---|---|
 | エージェント | `hackathon_agent/agent.py` | ADK の単一エージェント（Gemini 3.8 Flash）。聞き取り、ツールの呼び出し、短い要約 |
 | ツール | `hackathon_agent/tools.py` | `find_scholarships`（探して判定）、`get_scholarship_detail`、`register_shared_scholarship`（高リスク） |
-| 検索 | `hackathon_agent/scholarship/websearch.py` | 発見（Google 検索グラウンディング）→ 一覧ページの展開 → 重複の統合 → 公式ページで照合（引用を原文と照合）→ 判定 |
+| 検索 | `hackathon_agent/scholarship/websearch.py` | 発見（Google 検索グラウンディング。年度を固定せず、募集中・次年度採用を探す）→ 重複の統合 → 公式ページで照合（引用を原文と照合）→ 判定 |
 | 判定（AI ではなくコード） | `hackathon_agent/scholarship/judge.py` | 学年・地域・分野・併給・締切・卒業後・目的を判定。確認できないものは「要確認」に倒す |
 | 取得の安全 | `hackathon_agent/scholarship/web.py` | robots.txt を守る、内部アドレスは取得しない、転送先も毎回確認 |
 | 筑波大学の公開一覧 | `hackathon_agent/scholarship/tsukuba.py` `service.py` | 大学経由の奨学金（大学名に「筑波」を含むとき併用） |
 | ガバナンス | `hackathon_agent/governance/` | `guard.py`（許可リスト・引数検証・上限）、`approvals.py`（人間の承認）、`audit.py`（監査ログ）、`fallback.py` |
 | 画面と API | `ui/`, `main.py` | 利用者向けサイト（Material Design 3）、許可・保存・CSV の API、Basic 認証 |
 | 評価・テスト | `tests/`, `hackathon_agent/evals/` | 自動テスト約175件、`adk eval` の評価セット |
-| 実験 | `scripts/exp_*.py`, `docs/experiments/` | 一覧ページ経由の集合拡張、30件の公式要項での照合、素のAI（同じメッセージ）との比較 |
+| 実験 | `scripts/exp_*.py`, `docs/experiments/` | 一覧ページ経由の集合拡張（実験。製品への組み込みは拡張予定）、30件の公式要項での照合、素のAI（同じメッセージ）との比較 |
 
 ## 使っている Google Cloud の製品
 - 実行: **Cloud Run**（`Dockerfile`、最大1インスタンス、専用サービスアカウント）
