@@ -218,7 +218,7 @@ def _who(profile: Profile) -> str:
     return f"{school}生"
 
 
-def _pool(profile: Profile, purpose: str, university: str, field_text: str, year: int) -> list[str]:
+def _pool(profile: Profile, purpose: str, university: str, field_text: str, year: int, next_year: int) -> list[str]:
     """1つの目的について、検索語（質問文）の候補を、優先度の高い順に作る。
 
     年度を「{year}年度の募集」と固定しない。秋には、春に締め切った前年度分ばかりが出て、
@@ -228,12 +228,12 @@ def _pool(profile: Profile, purpose: str, university: str, field_text: str, year
     who = _who(profile)
     words = PURPOSE_WORDS[purpose]
     home, res, guard = profile.home_prefecture, profile.residence, profile.guardian_residence
-    now = f"いま応募できる（募集中、または{year + 1}年度採用の募集）"
+    now = f"いま応募できる（募集中、または{next_year}年度採用の募集）"
     if purpose == "学業・生活費":
         subject = f"{field_text}を学ぶ" if field_text else ""
         qs = [
             f"{subject}{who}が{now}奨学金",
-            f"{who}向け {year + 1}年度採用の奨学金 募集開始 財団・企業・自治体",
+            f"{who}向け {next_year}年度採用の奨学金 募集開始 財団・企業・自治体",
             f"{home}出身の{who}が{now}奨学金（財団・企業・自治体）",
             f"{res}に住む{who}が{now}自治体・公的な奨学金と、民間の給付型奨学金",
         ]
@@ -241,14 +241,14 @@ def _pool(profile: Profile, purpose: str, university: str, field_text: str, year
             qs.append(f"{university}の学生が{now}奨学金（学内・民間）")
         qs += [
             f"保護者が{guard}に住んでいる{who}が{now}奨学金",
-            f"{who}向け 給付型奨学金 民間財団 募集中の一覧（{year}年度・{year + 1}年度）",
+            f"{who}向け 給付型奨学金 民間財団 募集中の一覧（{year}年度・{next_year}年度）",
         ]
         return qs
     qs = [
         f"{who}が{now}{words}",
-        f"{who}向け {year + 1}年度採用の{words} 募集開始",
+        f"{who}向け {next_year}年度採用の{words} 募集開始",
         f"{home}出身、または{res}在住の{who}が{now}{words}",
-        f"{words} 民間財団・企業・自治体 募集中の一覧（{year}年度・{year + 1}年度）",
+        f"{words} 民間財団・企業・自治体 募集中の一覧（{year}年度・{next_year}年度）",
     ]
     if university:
         qs.append(f"{university}の学生向けの{words}の募集一覧（募集中）")
@@ -259,15 +259,18 @@ def _pool(profile: Profile, purpose: str, university: str, field_text: str, year
     return qs
 
 
-def build_queries(profile: Profile, university: str, field_text: str, year: int) -> list[str]:
+def build_queries(
+    profile: Profile, university: str, field_text: str, year: int, next_year: int | None = None
+) -> list[str]:
     """プロフィール（立場・目的・地域）から検索語（質問文）をコードで作る。同じ検索が重ならないようにする。
 
     目的ごとに検索語の候補を作り、目的をまたいで交互に並べる（留学・研究・活動を先に）。
-    目的が1つなら、その目的の検索語を優先度順に使う。学業・生活費だけのときは、従来どおりの6本。
+    目的が1つなら、その目的の検索語を優先度順に使う。年度は固定せず、いま応募できるもの（募集中・次年度採用）を探す。
     """
     purposes = profile.purposes or DEFAULT_PURPOSES
     ordered = [p for p in purposes if p != "学業・生活費"] + (["学業・生活費"] if "学業・生活費" in purposes else [])
-    pools = [_pool(profile, p, university, field_text, year) for p in ordered]
+    next_year = next_year or year + 1  # 次年度採用の年度（年度は4月始まり。1〜3月は、今年が次年度）
+    pools = [_pool(profile, p, university, field_text, year, next_year) for p in ordered]
     out: list[str] = []
     for i in range(max(len(p) for p in pools)):
         for pool in pools:
@@ -614,7 +617,8 @@ def _dedupe_by_url(results: list[dict]) -> list[dict]:
 def search(profile: Profile, university: str, field_text: str, today: date, budget: Budget | None = None) -> dict:
     budget = budget or Budget()
     prefs = {profile.home_prefecture, profile.residence, profile.school_location, profile.guardian_residence}
-    queries = build_queries(profile, university, field_text, today.year)[: budget.searches]
+    next_year = today.year + 1 if today.month >= 4 else today.year
+    queries = build_queries(profile, university, field_text, today.year, next_year)[: budget.searches]
 
     t0 = time.time()
     # 同じ条件の再検索は、発見の結果（候補の一覧）を共有キャッシュから使う。確認できた分は積み上がる

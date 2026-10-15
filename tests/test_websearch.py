@@ -370,6 +370,11 @@ def test_学業と留学の両方なら留学の検索語を先に_学業の検�
     assert sum("留学" in q for q in first6) == 3 and sum("留学" not in q for q in first6) == 3  # 目的ごとに配分する
 
 
+def test_次年度採用の年度は4月始まりで求める():
+    assert any("2027年度採用" in q for q in websearch.build_queries(ME, "", "", 2026))
+    assert any("2027年度採用" in q for q in websearch.build_queries(ME, "", "", 2027, next_year=2027))
+
+
 def test_高校生と卒業後の人の立場の言い方():
     hs = Profile("高校", 2, [], "埼玉県", "埼玉県", "埼玉県", "埼玉県", [])
     assert "高校2年生" in websearch.build_queries(hs, "", "", 2026)[0]
