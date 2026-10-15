@@ -10,20 +10,21 @@
 <style>
   /* ---------------------------------------------------------------
      Material Design 3 に沿ったデザイン
-     - カラーロール（primary / surface / on-surface / outline など）。配色は黒・白・グレーのニュートラルな階調
+     - カラーロール（primary / secondary-container / surface / on-surface / outline / error など）。配色は M3 ベースラインの紫を基調にした標準のスキーム
      - タイプスケール（Headline / Title / Body / Label）、シェイプ（角丸の段階）、状態レイヤー（hover 8% / focus・pressed 10%）
      - コンポーネント: Top app bar、Linear / Circular progress、Filled・Tonal・Outlined・Text ボタン、Outlined text field、
        Assist / Suggestion chip、Outlined card、Dialog、Snackbar、List
      - タッチターゲットは 48px 以上
      --------------------------------------------------------------- */
   :root {
-    --md-primary: #1b1b1b; --md-on-primary: #ffffff;
-    --md-primary-container: #e2e2e2; --md-on-primary-container: #1b1b1b;
-    --md-secondary-container: #e8e8e8; --md-on-secondary-container: #1b1b1b;
-    --md-surface: #fbfbfb; --md-on-surface: #1b1b1b; --md-on-surface-variant: #474747;
-    --md-surface-container-lowest: #ffffff; --md-surface-container-low: #f5f5f5; --md-surface-container: #efefef; --md-surface-container-high: #e9e9e9;
-    --md-outline: #777777; --md-outline-variant: #c8c8c8; --md-scrim: rgba(0,0,0,.32);
-    --md-inverse-surface: #303030; --md-inverse-on-surface: #f2f2f2;
+    --md-primary: #6750a4; --md-on-primary: #ffffff;
+    --md-primary-container: #eaddff; --md-on-primary-container: #21005d;
+    --md-secondary-container: #e8def8; --md-on-secondary-container: #1d192b;
+    --md-error: #b3261e; --md-error-container: #f9dedc; --md-on-error-container: #410e0b;
+    --md-surface: #fef7ff; --md-on-surface: #1d1b20; --md-on-surface-variant: #49454f;
+    --md-surface-container-lowest: #ffffff; --md-surface-container-low: #f7f2fa; --md-surface-container: #f3edf7; --md-surface-container-high: #ece6f0;
+    --md-outline: #79747e; --md-outline-variant: #cac4d0; --md-scrim: rgba(0,0,0,.32);
+    --md-inverse-surface: #322f35; --md-inverse-on-surface: #f5eff7;
     --md-font: "Roboto", "Noto Sans JP", system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
     --md-shape-xs: 4px; --md-shape-sm: 8px; --md-shape-md: 12px; --md-shape-lg: 16px; --md-shape-xl: 28px; --md-shape-full: 999px;
     --md-elev-1: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px 1px rgba(0,0,0,.15);
@@ -31,19 +32,20 @@
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --md-primary: #e3e3e3; --md-on-primary: #1b1b1b;
-      --md-primary-container: #3a3a3a; --md-on-primary-container: #e3e3e3;
-      --md-secondary-container: #333333; --md-on-secondary-container: #e3e3e3;
-      --md-surface: #131313; --md-on-surface: #e3e3e3; --md-on-surface-variant: #c6c6c6;
-      --md-surface-container-lowest: #0e0e0e; --md-surface-container-low: #1b1b1b; --md-surface-container: #1f1f1f; --md-surface-container-high: #2a2a2a;
-      --md-outline: #919191; --md-outline-variant: #474747; --md-scrim: rgba(0,0,0,.6);
-      --md-inverse-surface: #e3e3e3; --md-inverse-on-surface: #303030;
+      --md-primary: #d0bcff; --md-on-primary: #381e72;
+      --md-primary-container: #4f378b; --md-on-primary-container: #eaddff;
+      --md-secondary-container: #4a4458; --md-on-secondary-container: #e8def8;
+      --md-error: #f2b8b5; --md-error-container: #8c1d18; --md-on-error-container: #f9dedc;
+      --md-surface: #141218; --md-on-surface: #e6e0e9; --md-on-surface-variant: #cac4d0;
+      --md-surface-container-lowest: #0f0d13; --md-surface-container-low: #1d1b20; --md-surface-container: #211f26; --md-surface-container-high: #2b2930;
+      --md-outline: #938f99; --md-outline-variant: #49454f; --md-scrim: rgba(0,0,0,.6);
+      --md-inverse-surface: #e6e0e9; --md-inverse-on-surface: #322f35;
     }
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body { margin: 0; background: var(--md-surface); color: var(--md-on-surface); font: 400 16px/1.6 var(--md-font); -webkit-font-smoothing: antialiased; }
-  a { color: var(--md-on-surface); text-underline-offset: 3px; }
+  a { color: var(--md-primary); text-underline-offset: 3px; }
   .skip { position: absolute; left: 16px; top: -80px; background: var(--md-primary); color: var(--md-on-primary); padding: 8px 16px; border-radius: var(--md-shape-full); z-index: 50; }
   .skip:focus { top: 8px; }
   svg.i { width: 24px; height: 24px; fill: currentColor; flex: none; }
@@ -105,8 +107,8 @@
   .btn.filled { --bg: var(--md-primary); --fg: var(--md-on-primary); }
   .btn.filled:hover { box-shadow: var(--md-elev-1); }
   .btn.tonal { --bg: var(--md-secondary-container); --fg: var(--md-on-secondary-container); }
-  .btn.outlined { --bd: var(--md-outline); --fg: var(--md-on-surface); }
-  .btn.text { padding: 0 12px; --fg: var(--md-on-surface); }
+  .btn.outlined { --bd: var(--md-outline); --fg: var(--md-primary); }
+  .btn.text { padding: 0 12px; --fg: var(--md-primary); }
   .btn.sm { min-height: 40px; padding: 0 16px; }
   .btn.text.sm { padding: 0 12px; }
   .btn:disabled { opacity: .38; cursor: default; box-shadow: none; }
@@ -115,7 +117,7 @@
   /* ---- Outlined text field（ラベルが浮き上がる） ---- */
   .field { position: relative; }
   .field input, .field select, .field textarea { width: 100%; min-height: 56px; font: 400 16px/24px var(--md-font); color: var(--md-on-surface); background: transparent; border: 1px solid var(--md-outline); border-radius: var(--md-shape-xs); padding: 16px 16px; outline: none; transition: border-color .15s, box-shadow .15s; appearance: none; -webkit-appearance: none; }
-  .field select { padding-right: 44px; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M7 10l5 5 5-5z'/></svg>"); background-repeat: no-repeat; background-position: right 12px center; background-size: 24px; }
+  .field select { padding-right: 44px; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2379747E'><path d='M7 10l5 5 5-5z'/></svg>"); background-repeat: no-repeat; background-position: right 12px center; background-size: 24px; }
   .field input:hover, .field select:hover, .field textarea:hover { border-color: var(--md-on-surface); }
   .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--md-primary); box-shadow: inset 0 0 0 1px var(--md-primary); }
   .field label { position: absolute; left: 12px; top: 16px; padding: 0 4px; font-size: 16px; line-height: 24px; color: var(--md-on-surface-variant); background: var(--md-surface-container-lowest); pointer-events: none; transform-origin: left top; transition: transform .15s, color .15s; }
@@ -161,11 +163,11 @@
   .msg.bot p { margin: 8px 0; } .msg.bot ul, .msg.bot ol { margin: 4px 0; padding-left: 1.4em; }
   .msg.bot hr { border: 0; border-top: 1px solid var(--md-outline-variant); margin: 12px 0; }
   .msg.bot code { background: var(--md-surface-container-high); border-radius: 4px; padding: 0 4px; font: 13px ui-monospace, Menlo, Consolas, monospace; }
-  .status { align-self: flex-start; display: inline-flex; align-items: center; gap: 12px; min-height: 40px; padding: 0 16px; border-radius: var(--md-shape-full); background: var(--md-surface-container); font-size: 14px; }
-  .status.done { color: var(--md-on-surface-variant); }
-  .status.done .cp { animation: none; border: 0; width: 20px; height: 20px; background: no-repeat center/18px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/></svg>"); }
+  .status { align-self: flex-start; display: inline-flex; align-items: center; gap: 12px; min-height: 40px; padding: 0 16px; border-radius: var(--md-shape-full); background: var(--md-secondary-container); color: var(--md-on-secondary-container); font-size: 14px; }
+  .status.done { background: var(--md-surface-container); color: var(--md-on-surface-variant); }
+  .status.done .cp { animation: none; border: 0; width: 20px; height: 20px; background: no-repeat center/18px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236750A4'><path d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/></svg>"); }
   .status .timer { color: var(--md-on-surface-variant); font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .error { display: flex; gap: 12px; align-items: flex-start; border: 1px solid var(--md-outline); border-radius: var(--md-shape-md); padding: 12px 16px; font-size: 14px; background: var(--md-surface-container-lowest); }
+  .error { display: flex; gap: 12px; align-items: flex-start; border-radius: var(--md-shape-md); padding: 12px 16px; font-size: 14px; background: var(--md-error-container); color: var(--md-on-error-container); }
   .composer { display: flex; gap: 12px; align-items: flex-start; }
   .composer .field { flex: 1; }
   .composer textarea { min-height: 56px; resize: vertical; border-radius: 28px; padding: 16px 20px; }
