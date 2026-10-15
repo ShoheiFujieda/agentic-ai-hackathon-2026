@@ -73,27 +73,37 @@ const T = (slide, text, o) => slide.addText(text, { isTextBox: true, margin: 0, 
     s.addNotes(`【${r.time}】\n${r.text}` + (body.includes("動画を挿入したら") ? `\n\n（動画を挿入したら、［再生］タブで「自動」を選ぶ。自分の声を重ねるなら、動画の音量をミュート）` : ""));
   };
 
-  // 1. タイトル（暗）
+  // 1. 問いかけ（暗）。冒頭で顔を上げてもらう。話す言葉を、そのまま大きく出す（言葉に詰まったときの保険にもなる）
   {
     const s = pres.addSlide({ masterName: "DARK" });
-    T(s, "第5回 Agentic AI Hackathon with Google Cloud", { x: 0.8, y: 1.2, w: 11.5, h: 0.4, fontSize: 16, color: "CADCFC" });
-    T(s, "奨学金エージェント", { x: 0.8, y: 2.0, w: 11.5, h: 1.3, fontSize: 60, bold: true, color: C.background1 });
-    T(s, "応募できる奨学金・助成金を、探して「確かめて」届ける", { x: 0.8, y: 3.45, w: 11.5, h: 0.7, fontSize: 28, color: "EADDFF" });
-    const chips = ["高校生〜社会人", "学業・留学・研究・プロジェクト", "公式ページで確認"];
-    let cx = 0.8;
-    chips.forEach((c, i) => {
-      const w = 0.3 * c.length + 0.7;
-      s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: cx, y: 4.7, w, h: 0.55, rectRadius: 0.27, fill: { color: "381E72" }, line: { color: "6750A4", width: 1 }, objectName: `チップ${i + 1}` });
-      T(s, c, { x: cx, y: 4.7, w, h: 0.55, fontSize: 16, color: "EADDFF", align: "center", valign: "middle" });
-      cx += w + 0.25;
-    });
-    notes(s, "0:00〜0:05（約5秒）", "奨学金エージェントです。応募できる奨学金を、探して、確かめて届けます。");
+    T(s, "生成AIに、\n調べものを頼んだこと、\nありますか？", { x: 0.8, y: 1.3, w: 11.8, h: 3.4, fontSize: 56, bold: true, color: C.background1, valign: "middle" });
+    T(s, "奨学金エージェント", { x: 0.8, y: 5.3, w: 8, h: 0.6, fontSize: 28, bold: true, color: "EADDFF" });
+    T(s, "応募できる奨学金を、探して「確かめて」届ける　｜　第5回 Agentic AI Hackathon with Google Cloud", { x: 0.8, y: 5.95, w: 11.8, h: 0.4, fontSize: 14, color: "CADCFC" });
+    notes(s, "", "");
   }
 
-  // 2. 課題
+  // 2. 体験（1スライド1メッセージ: AIに奨学金を探させると、うまくいかない）
   {
     const s = pres.addSlide({ masterName: "CONTENT" });
-    s.addText("生成AIに「全部教えて」と聞くと、募集終了が混ざる", { placeholder: "title" });
+    s.addText("大学生の私が、AIに奨学金を探させると…", { placeholder: "title" });
+    const items = [
+      [fa.FaHistory, "5年前の募集を、拾ってくる"],
+      [fa.FaSearchMinus, "すぐ見つかるものを、漏らす"],
+    ];
+    for (let i = 0; i < 2; i++) {
+      const y = 1.7 + i * 1.95;
+      card(s, 0.6, y, 12.1, 1.7, `体験カード${i + 1}`);
+      await iconCircle(s, items[i][0], 1.0, y + 0.35, 1.0, C.accent5, `体験アイコン${i + 1}`);
+      T(s, items[i][1], { x: 2.4, y, w: 10, h: 1.7, fontSize: 36, bold: true, color: C.text1, valign: "middle" });
+    }
+    T(s, "意外と、うまくいきません。なぜか？", { x: 0.6, y: 5.85, w: 12.1, h: 0.8, fontSize: 28, bold: true, color: C.accent1, valign: "middle" });
+    notes(s, "", "");
+  }
+
+  // 3. 課題（数字）
+  {
+    const s = pres.addSlide({ masterName: "CONTENT" });
+    s.addText("素のAIの回答34件のうち、12件は募集終了", { placeholder: "title" });
     card(s, 0.6, 1.6, 5.6, 2.35, "数字カード1");
     T(s, "12 / 34件", { x: 0.9, y: 1.75, w: 5.0, h: 1.2, fontSize: 60, bold: true, color: C.accent5, valign: "middle" });
     T(s, "素のAIが挙げた回答のうち、公式ページで見ると募集終了だったもの", { x: 0.9, y: 3.0, w: 5.0, h: 0.8, fontSize: 16, color: C.text1 });
