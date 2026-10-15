@@ -65,7 +65,13 @@ async function iconCircle(slide, Comp, x, y, d, circleColor, name) {
 const T = (slide, text, o) => slide.addText(text, { isTextBox: true, margin: 0, fontFace: THEME.bodyFontFace, ...o });
 
 (async () => {
-  const notes = (s, timing, body) => s.addNotes(`【${timing}】\n${body}`);
+  // 本編8枚のノートは、narration/script.json の原稿（スライド1〜8の順）
+  const SCRIPT = JSON.parse(require("fs").readFileSync(path.join(REPO, "docs/submission/narration/script.json"), "utf-8"));
+  let noteIdx = 0;
+  const notes = (s, timing, body) => {
+    const r = SCRIPT[noteIdx++];
+    s.addNotes(`【${r.time}】\n${r.text}` + (body.includes("動画を挿入したら") ? `\n\n（動画を挿入したら、［再生］タブで「自動」を選ぶ。自分の声を重ねるなら、動画の音量をミュート）` : ""));
+  };
 
   // 1. タイトル（暗）
   {
@@ -143,7 +149,7 @@ const T = (slide, text, o) => slide.addText(text, { isTextBox: true, margin: 0, 
     s.addText(points.map((t, k) => ({ text: t, options: { bullet: true, breakLine: k < points.length - 1 } })), {
       isTextBox: true, x: 9.8, y: 2.4, w: 2.7, h: 3.8, fontSize: 14, color: C.text1, margin: 0, valign: "top", paraSpaceAfter: 8,
     });
-    notes(s, timing, narration + "\n\n（動画を挿入したら、［再生］タブで「自動」または「クリック時」を選ぶ。撮影時は、動画の音声を使うか、ナレーションをこの原稿で読む）");
+    notes(s, timing, "動画を挿入したら");
     return s;
   };
   await videoSlide(
