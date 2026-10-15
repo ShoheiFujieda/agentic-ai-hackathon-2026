@@ -10,6 +10,8 @@
 import hashlib
 import io
 import logging
+import os
+import random
 import re
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -30,10 +32,8 @@ logger = logging.getLogger(__name__)
 
 MODEL = extract.MODEL
 MAX_PAGE_CHARS = 40_000
-WORKERS = 16  # 照合の並列数（Gemini の応答が遅い日でも1回りで終わらせるため多め）
-NEGATIVE_TTL = timedelta(
-    hours=6
-)  # 「公式ページを確認できなかった」結果を覚えておく時間（後で見つかるかもしれないので短い）
+WORKERS = 10  # 照合の並列数（多すぎると Vertex AI の利用上限（429）に当たるので、控えめにする）
+DEFAULT_NEGATIVE_HOURS = 6  # 「公式ページを確認できなかった」結果を覚えておく時間（後で見つかるかもしれないので短い）。環境変数 NEGATIVE_TTL_HOURS で変える
 MAX_FAILED_TO_CACHE = 2  # 発見の検索が6本中この本数まで失敗しても、結果は共有キャッシュに保存する（Gemini の一時的な時間切れは珍しくないため）
 CACHE_VERSION = "v3"  # v3: 卒業後・使途（目的）の条件を抜き出すようにした  # 抜き出し方を変えたら上げて、古いキャッシュを使わないようにする
 UNVERIFIED = "未確認の候補"
@@ -73,14 +73,17 @@ class Budget:
 # ---------- Gemini ----------
 def _gen(contents, config: types.GenerateContentConfig):
     """Gemini を呼ぶ。混雑（429）や一時的な失敗（5xx）は、待って少しだけ再試行する。"""
-    for wait in (3, None):  # 1回だけ再試行する（遅い日に待ち時間が何倍にもならないように）
+    # 混雑（429）は、待ち時間を延ばしながら最大3回まで再試行する（少しずらして、同時に再試行が集中しないようにする）。5xx は1回だけ
+    waits = (2.0, 6.0, 14.0, None)
+    for i, wait in enumerate(waits):
         try:
             return extract._get_client().models.generate_content(model=MODEL, contents=contents, config=config)
         except (genai.errors.ClientError, genai.errors.ServerError) as e:
-            retryable = e.code == 429 or e.code >= 500
+            busy = e.code == 429
+            retryable = busy or (e.code >= 500 and i == 0)
             if not retryable or wait is None:
                 raise
-            time.sleep(wait)
+            time.sleep(wait + random.random() * (wait / 2))
 
 
 def _cfg(**kw) -> types.GenerateContentConfig:
@@ -488,8 +491,24 @@ def cond_key(core: str, today: date) -> str:
     return f"web-{item_id(core)}-{today.year}-{CACHE_VERSION}"
 
 
+def negative_ttl() -> timedelta:
+    """「見つからなかった」記録の保存期間。環境変数 NEGATIVE_TTL_HOURS（時間）で変えられる。"""
+    try:
+        hours = float(os.environ.get("NEGATIVE_TTL_HOURS", DEFAULT_NEGATIVE_HOURS))
+    except ValueError:
+        hours = DEFAULT_NEGATIVE_HOURS
+    return timedelta(hours=hours if hours > 0 else DEFAULT_NEGATIVE_HOURS)
+
+
 def missing_key(core: str, today: date) -> str:
     return f"webno-{item_id(core)}-{today.year}-{CACHE_VERSION}"
+
+
+def _failure_reason(e: Exception) -> str:
+    """検索に失敗した理由を、利用者に分かる言葉にする（混雑かどうかを区別する）。"""
+    if getattr(e, "code", None) == 429:
+        return "AI の利用が混み合っているため、公式ページを検索できませんでした。時間をおいて、もう一度探してください"
+    return f"公式ページの検索に失敗しました（{type(e).__name__}）。団体のサイトを直接確認してください"
 
 
 def _unverified(base: dict, reason: str, sources: list[str] | None = None) -> dict:
@@ -528,7 +547,7 @@ def check_candidate(
             return {
                 **base,
                 "status": UNVERIFIED,
-                "reasons": [f"公式ページの検索に失敗しました（{type(e).__name__}）"],
+                "reasons": [_failure_reason(e)],
                 "official_url": "",
                 "sources": [],
             }
@@ -626,7 +645,7 @@ def search(profile: Profile, university: str, field_text: str, today: date, budg
     # 確認済み（キャッシュあり）の候補はすぐ判定できるので先に処理し、照合の予算は未確認の分にだけ使う
     def lookup(kc):
         core = kc[0]
-        return cache.get(cond_key(core, today)), bool(cache.get(missing_key(core, today), ttl=NEGATIVE_TTL))
+        return cache.get(cond_key(core, today)), bool(cache.get(missing_key(core, today), max_age=negative_ttl()))
 
     with ThreadPoolExecutor(8) as reader:
         looked_up = dict(zip([k for k, _ in ranked], reader.map(lookup, ranked), strict=True))

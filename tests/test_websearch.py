@@ -72,7 +72,7 @@ def _patch(monkeypatch, cond, page_text=PAGE, sources=None):
 @pytest.fixture(autouse=True)
 def _no_cache(monkeypatch):
     store = {}
-    monkeypatch.setattr(websearch.cache, "get", lambda key, ttl=None: store.get(key))
+    monkeypatch.setattr(websearch.cache, "get", lambda key, max_age=None: store.get(key))
     monkeypatch.setattr(websearch.cache, "put", lambda key, value: store.__setitem__(key, value))
     return store
 
@@ -407,3 +407,82 @@ def test_名前が違っても同じ公式ページ_同じ判定なら1件にま
     out = websearch._dedupe_by_url(rows)
     assert [r["name"] for r in out] == ["A給付金制度", "別の制度", "URLなし1", "URLなし2"]
     assert out[0]["mentions"] == 3
+
+
+# ---------- 混雑（429）への備え ----------
+class _Busy(Exception):
+    code = 429
+
+
+def test_混雑で失敗したときは_混み合っていると分かる言葉にする(monkeypatch):
+    def boom(prompt):
+        raise _Busy()
+
+    monkeypatch.setattr(websearch, "_grounded", boom)
+    r = websearch.check_candidate("テスト財団", CAND, ME, TODAY)
+    assert r["status"] == websearch.UNVERIFIED and "混み合" in r["reasons"][0]
+
+
+def test_混雑は待ってから再試行し_成功すれば結果を返す(monkeypatch):
+    from google.genai import errors
+
+    calls = []
+
+    class FakeModels:
+        def generate_content(self, **kw):
+            calls.append(1)
+            if len(calls) < 3:
+                raise errors.ClientError(429, {"error": {"message": "busy", "status": "RESOURCE_EXHAUSTED"}}, None)
+            return "ok"
+
+    class FakeClient:
+        models = FakeModels()
+
+    sleeps = []
+    monkeypatch.setattr(websearch.extract, "_get_client", lambda: FakeClient())
+    monkeypatch.setattr(websearch.time, "sleep", lambda s: sleeps.append(s))
+    assert websearch._gen("x", object()) == "ok"
+    assert len(calls) == 3 and len(sleeps) == 2 and sleeps[1] > sleeps[0]  # 待ち時間は延びていく
+
+
+def test_混雑が続けば最終的に例外を返す(monkeypatch):
+    from google.genai import errors
+
+    class FakeModels:
+        def generate_content(self, **kw):
+            raise errors.ClientError(429, {"error": {"message": "busy", "status": "RESOURCE_EXHAUSTED"}}, None)
+
+    class FakeClient:
+        models = FakeModels()
+
+    monkeypatch.setattr(websearch.extract, "_get_client", lambda: FakeClient())
+    monkeypatch.setattr(websearch.time, "sleep", lambda s: None)
+    import pytest
+
+    with pytest.raises(errors.ClientError):
+        websearch._gen("x", object())
+
+
+# ---------- キャッシュの保存期間 ----------
+def test_保存期間は既定で7日_環境変数で変えられる(monkeypatch):
+    from datetime import timedelta
+
+    from hackathon_agent.scholarship import cache
+
+    monkeypatch.delenv("CACHE_TTL_DAYS", raising=False)
+    assert cache.ttl() == timedelta(days=7)
+    monkeypatch.setenv("CACHE_TTL_DAYS", "60")
+    assert cache.ttl() == timedelta(days=60)
+    monkeypatch.setenv("CACHE_TTL_DAYS", "abc")  # 不正な値は既定に戻す
+    assert cache.ttl() == timedelta(days=7)
+    monkeypatch.setenv("CACHE_TTL_DAYS", "-1")
+    assert cache.ttl() == timedelta(days=7)
+
+
+def test_見つからなかった記録の保存期間も環境変数で変えられる(monkeypatch):
+    from datetime import timedelta
+
+    monkeypatch.delenv("NEGATIVE_TTL_HOURS", raising=False)
+    assert websearch.negative_ttl() == timedelta(hours=6)
+    monkeypatch.setenv("NEGATIVE_TTL_HOURS", "168")
+    assert websearch.negative_ttl() == timedelta(hours=168)
