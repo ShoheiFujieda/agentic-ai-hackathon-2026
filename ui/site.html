@@ -6,252 +6,284 @@
 <title>奨学金エージェント</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   /* ---------------------------------------------------------------
-     デザインの方針（Figma「UIデザインの7原則」に沿う）
-     階層: 文字サイズ・太さの段階を決め、主な操作は黒の塗り、補助はグレー
-     段階的開示: ステップ表示で現在地を示し、補助情報は折りたたむ
-     一貫性: 余白は 8px の倍数、角丸・ボタン・バッジは種類を決めて使い回す
-     コントラスト: 文字と背景は WCAG AA 以上
-     アクセシビリティ: 44px のタップ領域、キーボード操作、動きを抑える設定に対応
-     近接・整列: 関連する要素は近く、補助的な操作は離す。8px グリッドに揃える
-     配色は黒・白・グレーだけ。強調は濃淡と枠線で表す。装飾的なアニメーション・光・背景模様は使わない（動くのは処理中の回転表示だけ）
+     Material Design 3 に沿ったデザイン
+     - カラーロール（primary / surface / on-surface / outline など）。配色は黒・白・グレーのニュートラルな階調
+     - タイプスケール（Headline / Title / Body / Label）、シェイプ（角丸の段階）、状態レイヤー（hover 8% / focus・pressed 10%）
+     - コンポーネント: Top app bar、Linear / Circular progress、Filled・Tonal・Outlined・Text ボタン、Outlined text field、
+       Assist / Suggestion chip、Outlined card、Dialog、Snackbar、List
+     - タッチターゲットは 48px 以上
      --------------------------------------------------------------- */
   :root {
-    --bg: #fafafa; --panel: #ffffff; --soft: #f2f2f2; --text: #0a0a0a; --muted: #606060; --line: #e4e4e4; --line-strong: #c9c9c9;
-    --ink: #0a0a0a; --on-ink: #ffffff;
-    --shadow: 0 1px 2px rgba(0,0,0,.04);
-    --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px;
-    --r-sm: 8px; --r-md: 12px; --r-lg: 20px;
-    --font: "Inter", "Noto Sans JP", system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
-    --mono: ui-monospace, Menlo, Consolas, monospace;
+    --md-primary: #1b1b1b; --md-on-primary: #ffffff;
+    --md-primary-container: #e2e2e2; --md-on-primary-container: #1b1b1b;
+    --md-secondary-container: #e8e8e8; --md-on-secondary-container: #1b1b1b;
+    --md-surface: #fbfbfb; --md-on-surface: #1b1b1b; --md-on-surface-variant: #474747;
+    --md-surface-container-lowest: #ffffff; --md-surface-container-low: #f5f5f5; --md-surface-container: #efefef; --md-surface-container-high: #e9e9e9;
+    --md-outline: #777777; --md-outline-variant: #c8c8c8; --md-scrim: rgba(0,0,0,.32);
+    --md-inverse-surface: #303030; --md-inverse-on-surface: #f2f2f2;
+    --md-font: "Roboto", "Noto Sans JP", system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
+    --md-shape-xs: 4px; --md-shape-sm: 8px; --md-shape-md: 12px; --md-shape-lg: 16px; --md-shape-xl: 28px; --md-shape-full: 999px;
+    --md-elev-1: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px 1px rgba(0,0,0,.15);
+    --md-elev-3: 0 1px 3px rgba(0,0,0,.3), 0 4px 8px 3px rgba(0,0,0,.15);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #09090b; --panel: #121214; --soft: #1b1b1e; --text: #f4f4f5; --muted: #a1a1a6; --line: #26262a; --line-strong: #3f3f46;
-      --ink: #f4f4f5; --on-ink: #09090b;
-      --shadow: none;
+      --md-primary: #e3e3e3; --md-on-primary: #1b1b1b;
+      --md-primary-container: #3a3a3a; --md-on-primary-container: #e3e3e3;
+      --md-secondary-container: #333333; --md-on-secondary-container: #e3e3e3;
+      --md-surface: #131313; --md-on-surface: #e3e3e3; --md-on-surface-variant: #c6c6c6;
+      --md-surface-container-lowest: #0e0e0e; --md-surface-container-low: #1b1b1b; --md-surface-container: #1f1f1f; --md-surface-container-high: #2a2a2a;
+      --md-outline: #919191; --md-outline-variant: #474747; --md-scrim: rgba(0,0,0,.6);
+      --md-inverse-surface: #e3e3e3; --md-inverse-on-surface: #303030;
     }
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-  body { margin: 0; background: var(--bg); color: var(--text); font: 400 15px/1.8 var(--font); -webkit-font-smoothing: antialiased; position: relative; min-height: 100vh; }
-  a { color: var(--text); text-underline-offset: 3px; text-decoration-color: var(--line-strong); text-decoration-thickness: 1px; }
-  a:hover { text-decoration-color: var(--text); }
-  .skip { position: absolute; left: var(--s4); top: -80px; background: var(--ink); color: var(--on-ink); padding: var(--s2) var(--s4); border-radius: var(--r-sm); z-index: 20; }
-  .skip:focus { top: var(--s2); }
+  body { margin: 0; background: var(--md-surface); color: var(--md-on-surface); font: 400 16px/1.6 var(--md-font); -webkit-font-smoothing: antialiased; }
+  a { color: var(--md-on-surface); text-underline-offset: 3px; }
+  .skip { position: absolute; left: 16px; top: -80px; background: var(--md-primary); color: var(--md-on-primary); padding: 8px 16px; border-radius: var(--md-shape-full); z-index: 50; }
+  .skip:focus { top: 8px; }
+  svg.i { width: 24px; height: 24px; fill: currentColor; flex: none; }
+  svg.i.sm { width: 18px; height: 18px; }
 
-  /* ---- ヘッダー ---- */
-  header { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
-  .bar { max-width: 1160px; margin: 0 auto; padding: var(--s3) var(--s5); display: flex; align-items: center; justify-content: space-between; gap: var(--s3); }
-  .brand { display: flex; align-items: center; gap: var(--s3); font-weight: 700; letter-spacing: .01em; }
-  .logo { width: 32px; height: 32px; border-radius: 10px; background: var(--ink); color: var(--on-ink); display: grid; place-items: center; font: 700 17px/1 var(--font); }
-  .tagline { color: var(--muted); font-size: 13px; }
-  @media (max-width: 720px) { .tagline { display: none; } }
+  /* ---- タイプスケール ---- */
+  .headline-large { font-size: 32px; line-height: 1.3; font-weight: 400; letter-spacing: 0; }
+  .headline-medium { font-size: 28px; line-height: 1.3; font-weight: 400; }
+  .title-large { font-size: 22px; line-height: 1.4; font-weight: 400; }
+  .title-medium { font-size: 16px; line-height: 1.5; font-weight: 500; letter-spacing: .01em; }
+  .body-large { font-size: 16px; line-height: 1.7; }
+  .body-medium { font-size: 14px; line-height: 1.65; }
+  .label-large { font-size: 14px; line-height: 1.4; font-weight: 500; letter-spacing: .01em; }
+  .label-medium { font-size: 12px; line-height: 1.4; font-weight: 500; letter-spacing: .04em; }
+  .muted { color: var(--md-on-surface-variant); }
 
-  .layout { max-width: 1160px; margin: 0 auto; padding: var(--s6) var(--s5) var(--s7); display: grid; grid-template-columns: minmax(0, 1fr) 344px; gap: var(--s6); align-items: start; }
-  @media (max-width: 960px) { .layout { grid-template-columns: minmax(0, 1fr); padding: var(--s5) var(--s4) var(--s7); } }
+  /* ---- Top app bar と Linear progress ---- */
+  .appbar { position: sticky; top: 0; z-index: 20; background: var(--md-surface-container); border-bottom: 1px solid var(--md-outline-variant); }
+  .appbar .row { max-width: 1200px; margin: 0 auto; height: 64px; padding: 0 16px; display: flex; align-items: center; gap: 12px; }
+  .appbar .logo { width: 40px; height: 40px; border-radius: var(--md-shape-full); background: var(--md-primary); color: var(--md-on-primary); display: grid; place-items: center; font-weight: 700; font-size: 18px; }
+  .appbar .title { font-size: 22px; line-height: 28px; flex: 1; }
+  .appbar .sub { display: none; }
+  @media (min-width: 720px) { .appbar .sub { display: block; } }
+  .linear { height: 4px; background: var(--md-primary-container); overflow: hidden; position: relative; }
+  .linear[hidden] { display: block; visibility: hidden; }
+  .linear::before { content: ""; position: absolute; inset: 0; width: 40%; background: var(--md-primary); animation: indeterminate 1.4s cubic-bezier(.4,0,.2,1) infinite; }
+  @keyframes indeterminate { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .cp { width: 20px; height: 20px; border-radius: 50%; border: 3px solid var(--md-primary); border-top-color: transparent; animation: spin .9s linear infinite; flex: none; }
 
-  /* ---- ヒーローとステップ（現在地） ---- */
-  .hero { position: relative; margin-bottom: var(--s5); }
-  .hero h1 { font-size: clamp(30px, 4.6vw, 44px); line-height: 1.25; letter-spacing: -.015em; font-weight: 800; margin: 0 0 var(--s4); font-feature-settings: "palt"; }
-  .lead { color: var(--muted); font-size: 16px; line-height: 1.85; margin: 0 0 var(--s5); max-width: 38em; }
-  .lead b { color: var(--text); font-weight: 600; }
+  /* ---- レイアウト（本文と補助ペイン） ---- */
+  .layout { max-width: 1200px; margin: 0 auto; padding: 24px 16px 64px; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; align-items: start; }
+  @media (max-width: 960px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+  .hero { margin: 8px 0 24px; }
+  .hero h1 { margin: 0 0 12px; }
+  .hero p { margin: 0; max-width: 40em; }
 
-  .stepper { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s3); margin: 0 0 var(--s5); padding: 0; }
-  .stepper li { position: relative; padding-top: var(--s3); border-top: 2px solid var(--line-strong); color: var(--muted); font-size: 13px; line-height: 1.55; transition: border-color .3s, color .3s; }
-  .stepper li b { display: block; color: inherit; font-size: 14px; font-weight: 700; margin-bottom: 2px; }
-  .stepper li .no { font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px; }
-  .stepper li.active { border-top-color: var(--ink); color: var(--text); }
-  .stepper li.done { border-top-color: var(--ink); color: var(--muted); }
-  .stepper li.done .no::after { content: "  完了"; }
-  .compact .stepper li:not(.active) { font-size: 0; }
-  .compact .stepper li:not(.active) b, .compact .stepper li:not(.active) .no { font-size: 12px; }
-  .compact .stepper li:not(.active) b { margin: 0; }
+  /* ステップ（現在地） */
+  .steps { list-style: none; display: flex; gap: 8px; margin: 0 0 24px; padding: 0; }
+  .steps li { flex: 1; display: flex; align-items: flex-start; gap: 12px; color: var(--md-on-surface-variant); min-width: 0; }
+  .steps .n { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 500; background: var(--md-surface-container-high); color: var(--md-on-surface-variant); }
+  .steps li.active { color: var(--md-on-surface); } .steps li.active .n { background: var(--md-primary); color: var(--md-on-primary); }
+  .steps li.done .n { background: var(--md-primary-container); color: var(--md-on-primary-container); }
+  .steps b { display: block; font-size: 14px; font-weight: 500; line-height: 24px; }
+  .steps small { display: block; font-size: 12px; line-height: 1.5; }
+  .compact .steps small { display: none; }
+  @media (max-width: 720px) { .steps { flex-direction: column; } .steps small { display: none; } }
 
-  /* ---- カード・見出し・文字の階層 ---- */
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg); padding: var(--s5); box-shadow: var(--shadow); }
-  h2 { font-size: 20px; line-height: 1.4; margin: 0 0 var(--s1); font-weight: 700; letter-spacing: -.005em; }
-  h3 { font-size: 16px; }
-  .sub { color: var(--muted); font-size: 13.5px; line-height: 1.7; margin: 0 0 var(--s4); }
-  .hint { color: var(--muted); font-size: 12.5px; margin: var(--s1) 0 0; line-height: 1.55; }
-  .small { font-size: 12.5px; color: var(--muted); }
-  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: var(--s2); }
-  select, input[type=text], textarea { width: 100%; min-height: 44px; font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--line-strong); border-radius: var(--r-md); padding: 10px var(--s3); transition: border-color .15s, box-shadow .15s; }
-  select:hover, input[type=text]:hover, textarea:hover { border-color: var(--muted); }
-  select:focus, input[type=text]:focus, textarea:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
-  textarea { resize: vertical; min-height: 52px; }
-  ::placeholder { color: var(--muted); opacity: .75; }
+  /* ---- Card（outlined） ---- */
+  .card { background: var(--md-surface-container-lowest); border: 1px solid var(--md-outline-variant); border-radius: var(--md-shape-md); padding: 24px; }
+  .card h2 { margin: 0 0 4px; }
+  .card > .body-medium.muted { margin: 0 0 24px; }
 
-  /* ---- ボタン: 主（黒の塗り）／副（枠線）／控えめ（グレーの文字） ---- */
-  button { font: inherit; min-height: 44px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: var(--panel); color: var(--text); padding: 0 var(--s4); cursor: pointer; transition: background .15s, border-color .15s, opacity .15s, transform .05s; }
-  button:hover { background: var(--soft); }
-  button:active { transform: translateY(1px); }
-  button.primary { background: var(--ink); border-color: var(--ink); color: var(--on-ink); font-weight: 600; }
-  button.primary:hover { opacity: .86; background: var(--ink); }
-  button.ghost { background: transparent; border-color: transparent; color: var(--muted); }
-  button.ghost:hover { background: var(--soft); color: var(--text); }
-  button.big { min-height: 52px; padding: 0 var(--s6); font-size: 16px; border-radius: 14px; }
-  button.sm { min-height: 36px; padding: 0 var(--s3); font-size: 13px; }
-  button:disabled { opacity: .5; cursor: default; }
-  :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  /* ---- ボタン（Filled / Tonal / Outlined / Text）と状態レイヤー ---- */
+  .btn { --bg: transparent; --fg: var(--md-primary); --bd: transparent; position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 24px; border: 1px solid var(--bd); border-radius: var(--md-shape-full); background: var(--bg); color: var(--fg); font: 500 14px/20px var(--md-font); letter-spacing: .01em; cursor: pointer; text-decoration: none; transition: background-color .15s, box-shadow .15s; }
+  .btn:hover { background: color-mix(in srgb, var(--bg) 92%, var(--fg)); }
+  .btn:focus-visible { outline: 3px solid var(--md-outline); outline-offset: 2px; background: color-mix(in srgb, var(--bg) 90%, var(--fg)); }
+  .btn:active { background: color-mix(in srgb, var(--bg) 90%, var(--fg)); }
+  .btn.filled { --bg: var(--md-primary); --fg: var(--md-on-primary); }
+  .btn.filled:hover { box-shadow: var(--md-elev-1); }
+  .btn.tonal { --bg: var(--md-secondary-container); --fg: var(--md-on-secondary-container); }
+  .btn.outlined { --bd: var(--md-outline); --fg: var(--md-on-surface); }
+  .btn.text { padding: 0 12px; --fg: var(--md-on-surface); }
+  .btn.sm { min-height: 40px; padding: 0 16px; }
+  .btn.text.sm { padding: 0 12px; }
+  .btn:disabled { opacity: .38; cursor: default; box-shadow: none; }
+  .btn.big { min-height: 56px; padding: 0 32px; font-size: 16px; }
 
-  /* ---- フォーム: 8px グリッドに整列し、関連する項目を近く、グループの間は離す ---- */
-  .group { margin: 0 0 var(--s5); padding: 0; border: 0; min-width: 0; }
-  .group > legend { font-size: 14px; font-weight: 700; color: var(--text); margin: 0 0 var(--s3); padding: 0; }
-  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s4); }
-  @media (max-width: 640px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+  /* ---- Outlined text field（ラベルが浮き上がる） ---- */
+  .field { position: relative; }
+  .field input, .field select, .field textarea { width: 100%; min-height: 56px; font: 400 16px/24px var(--md-font); color: var(--md-on-surface); background: transparent; border: 1px solid var(--md-outline); border-radius: var(--md-shape-xs); padding: 16px 16px; outline: none; transition: border-color .15s, box-shadow .15s; appearance: none; -webkit-appearance: none; }
+  .field select { padding-right: 44px; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M7 10l5 5 5-5z'/></svg>"); background-repeat: no-repeat; background-position: right 12px center; background-size: 24px; }
+  .field input:hover, .field select:hover, .field textarea:hover { border-color: var(--md-on-surface); }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--md-primary); box-shadow: inset 0 0 0 1px var(--md-primary); }
+  .field label { position: absolute; left: 12px; top: 16px; padding: 0 4px; font-size: 16px; line-height: 24px; color: var(--md-on-surface-variant); background: var(--md-surface-container-lowest); pointer-events: none; transform-origin: left top; transition: transform .15s, color .15s; }
+  .field.filled label, .field:focus-within label { transform: translateY(-26px) scale(.75); }
+  .field:focus-within label { color: var(--md-primary); }
+  .field input::placeholder { color: transparent; }
+  .field:focus-within input::placeholder { color: var(--md-on-surface-variant); opacity: .7; }
+  .support { margin: 4px 16px 0; font-size: 12px; line-height: 1.5; color: var(--md-on-surface-variant); }
+  .field select option { color: #000; }
+
+  .section-title { margin: 24px 0 16px; }
+  .section-title:first-of-type { margin-top: 0; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
   .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  @media (max-width: 760px) { .grid.three { grid-template-columns: minmax(0, 1fr); } }
-  details.optional { border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s3) var(--s4); margin: 0 0 var(--s5); }
-  details.optional > summary { cursor: pointer; font-size: 14px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: var(--s3); min-height: 28px; }
+  @media (max-width: 760px) { .grid, .grid.three { grid-template-columns: minmax(0, 1fr); } }
+
+  details.optional { margin: 24px 0 0; border: 1px solid var(--md-outline-variant); border-radius: var(--md-shape-sm); }
+  details.optional > summary { cursor: pointer; list-style: none; min-height: 56px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 14px; font-weight: 500; }
   details.optional > summary::-webkit-details-marker { display: none; }
-  details.optional > summary::after { content: "＋"; color: var(--muted); }
-  details.optional[open] > summary::after { content: "－"; }
-  details.optional .body { margin-top: var(--s3); }
-  .checks { display: flex; flex-wrap: wrap; gap: var(--s2); }
-  .checks label { display: inline-flex; align-items: center; gap: var(--s2); font-weight: 500; font-size: 14px; margin: 0; min-height: 44px; border: 1px solid var(--line-strong); border-radius: 999px; padding: 0 var(--s4); cursor: pointer; }
-  .checks label:has(input:checked) { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
-  .checks input { accent-color: var(--ink); width: 16px; height: 16px; }
-  .actions { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: center; }
-  .actions.end { margin-top: var(--s5); }
+  details.optional > summary svg { transition: transform .2s; }
+  details.optional[open] > summary svg { transform: rotate(180deg); }
+  details.optional .body { padding: 0 16px 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 0 12px; border: 1px solid var(--md-outline); border-radius: var(--md-shape-sm); background: transparent; color: var(--md-on-surface-variant); font: 500 14px/20px var(--md-font); cursor: pointer; transition: background-color .15s; }
+  .chip:hover { background: color-mix(in srgb, transparent 92%, var(--md-on-surface-variant)); }
+  .chip.static { cursor: default; min-height: 28px; font-size: 12px; padding: 0 10px; border-color: var(--md-outline-variant); }
+  .chip.static:hover { background: transparent; }
+  .chip.strong { background: var(--md-primary); color: var(--md-on-primary); border-color: var(--md-primary); }
+  .filter { position: relative; }
+  .filter input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .filter { min-height: 48px; padding: 0 16px; font-size: 14px; border-radius: var(--md-shape-sm); }
+  .filter:has(input:checked) { background: var(--md-secondary-container); color: var(--md-on-secondary-container); border-color: var(--md-secondary-container); }
+  .filter:has(input:checked)::before { content: "✓"; font-weight: 700; }
+  .filter:has(input:focus-visible) { outline: 3px solid var(--md-outline); outline-offset: 2px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+  .actions.end { margin-top: 32px; }
 
   /* ---- 会話 ---- */
-  #log { display: flex; flex-direction: column; gap: var(--s4); margin: var(--s5) 0; }
-  .msg.user { align-self: flex-end; background: var(--ink); color: var(--on-ink); border-radius: var(--r-lg) var(--r-lg) var(--s1) var(--r-lg); padding: var(--s3) var(--s4); max-width: 86%; white-space: pre-wrap; overflow-wrap: anywhere; }
-  .msg.bot { align-self: stretch; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg) var(--r-lg) var(--r-lg) var(--s1); padding: var(--s2) var(--s5) var(--s3); overflow-wrap: anywhere; box-shadow: var(--shadow); position: relative; }
-  .msg.bot h3 { font-size: 15px; margin: var(--s4) 0 var(--s1); }
-  .msg.bot p { margin: var(--s2) 0; }
-  .msg.bot ul, .msg.bot ol { margin: var(--s1) 0; padding-left: 1.4em; }
-  .msg.bot hr { border: 0; border-top: 1px solid var(--line); margin: var(--s3) 0; }
-  .msg.bot code { background: var(--soft); border-radius: 4px; padding: 0 4px; font: 13px var(--mono); }
+  #log { display: flex; flex-direction: column; gap: 16px; margin: 24px 0; }
+  .msg.user { align-self: flex-end; max-width: 86%; background: var(--md-primary-container); color: var(--md-on-primary-container); border-radius: 20px 20px 4px 20px; padding: 12px 16px; font-size: 14px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .msg.bot { align-self: stretch; background: var(--md-surface-container-low); border-radius: 4px 20px 20px 20px; padding: 8px 24px 12px; overflow-wrap: anywhere; font-size: 15px; }
+  .msg.bot h3 { font-size: 16px; font-weight: 500; margin: 16px 0 4px; }
+  .msg.bot p { margin: 8px 0; } .msg.bot ul, .msg.bot ol { margin: 4px 0; padding-left: 1.4em; }
+  .msg.bot hr { border: 0; border-top: 1px solid var(--md-outline-variant); margin: 12px 0; }
+  .msg.bot code { background: var(--md-surface-container-high); border-radius: 4px; padding: 0 4px; font: 13px ui-monospace, Menlo, Consolas, monospace; }
+  .status { align-self: flex-start; display: inline-flex; align-items: center; gap: 12px; min-height: 40px; padding: 0 16px; border-radius: var(--md-shape-full); background: var(--md-surface-container); font-size: 14px; }
+  .status.done { color: var(--md-on-surface-variant); }
+  .status.done .cp { animation: none; border: 0; width: 20px; height: 20px; background: no-repeat center/18px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/></svg>"); }
+  .status .timer { color: var(--md-on-surface-variant); font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .error { display: flex; gap: 12px; align-items: flex-start; border: 1px solid var(--md-outline); border-radius: var(--md-shape-md); padding: 12px 16px; font-size: 14px; background: var(--md-surface-container-lowest); }
+  .composer { display: flex; gap: 12px; align-items: flex-start; }
+  .composer .field { flex: 1; }
+  .composer textarea { min-height: 56px; resize: vertical; border-radius: 28px; padding: 16px 20px; }
+  .composer .field label { left: 16px; }
+  .composer .btn { margin-top: 4px; }
 
-  /* 処理中の表示: 光が流れる帯＋経過時間（待たされている理由と長さが分かる） */
-  .status { align-self: flex-start; position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: var(--s3); background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 10px var(--s4); font-size: 13.5px; }
-  .status::before { content: ""; flex: none; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--ink); border-top-color: transparent; animation: spin .8s linear infinite; }
-  .status.done { color: var(--muted); }
-  .status.done::before { animation: none; border: 0; content: "✓"; width: auto; height: auto; line-height: 1; }
-  .status.stop::before { animation: none; border: 0; content: "⚠"; width: auto; height: auto; line-height: 1; }
-  .status .timer { font-size: 12.5px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  /* ---- 結果（List と Outlined card） ---- */
+  .results { align-self: stretch; }
+  .rhead { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; justify-content: space-between; }
+  details.sec { border-top: 1px solid var(--md-outline-variant); margin-top: 16px; padding-top: 8px; }
+  details.sec > summary { cursor: pointer; list-style: none; min-height: 48px; display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 500; }
+  details.sec > summary::-webkit-details-marker { display: none; }
+  details.sec > summary svg { transition: transform .2s; margin-left: auto; color: var(--md-on-surface-variant); }
+  details.sec[open] > summary svg { transform: rotate(180deg); }
+  details.sec > p { margin: 0 0 8px; }
+  .count { font-size: 12px; font-weight: 500; min-width: 24px; height: 24px; padding: 0 8px; border-radius: var(--md-shape-full); display: inline-grid; place-items: center; background: var(--md-surface-container-high); }
+  .count.alert { background: var(--md-primary); color: var(--md-on-primary); }
+  .item { border-top: 1px solid var(--md-outline-variant); padding: 16px 0; }
+  .item:first-of-type { border-top: 0; }
+  .item .title { font-size: 16px; font-weight: 500; line-height: 1.5; overflow-wrap: anywhere; }
+  .item .meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; font-size: 13px; color: var(--md-on-surface-variant); }
+  .item .why { margin: 12px 0 4px; }
+  .item ul { margin: 0 0 8px 1.2em; padding: 0; font-size: 14px; }
+  .item .acts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; margin-left: -12px; }
 
-  .approval { align-self: stretch; border: 2px solid var(--ink); background: var(--panel); border-radius: var(--r-lg); padding: var(--s5); }
-  .approval h3 { margin: 0 0 var(--s2); font-size: 17px; }
-  .approval p { margin: var(--s1) 0; font-size: 14px; }
-  .approval dl { margin: var(--s4) 0; padding: var(--s3) var(--s4); background: var(--soft); border-radius: var(--r-md); font-size: 13.5px; display: grid; grid-template-columns: auto 1fr; gap: var(--s1) var(--s4); }
-  .approval dt { color: var(--muted); } .approval dd { margin: 0; overflow-wrap: anywhere; }
-  .approval .note { color: var(--muted); font-size: 12.5px; margin-top: var(--s3); }
-
-  .composer { display: flex; gap: var(--s3); align-items: flex-end; }
-  .composer textarea { flex: 1; border-radius: var(--r-lg); padding: var(--s3) var(--s4); }
-  .chips { display: flex; flex-wrap: wrap; gap: var(--s2); margin: 0 0 var(--s4); }
-  .chip { min-height: 36px; background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 0 var(--s4); font-size: 13px; }
-  .error { font-size: 14px; border: 1px solid var(--line-strong); border-left: 4px solid var(--ink); border-radius: var(--r-md); padding: var(--s3) var(--s4); background: var(--panel); }
-  .error::before { content: "⚠ "; }
-
-  /* ---- サイドパネル（段階的開示: 必要なものだけ開く） ---- */
-  .side { display: flex; flex-direction: column; gap: var(--s3); position: sticky; top: 80px; }
+  /* ---- 補助ペイン（サイドシート） ---- */
+  .side { display: flex; flex-direction: column; gap: 12px; position: sticky; top: 88px; }
   @media (max-width: 960px) { .side { position: static; } }
-  details.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 0 var(--s5); box-shadow: var(--shadow); }
-  details.panel > summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: 56px; font-size: 15px; font-weight: 700; }
+  details.panel { background: var(--md-surface-container-lowest); border: 1px solid var(--md-outline-variant); border-radius: var(--md-shape-md); }
+  details.panel > summary { cursor: pointer; list-style: none; min-height: 56px; padding: 0 16px 0 20px; display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 500; }
   details.panel > summary::-webkit-details-marker { display: none; }
-  details.panel > summary::after { content: "＋"; font-size: 14px; color: var(--muted); }
-  details.panel[open] > summary::after { content: "－"; }
-  details.panel .body { padding: 0 0 var(--s5); }
-  details.panel .count { font-size: 12px; font-weight: 600; line-height: 1; border-radius: 999px; padding: 4px 8px; background: var(--soft); border: 1px solid var(--line); margin-left: var(--s2); }
-  details.panel .count.alert { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
-  .row { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s3); align-items: center; padding: var(--s3) 0; border-top: 1px solid var(--line); font-size: 14px; }
-  .row:first-of-type { border-top: 0; }
-  .row .name { flex: 1 1 150px; min-width: 0; overflow-wrap: anywhere; }
-  .badge { display: inline-block; font: 600 11.5px/1.6 var(--font); border-radius: 999px; padding: 0 10px; background: var(--soft); border: 1px solid var(--line); white-space: nowrap; }
-  .badge.ok { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
-  .badge.warn { background: var(--panel); border-color: var(--ink); }
-  .badge.bad { background: transparent; color: var(--muted); border-style: dashed; }
-  .empty { color: var(--muted); font-size: 14px; margin: var(--s1) 0; }
+  details.panel > summary .chev { margin-left: auto; transition: transform .2s; color: var(--md-on-surface-variant); }
+  details.panel[open] > summary .chev { transform: rotate(180deg); }
+  details.panel .body { padding: 0 20px 16px; }
+  .li { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; padding: 12px 0; border-top: 1px solid var(--md-outline-variant); font-size: 14px; }
+  .li:first-of-type { border-top: 0; }
+  .li .name { flex: 1 1 150px; min-width: 0; overflow-wrap: anywhere; }
+  .badge { display: inline-block; font-size: 12px; font-weight: 500; line-height: 20px; border-radius: var(--md-shape-sm); padding: 0 8px; background: var(--md-surface-container-high); white-space: nowrap; }
+  .badge.ok { background: var(--md-primary); color: var(--md-on-primary); }
+  .badge.warn { background: var(--md-secondary-container); }
+  .badge.bad { background: transparent; border: 1px solid var(--md-outline-variant); color: var(--md-on-surface-variant); }
+  .empty { margin: 4px 0; color: var(--md-on-surface-variant); font-size: 14px; }
   .scrollbox { max-height: 300px; overflow-y: auto; }
 
-  /* ---- 結果の一覧 ---- */
-  .results { align-self: stretch; }
-  .rhead { display: flex; flex-wrap: wrap; gap: var(--s3) var(--s4); align-items: center; justify-content: space-between; }
-  .item { border-top: 1px solid var(--line); padding: var(--s4) 0; }
-  .item .title { font-weight: 700; font-size: 16px; line-height: 1.5; overflow-wrap: anywhere; }
-  .item .meta { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; margin: var(--s2) 0; font-size: 13px; color: var(--muted); }
-  .item .why { font-size: 12.5px; font-weight: 700; color: var(--muted); margin: var(--s3) 0 var(--s1); }
-  .item ul { margin: 0 0 var(--s2) 1.2em; padding: 0; font-size: 13.5px; }
-  .item .acts { display: flex; gap: var(--s4); align-items: center; margin-top: var(--s3); font-size: 14px; }
-  details.sec { border-top: 1px solid var(--line); margin-top: var(--s4); padding-top: var(--s3); }
-  details.sec > summary { cursor: pointer; font-weight: 700; font-size: 16px; list-style: none; display: flex; align-items: center; gap: var(--s2); min-height: 32px; }
-  details.sec > summary::-webkit-details-marker { display: none; }
-  details.sec > summary::before { content: "▸"; color: var(--muted); font-size: 12px; transition: transform .15s; }
-  details.sec[open] > summary::before { transform: rotate(90deg); }
-  details.sec > p.small { margin: var(--s1) 0 0; }
-  footer { max-width: 1160px; margin: 0 auto; padding: 0 var(--s5) var(--s6); color: var(--muted); font-size: 12.5px; }
+  /* ---- Dialog（許可の確認） ---- */
+  dialog.md { width: min(560px, calc(100vw - 32px)); border: 0; border-radius: var(--md-shape-xl); padding: 24px; background: var(--md-surface-container-high); color: var(--md-on-surface); box-shadow: var(--md-elev-3); }
+  dialog.md::backdrop { background: var(--md-scrim); }
+  dialog.md .ic { display: block; margin: 0 auto 16px; color: var(--md-on-surface-variant); width: 24px; height: 24px; }
+  dialog.md h2 { margin: 0 0 16px; text-align: center; }
+  dialog.md p { margin: 0 0 16px; color: var(--md-on-surface-variant); font-size: 14px; line-height: 1.7; }
+  dialog.md dl { margin: 0 0 16px; padding: 12px 16px; border-radius: var(--md-shape-md); background: var(--md-surface-container-lowest); font-size: 14px; display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; }
+  dialog.md dt { color: var(--md-on-surface-variant); } dialog.md dd { margin: 0; overflow-wrap: anywhere; }
+  dialog.md .dact { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
 
-  @keyframes spin { to { transform: rotate(360deg); } }
-  /* 動きを抑える設定の人には、アニメーションを止める */
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-    .status:not(.done)::before { border-top-color: var(--ink); }
-  }
+  /* ---- Snackbar ---- */
+  .snack { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 24px); opacity: 0; pointer-events: none; z-index: 60; min-width: 288px; max-width: calc(100vw - 32px); background: var(--md-inverse-surface); color: var(--md-inverse-on-surface); border-radius: var(--md-shape-xs); padding: 14px 16px; font-size: 14px; box-shadow: var(--md-elev-3); transition: opacity .2s, transform .2s; }
+  .snack.show { opacity: 1; transform: translate(-50%, 0); }
+
+  footer { max-width: 1200px; margin: 0 auto; padding: 0 16px 32px; color: var(--md-on-surface-variant); font-size: 12px; line-height: 1.7; }
+  :focus-visible { outline: 3px solid var(--md-outline); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition: none !important; scroll-behavior: auto !important; } .linear::before { width: 100%; } .cp { border-top-color: var(--md-primary); } }
 </style>
 </head>
 <body>
 <a class="skip" href="#main">本文へ移動</a>
-<header>
-  <div class="bar">
-    <div class="brand"><span class="logo" aria-hidden="true">S</span>奨学金エージェント</div>
-    <span class="tagline">民間まで含めて、応募できる奨学金を漏れなく探す</span>
+<header class="appbar">
+  <div class="row">
+    <span class="logo" aria-hidden="true">S</span>
+    <span class="title">奨学金エージェント</span>
+    <span class="sub label-large muted">民間まで含めて、応募できる奨学金を漏れなく探す</span>
   </div>
+  <div class="linear" id="bar" role="progressbar" aria-label="処理中" hidden></div>
 </header>
 
 <div class="layout">
   <main id="main">
     <section id="intro" class="hero" aria-label="このサイトについて">
-      <h1>あなたが応募できる奨学金を、<br>民間まで漏れなく。</h1>
-      <p class="lead">条件を入れると、AI が大学の一覧だけでなく、民間財団・企業・自治体の奨学金までインターネットから探し、<b>応募できるかどうか</b>を各団体の公式ページで確かめて、一覧にします。</p>
+      <h1 class="headline-large">あなたが応募できる奨学金を、<br>民間まで漏れなく。</h1>
+      <p class="body-large muted">条件を入れると、AI が大学の一覧だけでなく、民間財団・企業・自治体の奨学金までインターネットから探し、<b style="color:var(--md-on-surface);font-weight:500">応募できるかどうか</b>を各団体の公式ページで確かめて、一覧にします。</p>
     </section>
 
-    <ol class="stepper" id="stepper" aria-label="進み具合">
-      <li class="active" data-step="1"><span class="no">1</span><b>条件を入力</b>大学・学年・地域など、1分で入力できます。</li>
-      <li data-step="2"><span class="no">2</span><b>AI が探す</b>公式ページを読んで判定します。1〜2分ほどかかります。</li>
-      <li data-step="3"><span class="no">3</span><b>結果を見て保存</b>気になるものを保存し、CSV で持ち帰れます。</li>
+    <ol class="steps" id="stepper" aria-label="進み具合">
+      <li class="active" data-step="1"><span class="n">1</span><span><b>条件を入力</b><small>大学・学年・地域など、1分で入力できます。</small></span></li>
+      <li data-step="2"><span class="n">2</span><span><b>AI が探す</b><small>公式ページを読んで判定します。1〜2分ほどかかります。</small></span></li>
+      <li data-step="3"><span class="n">3</span><span><b>結果を見て保存</b><small>気になるものを保存し、CSV で持ち帰れます。</small></span></li>
     </ol>
 
     <section class="card" id="profile" aria-labelledby="h-prof">
-      <h2 id="h-prof">あなたの条件</h2>
-      <p class="sub">入力した内容は、応募できるかどうかの判定にだけ使います。</p>
+      <h2 class="title-large" id="h-prof">あなたの条件</h2>
+      <p class="body-medium muted">入力した内容は、応募できるかどうかの判定にだけ使います。</p>
       <form id="form">
-        <fieldset class="group">
-          <legend>大学について</legend>
-          <div class="grid">
-            <div><label for="uni">大学名</label><input type="text" id="uni" maxlength="50" placeholder="例: 筑波大学" autocomplete="off" required></div>
-            <div><label for="upref">大学の所在地</label><select id="upref" required></select><p class="hint">大学（キャンパス）がある都道府県</p></div>
-            <div><label for="fld">学部・学群・分野</label><input type="text" id="fld" maxlength="50" placeholder="例: 理工学群" autocomplete="off" required></div>
-            <div><label for="grade">学年</label><select id="grade" required></select></div>
-          </div>
-        </fieldset>
-        <fieldset class="group">
-          <legend>地域について</legend>
-          <div class="grid three">
-            <div><label for="home">出身高校の所在地</label><select id="home" required></select><p class="hint">卒業した高校がある都道府県</p></div>
-            <div><label for="res">今住んでいる都道府県</label><select id="res" required></select></div>
-            <div><label for="guard">保護者の住所</label><select id="guard" required></select><p class="hint">地域限定の奨学金の判定に使います</p></div>
-          </div>
-        </fieldset>
+        <h3 class="title-medium section-title">大学について</h3>
+        <div class="grid">
+          <div><div class="field"><input type="text" id="uni" maxlength="50" placeholder=" " autocomplete="off" required><label for="uni">大学名（例: 筑波大学）</label></div></div>
+          <div><div class="field"><select id="upref" required></select><label for="upref">大学の所在地</label></div><p class="support">大学（キャンパス）がある都道府県</p></div>
+          <div><div class="field"><input type="text" id="fld" maxlength="50" placeholder=" " autocomplete="off" required><label for="fld">学部・学群・分野（例: 理工学群）</label></div></div>
+          <div><div class="field"><select id="grade" required></select><label for="grade">学年</label></div></div>
+        </div>
+        <h3 class="title-medium section-title">地域について</h3>
+        <div class="grid three">
+          <div><div class="field"><select id="home" required></select><label for="home">出身高校の所在地</label></div><p class="support">卒業した高校がある都道府県</p></div>
+          <div><div class="field"><select id="res" required></select><label for="res">今住んでいる都道府県</label></div></div>
+          <div><div class="field"><select id="guard" required></select><label for="guard">保護者の住所</label></div><p class="support">地域限定の奨学金の判定に使います</p></div>
+        </div>
         <details class="optional">
-          <summary>今、奨学金を受けている場合は選ぶ（任意）</summary>
+          <summary>今、奨学金を受けている場合は選ぶ（任意）<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></summary>
           <div class="body">
-            <div class="checks" role="group" aria-label="今受けている奨学金" id="receiving">
-              <label><input type="checkbox" value="JASSO貸与"> JASSO（貸与型）</label>
-              <label><input type="checkbox" value="JASSO給付"> JASSO（給付型）</label>
-              <label><input type="checkbox" value="他の民間給付"> 他の民間の給付型</label>
+            <div class="chips" role="group" aria-label="今受けている奨学金" id="receiving">
+              <label class="chip filter"><input type="checkbox" value="JASSO貸与"> JASSO（貸与型）</label>
+              <label class="chip filter"><input type="checkbox" value="JASSO給付"> JASSO（給付型）</label>
+              <label class="chip filter"><input type="checkbox" value="他の民間給付"> 他の民間の給付型</label>
             </div>
-            <p class="hint">併用できない奨学金を除くために使います。受けていなければ、そのまま進んでください。</p>
+            <p class="support" style="margin:12px 0 0">併用できない奨学金を除くために使います。受けていなければ、そのまま進んでください。</p>
           </div>
         </details>
         <div class="actions end">
-          <button class="primary big" type="submit" id="go">奨学金を探す</button>
-          <button class="ghost" type="button" id="sample">入力例を入れてみる</button>
+          <button class="btn filled big" type="submit" id="go"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>奨学金を探す</button>
+          <button class="btn text" type="button" id="sample">入力例を入れてみる</button>
         </div>
       </form>
     </section>
@@ -259,36 +291,37 @@
     <div id="log" aria-live="polite"></div>
 
     <section class="card" id="chat" hidden aria-labelledby="h-chat">
-      <h2 id="h-chat">続けて質問する</h2>
-      <p class="sub">結果について、AI に聞いてみましょう。下の例を押すと入力されます。</p>
-      <div class="chips" id="chips"></div>
+      <h2 class="title-large" id="h-chat">続けて質問する</h2>
+      <p class="body-medium muted">結果について、AI に聞いてみましょう。下の例を押すと入力されます。</p>
+      <div class="chips" id="suggest" style="margin-bottom:24px"></div>
       <form class="composer" id="composer">
-        <textarea id="text" rows="2" maxlength="1000" placeholder="聞きたいことを入力（Ctrl + Enter でも送信できます）" aria-label="メッセージ"></textarea>
-        <button class="primary" type="submit" id="send">送信</button>
+        <div class="field"><textarea id="text" rows="1" maxlength="1000" placeholder=" " aria-label="メッセージ"></textarea><label for="text">聞きたいことを入力（Ctrl + Enter でも送信）</label></div>
+        <button class="btn filled" type="submit" id="send">送信</button>
       </form>
-      <div class="actions" style="margin-top:var(--s5)"><button class="ghost sm" type="button" id="reset">最初からやり直す</button></div>
+      <div class="actions" style="margin-top:24px"><button class="btn text sm" type="button" id="reset">最初からやり直す</button></div>
     </section>
   </main>
 
   <aside class="side" aria-label="保存・許可・記録">
     <details class="panel" id="p-saved" open>
-      <summary><span>保存した一覧<span class="count" id="n-saved">0</span></span></summary>
+      <summary>保存した一覧<span class="count" id="n-saved">0</span><svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></summary>
       <div class="body">
-        <p class="sub">気になる奨学金を「保存」すると、ここに集まります。 <a href="/admin/api/saved.csv?user_id=user" id="csv">CSV でダウンロード</a></p>
-        <div class="scrollbox" id="saved"></div>
+        <p class="body-medium muted" style="margin:0 0 8px">気になる奨学金を「保存」すると、ここに集まります。</p>
+        <a class="btn tonal sm" href="/admin/api/saved.csv?user_id=user" id="csv"><svg class="i sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>CSV でダウンロード</a>
+        <div class="scrollbox" id="saved" style="margin-top:8px"></div>
       </div>
     </details>
     <details class="panel" id="p-pending">
-      <summary><span>許可待ち<span class="count" id="n-pending">0</span></span></summary>
+      <summary>許可待ち<span class="count" id="n-pending">0</span><svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></summary>
       <div class="body">
-        <p class="sub">AI が、他の人にも影響する操作（共有リストへの追加など）をするときは、あなたの許可を求めます。許可するまで実行されません。</p>
+        <p class="body-medium muted" style="margin:0 0 8px">AI が、他の人にも影響する操作（共有リストへの追加など）をするときは、あなたの許可を求めます。許可するまで実行されません。</p>
         <div id="pending"></div>
       </div>
     </details>
     <details class="panel" id="p-audit">
-      <summary><span>操作の記録</span></summary>
+      <summary>操作の記録<svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></summary>
       <div class="body">
-        <p class="sub">AI が何をしたかを、安全のためにすべて自動で記録しています。 <a href="/admin/" target="_blank" rel="noopener">詳しく見る</a></p>
+        <p class="body-medium muted" style="margin:0 0 8px">AI が何をしたかを、安全のためにすべて自動で記録しています。 <a href="/admin/" target="_blank" rel="noopener">詳しく見る</a></p>
         <div class="scrollbox" id="audit"></div>
       </div>
     </details>
@@ -296,9 +329,30 @@
 </div>
 <footer>判定は、各団体の公式ページの募集要項（引用を原文と照合）をもとに、プログラムが行っています。最終的な応募の可否は、各団体の募集要項と大学の窓口で必ず確かめてください。</footer>
 
+<dialog class="md" id="dlg" aria-labelledby="dlg-title">
+  <svg class="i ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+  <h2 class="title-large" id="dlg-title">共有リストに追加しますか？</h2>
+  <p>AI が、次の奨学金を「共有リスト」に追加しようとしています。共有リストは、このサイトを使う他の人にも見える、奨学金の候補リストです。追加すると他の人にも表示されるため、実行する前にあなたの許可が必要です。</p>
+  <dl id="dlg-dl"></dl>
+  <p style="margin:0">許可の操作は、AI ではなくあなたにしかできません。</p>
+  <div class="dact">
+    <button class="btn text" type="button" id="dlg-no">許可しない</button>
+    <button class="btn filled" type="button" id="dlg-yes">追加を許可する</button>
+  </div>
+</dialog>
+<div class="snack" id="snack" role="status" aria-live="polite"></div>
+
 <script>
 const $ = (id) => document.getElementById(id);
 const el = (tag, text, cls) => { const e = document.createElement(tag); if (text !== undefined) e.textContent = text; if (cls) e.className = cls; return e; };
+const svg = (path, cls) => { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("class", "i " + (cls || "")); s.setAttribute("aria-hidden", "true"); const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("d", path); s.append(p); return s; };
+const ICON = {
+  bookmark: "M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z",
+  check: "M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z",
+  open: "M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z",
+  warn: "M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z",
+  chev: "M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+};
 const USER = "user", APP = "hackathon_agent";
 const PREF = "北海道 青森県 岩手県 宮城県 秋田県 山形県 福島県 茨城県 栃木県 群馬県 埼玉県 千葉県 東京都 神奈川県 新潟県 富山県 石川県 福井県 山梨県 長野県 岐阜県 静岡県 愛知県 三重県 滋賀県 京都府 大阪府 兵庫県 奈良県 和歌山県 鳥取県 島根県 岡山県 広島県 山口県 徳島県 香川県 愛媛県 高知県 福岡県 佐賀県 長崎県 熊本県 大分県 宮崎県 鹿児島県 沖縄県".split(" ");
 const STEP = { find_scholarships: "インターネット全体（民間財団・企業・自治体）と大学の一覧から、条件に合う奨学金を探しています（1〜2分ほどかかります）", get_scholarship_detail: "詳しい情報を確認しています", register_shared_scholarship: "共有リストへの追加について確認しています" };
@@ -308,23 +362,27 @@ const DECISION = { allowed: ["実行OK", ""], executed: ["完了", "ok"], pendin
 let sid = null, busy = false;
 const queue = []; // 回答の生成中に押された送信（許可のあとの続きなど）は、順番を待たせる
 
-/* 現在地（ステップ）の表示 */
+/* Snackbar（操作の結果を短く知らせる） */
+let snackTimer = null;
+function snack(text) { const s = $("snack"); s.textContent = text; s.classList.add("show"); clearTimeout(snackTimer); snackTimer = setTimeout(() => s.classList.remove("show"), 4000); }
+
+/* 現在地（ステップ） */
 function setStep(n) {
-  document.querySelectorAll("#stepper li").forEach(li => {
-    const k = Number(li.dataset.step);
-    li.classList.toggle("active", k === n); li.classList.toggle("done", k < n);
-  });
+  document.querySelectorAll("#stepper li").forEach(li => { const k = Number(li.dataset.step); li.classList.toggle("active", k === n); li.classList.toggle("done", k < n); });
   document.body.classList.toggle("compact", n > 1);
 }
 
-function fill(sel, items, ph) {
+/* フォーム: ラベルが浮き上がる Outlined text field */
+function syncFields() { document.querySelectorAll(".field").forEach(f => { const c = f.querySelector("input,select,textarea"); f.classList.toggle("filled", !!c.value); }); }
+document.addEventListener("input", syncFields); document.addEventListener("change", syncFields);
+function fill(sel, items) {
   const s = $(sel); s.replaceChildren();
-  if (ph) { const o = el("option", ph); o.value = ""; s.append(o); }
+  const o0 = el("option", ""); o0.value = ""; s.append(o0);
   for (const x of items) { const o = el("option", String(x)); o.value = x; s.append(o); }
 }
-fill("upref", PREF, "選んでください");
-fill("grade", [1, 2, 3, 4, 5, 6], "選んでください");
-for (const id of ["home", "res", "guard"]) fill(id, PREF, "選んでください");
+fill("upref", PREF); fill("grade", [1, 2, 3, 4, 5, 6]);
+for (const id of ["home", "res", "guard"]) fill(id, PREF);
+syncFields();
 
 /* ---------- 安全な Markdown 表示（HTML として解釈しない） ---------- */
 function inline(parent, text) {
@@ -369,20 +427,20 @@ const log = $("log");
 const reveal = (e, block) => e.scrollIntoView({ behavior: "smooth", block: block || "nearest" });
 function addUser(text) { const d = el("div", text, "msg user"); log.append(d); reveal(d); }
 function renderBot(d, text) { d.replaceChildren(); markdown(d, text); }
-function addBot(text, live) { const d = el("div", undefined, "msg bot"); renderBot(d, text); log.append(d); reveal(d, "start"); return d; }
+function addBot(text) { const d = el("div", undefined, "msg bot"); renderBot(d, text); log.append(d); reveal(d, "start"); return d; }
 
 /* 処理中の表示。送信した瞬間に出し、経過時間を数える（待たされている理由と長さが分かるように） */
-function addStatus(text, cls, timed) {
-  const d = el("div", undefined, "status" + (cls ? " " + cls : ""));
-  d.label = el("span", text); d.append(d.label);
+function addStatus(text, timed) {
+  const d = el("div", undefined, "status");
+  d.append(el("span", undefined, "cp")); d.label = el("span", text); d.append(d.label);
   if (timed) {
-    const t0 = Date.now(), tm = el("span", "", "timer"); d.append(tm);
+    const t0 = Date.now(), tm = el("span", "経過 0 秒", "timer"); d.append(tm);
     d.timer = setInterval(() => { tm.textContent = "経過 " + Math.floor((Date.now() - t0) / 1000) + " 秒"; }, 1000);
-    tm.textContent = "経過 0 秒";
   }
   log.append(d); reveal(d); return d;
 }
-function endStatus(d) { if (d) { clearInterval(d.timer); d.classList.add("done"); d.classList.remove("stop"); } }
+function endStatus(d) { if (d) { clearInterval(d.timer); d.classList.add("done"); } }
+function addNotice(text) { const d = el("div", undefined, "error"); d.append(svg(ICON.warn, "sm")); d.append(el("span", text)); log.append(d); reveal(d); return d; }
 
 async function newSession() {
   sid = "web-" + Math.random().toString(36).slice(2, 10);
@@ -395,9 +453,8 @@ async function send(text, initial) {
   busy = true; setBusy(true);
   addUser(text);
   // 送信した瞬間に表示する（サーバーからの最初の応答を待たない）
-  let status = addStatus(initial || "送信しました。AI が内容を確認しています", "", true);
+  let status = addStatus(initial || "送信しました。AI が内容を確認しています", true);
   const done = () => { endStatus(status); status = null; };
-  let live = null;
   try {
     if (!sid) await newSession();
     const r = await fetch("/run_sse", {
@@ -406,26 +463,25 @@ async function send(text, initial) {
     });
     if (!r.ok || !r.body) throw new Error("HTTP " + r.status);
     const reader = r.body.getReader(), dec = new TextDecoder();
-    let buf = "";
-    let liveText = "";
+    let buf = "", live = null, liveText = "";
     const handle = (ev) => {
       for (const p of (ev.content && ev.content.parts) || []) {
         if (p.functionCall) {
           if (ev.partial) continue; // 途中経過の重複は無視する
           const label = STEP[p.functionCall.name] || "処理しています";
           if (status) status.label.textContent = label; // 最初の表示を、具体的な内容に更新する
-          else status = addStatus(label, "", true);
+          else status = addStatus(label, true);
         } else if (p.functionResponse) {
           const res = p.functionResponse.response || {};
           done();
           if (p.functionResponse.name === "find_scholarships" && res.status === "ok") renderResults(res);
           else if (res.status === "pending" && res.approval_id) addApproval(res.approval_id);
-          else if (res.status === "blocked") { const s = addStatus("安全のため、この操作は止めました：" + (res.reason || ""), "stop"); clearInterval(s.timer); }
-          status = addStatus("結果をまとめています", "", true);
+          else if (res.status === "blocked") addNotice("安全のため、この操作は止めました：" + (res.reason || ""));
+          status = addStatus("結果をまとめています", true);
         } else if (p.text && !p.thought && ev.content.role !== "user") {
           done();
-          if (ev.partial) { liveText += p.text; if (!live) live = addBot(liveText, true); else renderBot(live, liveText); }
-          else { liveText = p.text; if (!live) live = addBot(liveText); else renderBot(live, liveText); live.classList.remove("live"); live = null; liveText = ""; }
+          if (ev.partial) { liveText += p.text; if (!live) live = addBot(liveText); else renderBot(live, liveText); }
+          else { liveText = p.text; if (!live) live = addBot(liveText); else renderBot(live, liveText); live = null; liveText = ""; }
         }
       }
     };
@@ -443,21 +499,20 @@ async function send(text, initial) {
     done();
   } catch (e) {
     if (status) { clearInterval(status.timer); status.remove(); }
-    log.append(el("div", "うまく応答を受け取れませんでした（" + e.message + "）。もう一度送ってください。", "error"));
+    addNotice("うまく応答を受け取れませんでした（" + e.message + "）。もう一度送ってください。");
   } finally {
-    if (live) live.classList.remove("live");
     busy = false; setBusy(false); refresh();
     $("chat").hidden = false; // 最初の応答が終わったら、続けて質問できるようにする
     if (queue.length) { const [t, i] = queue.shift(); send(t, i); }
   }
 }
-function setBusy(b) { $("go").disabled = $("send").disabled = b; $("send").textContent = b ? "処理中…" : "送信"; }
+function setBusy(b) { $("bar").hidden = !b; $("go").disabled = $("send").disabled = b; $("send").textContent = b ? "処理中…" : "送信"; }
 
 function showChat() {
   $("profile").hidden = true; $("intro").hidden = true;
-  const chips = $("chips"); chips.replaceChildren();
+  const box = $("suggest"); box.replaceChildren();
   for (const t of ["対象外になった理由を教えて", "締切が近い順に、特におすすめを教えて", "「（奨学金の名前）」を共有リストに追加したい。公式ページは https://…"]) {
-    const b = el("button", t, "chip"); b.type = "button"; b.onclick = () => { $("text").value = t; $("text").focus(); }; chips.append(b);
+    const b = el("button", t, "chip"); b.type = "button"; b.onclick = () => { $("text").value = t; syncFields(); $("text").focus(); }; box.append(b);
   }
 }
 
@@ -467,8 +522,8 @@ $("form").addEventListener("submit", (e) => {
   const msg = `${$("uni").value.trim()}（${$("upref").value}）の${$("fld").value.trim()}、${$("grade").value}年です。出身高校は${$("home").value}、今は${$("res").value}に住んでいて、保護者は${$("guard").value}に住んでいます。` + (rec.length ? `今受けている奨学金は${rec.join("、")}です。` : "奨学金は何も受けていません。");
   showChat(); setStep(2); send(msg, "条件を受け付けました。奨学金を探しています（1〜2分ほどかかります）");
 });
-$("sample").onclick = () => { $("uni").value = "筑波大学"; $("upref").value = "茨城県"; $("fld").value = "理工学群"; $("grade").value = "3"; $("home").value = "埼玉県"; $("res").value = "茨城県"; $("guard").value = "埼玉県"; };
-$("composer").addEventListener("submit", (e) => { e.preventDefault(); const t = $("text").value.trim(); if (!t) return; $("text").value = ""; send(t); });
+$("sample").onclick = () => { $("uni").value = "筑波大学"; $("upref").value = "茨城県"; $("fld").value = "理工学群"; $("grade").value = "3"; $("home").value = "埼玉県"; $("res").value = "茨城県"; $("guard").value = "埼玉県"; syncFields(); };
+$("composer").addEventListener("submit", (e) => { e.preventDefault(); const t = $("text").value.trim(); if (!t) return; $("text").value = ""; syncFields(); send(t); });
 $("text").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); $("composer").requestSubmit(); } });
 $("reset").onclick = () => { if (busy) return; queue.length = 0; sid = null; log.replaceChildren(); $("chat").hidden = true; $("profile").hidden = false; $("intro").hidden = false; setStep(1); refresh(); window.scrollTo({ top: 0 }); };
 
@@ -480,44 +535,52 @@ const NOTE = {
   unverified: "見つけましたが、公式ページの募集要項を読めていません。団体のサイトで確かめてください。",
   closed: "締切を過ぎています。来年の参考にどうぞ。"
 };
-function officialLink(url) {
+function officialLink(url, label) {
   if (typeof url !== "string" || !url.startsWith("https://")) return null;
-  const a = el("a", "公式ページを開く"); a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer"; return a;
+  const a = el("a", undefined, "btn text sm"); a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer";
+  a.append(svg(ICON.open, "sm"), document.createTextNode(label || "公式ページを開く")); return a;
+}
+function saveButton(pairs, cls, label) {
+  const b = el("button", undefined, "btn " + cls); b.type = "button"; b.append(svg(ICON.bookmark, "sm"), document.createTextNode(label));
+  b.onclick = async () => {
+    b.disabled = true; const ok = await saveItems(pairs);
+    if (ok) { b.replaceChildren(svg(ICON.check, "sm"), document.createTextNode("保存しました")); snack(pairs.length + " 件を保存しました"); }
+    else { b.disabled = false; snack("保存できませんでした。もう一度お試しください"); }
+  };
+  return b;
 }
 function itemRow(it, label) {
   const row = el("div", undefined, "item");
   row.append(el("div", it.name, "title"));
   const meta = el("div", undefined, "meta");
-  if (it.organization && it.organization !== it.name) meta.append(it.organization);
-  if (it.deadline) meta.append(el("span", "締切 " + it.deadline, "badge" + (label === "応募できる" ? " ok" : "")));
-  if (it.amount) meta.append(el("span", it.amount, "badge"));
-  if (it.route && it.route !== "不明") meta.append(el("span", it.route, "badge"));
-  if (it.source) meta.append(el("span", it.source, "badge"));
+  if (it.organization && it.organization !== it.name) meta.append(el("span", it.organization));
+  if (it.deadline) meta.append(el("span", "締切 " + it.deadline, "chip static" + (label === "応募できる" ? " strong" : "")));
+  if (it.amount) meta.append(el("span", it.amount, "chip static"));
+  if (it.route && it.route !== "不明") meta.append(el("span", it.route, "chip static"));
+  if (it.source) meta.append(el("span", it.source, "chip static"));
   row.append(meta);
   if (it.reasons && it.reasons.length) {
-    row.append(el("div", label === "応募できる" ? "確認できたこと" : "確認すること", "why"));
+    row.append(el("div", label === "応募できる" ? "確認できたこと" : "確認すること", "label-medium muted why"));
     const ul = el("ul"); for (const r of it.reasons.slice(0, 2)) ul.append(el("li", r));
     if (it.reasons.length > 2) ul.append(el("li", "ほか " + (it.reasons.length - 2) + " 件（公式ページで確認してください）"));
     row.append(ul);
   }
   const acts = el("div", undefined, "acts");
   const link = officialLink(it.official_url); if (link) acts.append(link);
-  const b = el("button", "保存する", "sm"); b.type = "button";
-  b.onclick = async () => { b.disabled = true; const ok = await saveItems([[it, label]]); b.textContent = ok ? "保存しました ✓" : "保存できませんでした"; if (!ok) b.disabled = false; };
-  acts.append(b); row.append(acts);
+  acts.append(saveButton([[it, label]], "tonal sm", "保存する")); row.append(acts);
   return row;
 }
 function renderResults(res) {
   const card = el("div", undefined, "card results");
   const head = el("div", undefined, "rhead");
-  head.append(el("h2", "検索結果"));
+  head.append(el("h2", "検索結果", "title-large"));
   card.append(head);
   const w = (res.searched && res.searched.web) || {};
   const how = [];
   if (w.queries) how.push("インターネットを " + w.queries + " 通りの方法で探し、見つかった " + w.candidates + " 件のうち " + w.verified + " 件を公式ページで確認しました");
   if (res.searched && res.searched.university_list) how.push(res.searched.university_list + "も確認しました");
-  card.append(el("p", res.today + " 時点の情報です。" + how.join("。") + (w.seconds ? "（所要 " + Math.round(w.seconds) + " 秒）" : "") + "。", "sub"));
-  for (const n of res.notes || []) card.append(el("p", n, "error"));
+  card.append(el("p", res.today + " 時点の情報です。" + how.join("。") + (w.seconds ? "（所要 " + Math.round(w.seconds) + " 秒）" : "") + "。", "body-medium muted"));
+  for (const n of res.notes || []) { const d = el("div", undefined, "error"); d.append(svg(ICON.warn, "sm"), el("span", n)); card.append(d); }
   const all = [];
   let total = 0;
   for (const [key, label] of SECTIONS) {
@@ -526,18 +589,15 @@ function renderResults(res) {
     total += list.length;
     const box = el("details", undefined, "sec");
     if (key === "eligible" || key === "needs_check") box.open = true; // 段階的開示: 主要な2区分だけ開いておく
-    box.append(el("summary", label + "（" + list.length + "件）"));
-    box.append(el("p", NOTE[key], "small"));
+    const sum = el("summary"); sum.append(el("span", label), el("span", String(list.length), "count" + (key === "eligible" ? " alert" : "")), svg(ICON.chev));
+    box.append(sum);
+    box.append(el("p", NOTE[key], "body-medium muted"));
     for (const it of list) { box.append(itemRow(it, label)); if (key !== "closed") all.push([it, label]); }
     card.append(box);
   }
   if (!total) card.append(el("p", "条件に合う候補は見つかりませんでした。条件を変えて、もう一度試してください。", "empty"));
-  if (res.ineligible_count) card.append(el("p", "条件に合わないと判定して除いたもの: " + res.ineligible_count + "件", "small"));
-  if (all.length) {
-    const b = el("button", "上の " + all.length + " 件をまとめて保存", "primary"); b.type = "button";
-    b.onclick = async () => { b.disabled = true; const ok = await saveItems(all); b.textContent = ok ? "保存しました ✓" : "保存できませんでした"; if (!ok) b.disabled = false; };
-    head.append(b);
-  }
+  if (res.ineligible_count) card.append(el("p", "条件に合わないと判定して除いたもの: " + res.ineligible_count + "件", "body-medium muted"));
+  if (all.length) head.append(saveButton(all, "filled", "上の " + all.length + " 件をまとめて保存"));
   log.append(card); reveal(card, "start"); setStep(3);
 }
 async function saveItems(pairs) {
@@ -558,17 +618,17 @@ async function loadSaved() {
   $("n-saved").textContent = d.items.length;
   if (!d.items.length) { box.append(el("p", "まだ保存したものはありません。", "empty")); return; }
   for (const it of d.items) {
-    const row = el("div", undefined, "row");
+    const row = el("div", undefined, "li");
     row.append(el("span", it.name, "name"), el("span", it.status, "badge" + (it.status === "応募できる" ? " ok" : it.status === "要確認" ? " warn" : "")));
-    if (it.deadline) row.append(el("span", "締切 " + it.deadline, "small"));
-    const link = officialLink(it.official_url); if (link) { link.textContent = "公式ページ"; row.append(link); }
-    const rm = el("button", "外す", "ghost sm"); rm.type = "button";
-    rm.onclick = async () => { rm.disabled = true; await fetch("/admin/api/saved/" + encodeURIComponent(it.id) + "?user_id=" + USER, { method: "DELETE" }); loadSaved(); };
+    if (it.deadline) row.append(el("span", "締切 " + it.deadline, "label-medium muted"));
+    const link = officialLink(it.official_url, "公式ページ"); if (link) row.append(link);
+    const rm = el("button", "外す", "btn text sm"); rm.type = "button";
+    rm.onclick = async () => { rm.disabled = true; await fetch("/admin/api/saved/" + encodeURIComponent(it.id) + "?user_id=" + USER, { method: "DELETE" }); loadSaved(); snack("保存リストから外しました"); };
     row.append(rm); box.append(row);
   }
 }
 
-/* ---------- 許可（AI が影響の大きい操作をするとき、本人が決める） ---------- */
+/* ---------- 許可（Dialog。AI が影響の大きい操作をするとき、本人が決める） ---------- */
 async function decide(id, approve, comment) {
   const r = await fetch(`/admin/api/approvals/${encodeURIComponent(id)}/decide`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ user_id: USER, approve, comment: comment || "" }) });
   return r.json();
@@ -576,39 +636,34 @@ async function decide(id, approve, comment) {
 async function approvalDetail(id) {
   try { const r = await fetch("/admin/api/state?user_id=" + USER); const d = await r.json(); return (d.approvals || []).find(a => a.id === id); } catch (e) { return null; }
 }
-function addApproval(id) {
-  const card = el("div", undefined, "approval");
-  card.append(el("h3", "確認してください：共有リストに追加しますか？"));
-  card.append(el("p", "AI が、次の奨学金を「共有リスト」に追加しようとしています。共有リストは、このサイトを使う他の人にも見える、奨学金の候補リストです。追加すると他の人にも表示されるため、実行する前にあなたの許可が必要です。"));
-  const dl = el("dl"); card.append(dl);
-  approvalDetail(id).then(a => {
-    const args = (a && a.args) || {};
-    for (const [k, v] of [["奨学金の名前", args.name], ["公式ページ", args.official_url], ["追加する理由", args.reason]]) {
-      if (!v) continue;
-      dl.append(el("dt", k));
-      const dd = el("dd");
-      if (k === "公式ページ" && /^https:\/\//.test(v)) { const x = el("a", v); x.href = v; x.target = "_blank"; x.rel = "noopener noreferrer"; dd.append(x); } else dd.textContent = v;
-      dl.append(dd);
-    }
-    if (!dl.children.length) dl.remove();
-  });
-  const ok = el("button", "追加を許可する", "primary"), ng = el("button", "許可しない", "ghost"), msg = el("span", "", "small");
-  const row = el("div", undefined, "actions"); row.style.marginTop = "var(--s4)"; row.append(ok, ng, msg);
-  const act = (approve) => async () => {
-    ok.disabled = ng.disabled = true;
-    msg.textContent = "許可の内容を反映しています…"; // 押した瞬間に反応を見せる
-    try {
-      const j = await decide(id, approve);
-      msg.textContent = j.ok ? (approve ? "許可しました" : "許可しませんでした") : (j.message || j.detail || "");
-      if (j.ok) { card.style.opacity = ".7"; if (approve) send(`承認しました。承認IDは ${id} です。登録を続けてください。`, "許可を受け付けました。共有リストに追加しています"); else addBot("許可されなかったので、共有リストには追加しません。"); }
-      else ok.disabled = ng.disabled = false;
-    } catch (e) { msg.textContent = "送信できませんでした"; ok.disabled = ng.disabled = false; }
-  };
-  ok.onclick = act(true); ng.onclick = act(false);
-  card.append(row);
-  card.append(el("p", "許可の操作は、AI ではなくあなたにしかできません。", "note"));
-  log.append(card); reveal(card);
+/* 許可・不許可を決めたあとの流れ（ダイアログでも、サイドの一覧でも同じ） */
+async function decideFlow(id, approve) {
+  const st = addStatus("許可の内容を反映しています", true); // 押した瞬間に反応を見せる
+  try {
+    const j = await decide(id, approve);
+    endStatus(st);
+    if (!j.ok) { addNotice(j.message || j.detail || "反映できませんでした"); refresh(); return; }
+    if (approve) send(`承認しました。承認IDは ${id} です。登録を続けてください。`, "許可を受け付けました。共有リストに追加しています");
+    else { addBot("許可されなかったので、共有リストには追加しません。"); refresh(); }
+  } catch (e) { endStatus(st); addNotice("送信できませんでした。もう一度お試しください。"); }
 }
+let dlgId = null;
+async function addApproval(id) {
+  addStatus("あなたの許可が必要です。表示された確認画面で選んでください", false).classList.add("done");
+  dlgId = id;
+  const dl = $("dlg-dl"); dl.replaceChildren();
+  const a = await approvalDetail(id); const args = (a && a.args) || {};
+  for (const [k, v] of [["奨学金の名前", args.name], ["公式ページ", args.official_url], ["追加する理由", args.reason]]) {
+    if (!v) continue;
+    dl.append(el("dt", k)); const dd = el("dd");
+    if (k === "公式ページ" && /^https:\/\//.test(v)) { const x = el("a", v); x.href = v; x.target = "_blank"; x.rel = "noopener noreferrer"; dd.append(x); } else dd.textContent = v;
+    dl.append(dd);
+  }
+  dl.hidden = !dl.children.length;
+  if (!$("dlg").open) $("dlg").showModal();
+}
+$("dlg-yes").onclick = () => { $("dlg").close(); decideFlow(dlgId, true); };
+$("dlg-no").onclick = () => { $("dlg").close(); decideFlow(dlgId, false); };
 
 /* ---------- サイドパネル ---------- */
 const fmt = (iso) => iso ? new Date(iso).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
@@ -622,19 +677,20 @@ async function refresh() {
   if (pend.length) $("p-pending").open = true; // 許可を待っている操作があるときだけ、自動で開く
   if (!pend.length) pd.append(el("p", "いま許可を待っている操作はありません。", "empty"));
   for (const a of pend) {
-    const row = el("div", undefined, "row");
+    const row = el("div", undefined, "li");
     row.append(el("span", "「" + ((a.args && a.args.name) || (TOOL_LABEL[a.tool] || a.tool)) + "」を共有リストに追加", "name"));
-    const ok = el("button", "許可", "primary sm"), ng = el("button", "許可しない", "ghost sm");
-    ok.onclick = async () => { ok.disabled = ng.disabled = true; await decide(a.id, true); refresh(); };
-    ng.onclick = async () => { ok.disabled = ng.disabled = true; await decide(a.id, false); refresh(); };
+    const ok = el("button", "許可", "btn filled sm"), ng = el("button", "許可しない", "btn text sm");
+    ok.type = ng.type = "button";
+    ok.onclick = () => { ok.disabled = ng.disabled = true; decideFlow(a.id, true); };
+    ng.onclick = () => { ok.disabled = ng.disabled = true; decideFlow(a.id, false); };
     row.append(ok, ng); pd.append(row);
   }
   const au = $("audit"); au.replaceChildren();
   if (!d.audit.length) au.append(el("p", "まだ記録はありません。", "empty"));
   for (const r of d.audit.slice(0, 12)) {
     const [t, c] = DECISION[r.decision] || [r.decision, ""];
-    const row = el("div", undefined, "row");
-    row.append(el("span", fmt(r.at), "small"), el("span", TOOL_LABEL[r.tool] || r.tool, "name"), el("span", t, "badge " + c));
+    const row = el("div", undefined, "li");
+    row.append(el("span", fmt(r.at), "label-medium muted"), el("span", TOOL_LABEL[r.tool] || r.tool, "name"), el("span", t, "badge " + c));
     au.append(row);
   }
 }
