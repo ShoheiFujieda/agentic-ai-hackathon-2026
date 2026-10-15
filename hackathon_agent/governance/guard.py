@@ -9,8 +9,9 @@ from urllib.parse import urlparse
 
 from google.adk.tools import BaseTool, ToolContext
 
+from ..scholarship.judge import PURPOSES
 from ..scholarship.prefilter import PREFECTURES
-from ..tools import RECEIVING
+from ..tools import GRADUATE, LAST_SCHOOLS, RECEIVING, STATUSES
 from . import approvals, audit
 
 MAX_TEXT = 50  # 大学名・分野の長さの上限
@@ -27,17 +28,36 @@ TOOL_RISK = {
 
 def _validate_find_scholarships(args: dict[str, Any], tool_context: ToolContext) -> str | None:
     """問題があれば理由を返す。問題なければ None。"""
-    for key, label in (("university", "大学名"), ("field", "学部・分野")):
-        v = args.get(key)
-        if not isinstance(v, str) or not v.strip():
+    status = args.get("status", "大学生")
+    if status not in STATUSES:
+        return f"立場は {'、'.join(STATUSES)} から選んでください"
+    in_college = status in ("大学生", "大学院生", "短大生", "高専生", "専門学校生")
+    for key, label, required in (("university", "学校名", in_college), ("field", "学部・分野", False)):
+        v = args.get(key, "")
+        if not isinstance(v, str):
+            return f"{label}は文字で指定してください"
+        if required and not v.strip():
             return f"{label}を指定してください"
         if len(v) > MAX_TEXT or any(ord(c) < 32 for c in v):
             return f"{label}は{MAX_TEXT}文字以内の文字で指定してください"
-    if args.get("university_prefecture") not in PREFECTURES:
-        return f"大学の所在地「{args.get('university_prefecture')}」は都道府県名（例: 茨城県）で指定してください"
+    pref = args.get("university_prefecture", "")
+    if pref not in PREFECTURES and (in_college or pref):
+        return f"学校の所在地「{pref}」は都道府県名（例: 茨城県）で指定してください"
     grade = args.get("grade")
-    if not isinstance(grade, int) or isinstance(grade, bool) or not 1 <= grade <= 6:
-        return "学年は1〜6の整数で指定してください"
+    low, high = (1, 3) if status == "高校生" else (1, 6)
+    if status == GRADUATE:
+        low, high = 0, 6  # 卒業後は学年を使わない
+    if not isinstance(grade, int) or isinstance(grade, bool) or not low <= grade <= high:
+        return f"学年は{low}〜{high}の整数で指定してください" if status != GRADUATE else "学年は0を指定してください"
+    if status == GRADUATE:
+        if args.get("last_school") not in LAST_SCHOOLS:
+            return f"最終学歴は {'、'.join(LAST_SCHOOLS)} から選んでください"
+        years = args.get("years_since_graduation", 0)
+        if not isinstance(years, int) or isinstance(years, bool) or not 0 <= years <= 20:
+            return "卒業後の年数は0〜20の整数で指定してください"
+    purposes = args.get("purposes")
+    if purposes is not None and (not isinstance(purposes, list) or not set(purposes) <= set(PURPOSES)):
+        return f"目的は {'、'.join(PURPOSES)} から選んでください"
     for key, label in (
         ("home_prefecture", "出身地"),
         ("residence_prefecture", "本人の住所"),

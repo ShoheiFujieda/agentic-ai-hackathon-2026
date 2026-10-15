@@ -10,11 +10,23 @@ from google.adk.tools import ToolContext
 
 from .governance import approvals, audit
 from .scholarship import service, web, websearch
-from .scholarship.judge import Profile
+from .scholarship.judge import DEFAULT_PURPOSES, Profile
 
 logger = logging.getLogger(__name__)
 
 RECEIVING = {"JASSO貸与", "JASSO給付", "他の民間給付"}
+# 立場 → 要項の「校種」。卒業後（社会人）は、最終学歴の校種で照合する
+SCHOOL_TYPE = {
+    "高校生": "高校",
+    "大学生": "大学",
+    "大学院生": "大学院",
+    "短大生": "短大",
+    "高専生": "高専",
+    "専門学校生": "専門学校",
+}
+GRADUATE = "卒業後（社会人）"
+STATUSES = [*SCHOOL_TYPE, GRADUATE]
+LAST_SCHOOLS = ["高校", "短大", "高専", "専門学校", "大学", "大学院"]
 # 日本時間。日本には夏時間がないので固定の +9時間 で求める（Windows はタイムゾーンのデータを持たないため ZoneInfo を使わない）
 JST = timezone(timedelta(hours=9), "JST")
 TSUKUBA = "筑波"  # 大学名にこの言葉があれば、筑波大学の公開一覧（大学経由の奨学金）も使う
@@ -66,34 +78,48 @@ async def find_scholarships(
     guardian_prefecture: str,
     receiving: list[str],
     tool_context: ToolContext,
+    status: str = "大学生",
+    last_school: str = "",
+    years_since_graduation: int = 0,
+    purposes: list[str] | None = None,
 ) -> dict:
-    """学生が応募できる奨学金を、民間のものも含めて Web から探し、応募資格を判定して一覧にする。
+    """応募できる奨学金・助成金を、民間のものも含めて Web から探し、応募資格と目的への合致を判定して一覧にする。
 
     判定はコードで行う。結果の eligible（応募できる）/ needs_check（要確認）/ unverified（公式ページ未確認の候補）を、
     そのまま学生に伝えること。結果の一覧は画面の表に出るので、回答は短い要約にする。探すのに1〜2分かかる。
 
     Args:
-        university: 在学する大学の名前（例: 筑波大学）。
-        university_prefecture: 大学の所在地の都道府県名（例: 茨城県）。
-        field: 学部・学群・分野（例: 理工学群、経済学部）。
-        grade: 学年（1〜6の整数）。
+        university: 在学する学校の名前（例: 筑波大学）。高校生と卒業後の人は、分からなければ空文字。
+        university_prefecture: 学校の所在地の都道府県名（例: 茨城県）。高校生と卒業後の人は、空文字でもよい。
+        field: 学部・学群・分野（例: 理工学群、経済学部）。なければ空文字。
+        grade: 学年（大学・大学院・短大・高専・専門学校は1〜6、高校は1〜3）。卒業後の人は0。
         home_prefecture: 本人の出身地（出身高校の所在地）の都道府県名（例: 埼玉県）。
         residence_prefecture: 本人が今住んでいる都道府県名（例: 茨城県）。
         guardian_prefecture: 保護者が住んでいる都道府県名（例: 埼玉県）。
         receiving: 今受けている奨学金の区分のリスト。JASSO貸与 / JASSO給付 / 他の民間給付 から選ぶ。なければ空のリスト。
+        status: 立場。高校生 / 大学生 / 大学院生 / 短大生 / 高専生 / 専門学校生 / 卒業後（社会人） から選ぶ。
+        last_school: 卒業後の人の最終学歴。高校 / 短大 / 高専 / 専門学校 / 大学 / 大学院 から選ぶ。在学中の人は空文字。
+        years_since_graduation: 卒業後の年数（0〜20）。在学中の人は0。
+        purposes: 利用の目的のリスト。学業・生活費 / 留学 / 研究 / プロジェクト・活動 から選ぶ（複数可）。分からなければ学業・生活費。
     """
+    graduated = status == GRADUATE
+    school_type = last_school if graduated else SCHOOL_TYPE.get(status, "大学")
     profile = Profile(
-        school_type="大学",
-        grade=grade,
+        school_type=school_type,
+        grade=0 if graduated else grade,
         field_keywords=websearch.field_keywords(field),
         home_prefecture=home_prefecture,
         residence=residence_prefecture,
-        school_location=university_prefecture,
+        school_location=university_prefecture or residence_prefecture,
         guardian_residence=guardian_prefecture,
         receiving=list(receiving),
+        graduated=graduated,
+        years_since_graduation=years_since_graduation if graduated else None,
+        purposes=list(purposes) if purposes else list(DEFAULT_PURPOSES),
     )
     day = today()
-    use_list = TSUKUBA in university
+    # 筑波大学の公開一覧（大学経由の奨学金）は、在学中の大学生・大学院生で、目的に学業・生活費を含むときだけ使う
+    use_list = TSUKUBA in university and status in ("大学生", "大学院生") and "学業・生活費" in profile.purposes
     jobs = [asyncio.to_thread(websearch.search, profile, university, field, day)]
     if use_list:
         jobs.append(asyncio.to_thread(service.find, profile, day))
@@ -109,6 +135,7 @@ async def find_scholarships(
             "needs_check": [],
             "unverified": [],
             "closed": [],
+            "off_purpose": [],
             "ineligible_count": 0,
             "stats": {},
         }
@@ -130,6 +157,7 @@ async def find_scholarships(
         "needs_check": [],
         "unverified": list(web_res["unverified"]),
         "closed": list(web_res.get("closed", [])),
+        "off_purpose": list(web_res.get("off_purpose", [])),
     }
     seen: set[str] = set()
     if list_res:

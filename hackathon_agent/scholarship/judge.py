@@ -14,6 +14,11 @@ NEEDS_CHECK = "要確認"
 INELIGIBLE = "対象外"
 CLOSED = "募集終了"
 NO_OFFICIAL = "公式情報なし"
+OFF_PURPOSE = "目的が違う"  # 使途が、本人の目的と明らかに違う（例: 留学専用なのに、目的が学業だけ）
+
+# 利用の目的（要項の使途と本人の目的を、この4つの言葉で照合する）
+PURPOSES = ["学業・生活費", "留学", "研究", "プロジェクト・活動"]
+DEFAULT_PURPOSES = ["学業・生活費"]
 
 # 地域条件の種類 → プロフィールの項目
 REGION_KEYS = {
@@ -45,6 +50,9 @@ class Profile:
     guardian_residence: str
     receiving: list[str] = field(default_factory=list)  # 受給中の奨学金の区分（例: JASSO貸与）
     is_international: bool = False
+    graduated: bool = False  # 卒業後（社会人など）。このとき school_type は最終学歴、grade は使わない
+    years_since_graduation: int | None = None
+    purposes: list[str] = field(default_factory=lambda: list(DEFAULT_PURPOSES))  # 利用の目的（PURPOSES から選ぶ）
 
 
 @dataclass
@@ -107,11 +115,28 @@ def judge(cond: dict | None, profile: Profile, today: date) -> Judgement:
         if not rows:
             return Judgement(INELIGIBLE, [f"{profile.school_type}の学生は対象外です"])
         grades = {g for t in rows for g in (t.get("grades") or [])}
-        if grades and profile.grade not in grades:
+        if grades and not profile.graduated and profile.grade not in grades:
             return Judgement(INELIGIBLE, [f"対象学年（{sorted(grades)}年）に含まれません"])
         reasons.append("学年: 条件に合っています")
     elif targets.get("status") != "制限なし":
         unknown.append("対象学年")
+
+    # 3b. 卒業後の条件（在学生のみ／卒業生も可／卒業生のみ、と卒業後の年数の上限）
+    grad = _section(cond, "graduates")
+    gstatus = grad.get("status")
+    if profile.graduated:
+        if gstatus == "在学生のみ":
+            return Judgement(INELIGIBLE, ["在学中の人だけが対象です（卒業後は対象外）"])
+        if gstatus in ("卒業生も可", "卒業生のみ"):
+            limit = grad.get("max_years")
+            mine = profile.years_since_graduation
+            if isinstance(limit, int) and not isinstance(limit, bool) and mine is not None and mine > limit:
+                return Judgement(INELIGIBLE, [f"卒業後{limit}年以内が対象です（あなたは卒業後{mine}年）"])
+            reasons.append("卒業後の応募: 条件に合っています")
+        else:
+            unknown.append("卒業後でも応募できるか")
+    elif gstatus == "卒業生のみ":
+        return Judgement(INELIGIBLE, ["卒業した人が対象です（在学中は対象外）"])
 
     # 4. 地域条件（種類ごとに照合する）
     region = _section(cond, "region")
@@ -152,6 +177,21 @@ def judge(cond: dict | None, profile: Profile, today: date) -> Judgement:
             unknown.append("学部・分野")
     elif fields.get("status") != "制限なし":
         unknown.append("学部・分野")
+
+    # 5b. 目的（使途）。明らかに違うものは「目的が違う」に分ける。留学・研究・活動が目的で、使途が読めなければ要確認
+    purposes = _section(cond, "purposes")
+    mine_p = set(profile.purposes or DEFAULT_PURPOSES)
+    listed_p = {x for x in purposes.get("list", []) if x}
+    if purposes.get("status") == "制限あり" and listed_p:
+        if mine_p & listed_p:
+            reasons.append("目的: 条件に合っています")
+        else:
+            return Judgement(
+                OFF_PURPOSE,
+                [f"使途（{'、'.join(sorted(listed_p))}）が、あなたの目的（{'、'.join(sorted(mine_p))}）と違います"],
+            )
+    elif (mine_p - {"学業・生活費"}) and purposes.get("status") != "制限なし":
+        unknown.append("使途（目的に合うか）")
 
     # 6. 併給（受給中の奨学金との組み合わせ）
     concurrent = _section(cond, "concurrent")

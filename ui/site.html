@@ -246,11 +246,11 @@
   <main id="main">
     <section id="intro" class="hero" aria-label="このサイトについて">
       <h1 class="headline-large">あなたが応募できる奨学金を、<br>民間まで漏れなく。</h1>
-      <p class="body-large muted">条件を入れると、AI が大学の一覧だけでなく、民間財団・企業・自治体の奨学金までインターネットから探し、<b style="color:var(--md-on-surface);font-weight:500">応募できるかどうか</b>を各団体の公式ページで確かめて、一覧にします。</p>
+      <p class="body-large muted">条件と目的を入れると、AI が大学の一覧だけでなく、民間財団・企業・自治体の奨学金・助成金までインターネットから探し、<b style="color:var(--md-on-surface);font-weight:500">応募できるかどうか</b>を各団体の公式ページで確かめて、一覧にします。</p>
     </section>
 
     <ol class="steps" id="stepper" aria-label="進み具合">
-      <li class="active" data-step="1"><span class="n">1</span><span><b>条件を入力</b><small>大学・学年・地域など、1分で入力できます。</small></span></li>
+      <li class="active" data-step="1"><span class="n">1</span><span><b>条件を入力</b><small>立場・目的・地域など、1分で入力できます。</small></span></li>
       <li data-step="2"><span class="n">2</span><span><b>AI が探す</b><small>公式ページを読んで判定します。1〜2分ほどかかります。</small></span></li>
       <li data-step="3"><span class="n">3</span><span><b>結果を見て保存</b><small>気になるものを保存し、CSV で持ち帰れます。</small></span></li>
     </ol>
@@ -259,19 +259,30 @@
       <h2 class="title-large" id="h-prof">あなたの条件</h2>
       <p class="body-medium muted">入力した内容は、応募できるかどうかの判定にだけ使います。</p>
       <form id="form">
-        <h3 class="title-medium section-title">大学について</h3>
+        <h3 class="title-medium section-title">あなたについて</h3>
         <div class="grid">
-          <div><div class="field"><input type="text" id="uni" maxlength="50" placeholder=" " autocomplete="off" required><label for="uni">大学名（例: 筑波大学）</label></div></div>
-          <div><div class="field"><select id="upref" required></select><label for="upref">大学の所在地</label></div><p class="support">大学（キャンパス）がある都道府県</p></div>
-          <div><div class="field"><input type="text" id="fld" maxlength="50" placeholder=" " autocomplete="off" required><label for="fld">学部・学群・分野（例: 理工学群）</label></div></div>
-          <div><div class="field"><select id="grade" required></select><label for="grade">学年</label></div></div>
+          <div><div class="field"><select id="status" required></select><label for="status">立場</label></div></div>
+          <div data-for="college"><div class="field"><input type="text" id="uni" maxlength="50" placeholder=" " autocomplete="off"><label for="uni">学校名（例: 筑波大学）</label></div></div>
+          <div data-for="college"><div class="field"><select id="upref"></select><label for="upref">学校の所在地</label></div><p class="support">学校（キャンパス）がある都道府県</p></div>
+          <div data-for="college"><div class="field"><input type="text" id="fld" maxlength="50" placeholder=" " autocomplete="off"><label for="fld">学部・学群・分野（例: 理工学群）</label></div></div>
+          <div data-for="college school"><div class="field"><select id="grade"></select><label for="grade">学年</label></div></div>
+          <div data-for="grad"><div class="field"><select id="last"></select><label for="last">最終学歴</label></div></div>
+          <div data-for="grad"><div class="field"><select id="years"></select><label for="years">卒業後の年数</label></div></div>
         </div>
         <h3 class="title-medium section-title">地域について</h3>
         <div class="grid three">
-          <div><div class="field"><select id="home" required></select><label for="home">出身高校の所在地</label></div><p class="support">卒業した高校がある都道府県</p></div>
+          <div><div class="field"><select id="home" required></select><label for="home" id="l-home">出身高校の所在地</label></div><p class="support" id="s-home">卒業した高校がある都道府県</p></div>
           <div><div class="field"><select id="res" required></select><label for="res">今住んでいる都道府県</label></div></div>
           <div><div class="field"><select id="guard" required></select><label for="guard">保護者の住所</label></div><p class="support">地域限定の奨学金の判定に使います</p></div>
         </div>
+        <h3 class="title-medium section-title">何に使いたいか（目的）</h3>
+        <div class="chips" role="group" aria-label="利用の目的" id="purposes">
+          <label class="chip filter"><input type="checkbox" value="学業・生活費" checked> 学業・生活費</label>
+          <label class="chip filter"><input type="checkbox" value="留学"> 留学</label>
+          <label class="chip filter"><input type="checkbox" value="研究"> 研究</label>
+          <label class="chip filter"><input type="checkbox" value="プロジェクト・活動"> プロジェクト・活動</label>
+        </div>
+        <p class="support" style="margin:12px 0 0">選んだ目的に合うものだけを出します（複数選べます）。</p>
         <details class="optional">
           <summary>今、奨学金を受けている場合は選ぶ（任意）<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></summary>
           <div class="body">
@@ -284,7 +295,7 @@
           </div>
         </details>
         <div class="actions end">
-          <button class="btn filled big" type="submit" id="go"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>奨学金を探す</button>
+          <button class="btn filled big" type="submit" id="go"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>探す</button>
           <button class="btn text" type="button" id="sample">入力例を入れてみる</button>
         </div>
       </form>
@@ -382,9 +393,40 @@ function fill(sel, items) {
   const o0 = el("option", ""); o0.value = ""; s.append(o0);
   for (const x of items) { const o = el("option", String(x)); o.value = x; s.append(o); }
 }
-fill("upref", PREF); fill("grade", [1, 2, 3, 4, 5, 6]);
+const STATUSES = ["高校生", "大学生", "大学院生", "短大生", "高専生", "専門学校生", "卒業後（社会人）"];
+fill("status", STATUSES); fill("upref", PREF); fill("grade", [1, 2, 3, 4, 5, 6]);
+fill("last", ["高校", "短大", "高専", "専門学校", "大学", "大学院"]); fill("years", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 for (const id of ["home", "res", "guard"]) fill(id, PREF);
 syncFields();
+
+/* 立場に応じて、聞く項目を切り替える（高校生は学校名を聞かない。卒業後は最終学歴と年数） */
+function kindOf(st) { return st === "高校生" ? "school" : st === "卒業後（社会人）" ? "grad" : st ? "college" : ""; }
+function applyStatus() {
+  const st = $("status").value, kind = kindOf(st);
+  document.querySelectorAll("[data-for]").forEach(box => {
+    const show = kind !== "" && box.dataset.for.split(" ").includes(kind);
+    box.hidden = !show;
+    box.querySelectorAll("input,select").forEach(c => { c.disabled = !show; });
+  });
+  $("uni").required = kind === "college"; $("upref").required = kind === "college"; $("grade").required = kind === "college" || kind === "school";
+  $("last").required = kind === "grad"; $("years").required = kind === "grad";
+  const max = st === "高校生" ? 3 : 6, cur = $("grade").value; fill("grade", Array.from({ length: max }, (_, i) => i + 1)); if (cur && Number(cur) <= max) $("grade").value = cur;
+  $("l-home").textContent = st === "高校生" ? "高校の所在地" : "出身高校の所在地";
+  $("s-home").textContent = st === "高校生" ? "いま通っている高校がある都道府県" : "卒業した高校がある都道府県";
+  syncFields();
+}
+$("status").addEventListener("change", applyStatus);
+applyStatus();
+function describeProfile() {
+  const st = $("status").value, kind = kindOf(st), home = $("home").value, res = $("res").value, guard = $("guard").value;
+  const rec = [...document.querySelectorAll("#receiving input:checked")].map(i => i.value);
+  const purposes = [...document.querySelectorAll("#purposes input:checked")].map(i => i.value);
+  let who;
+  if (kind === "grad") who = `卒業後${$("years").value}年の社会人です。最終学歴は${$("last").value}です。`;
+  else if (kind === "school") who = `高校${$("grade").value}年生です。` + ($("uni").value.trim() ? `学校名は${$("uni").value.trim()}です。` : "");
+  else who = `${$("uni").value.trim()}（${$("upref").value}）の${$("fld").value.trim()}、${st.replace("生", "")}${$("grade").value}年（立場: ${st}）です。`;
+  return `${who}${kind === "school" ? "高校は" : "出身高校は"}${home}、今は${res}に住んでいて、保護者は${guard}に住んでいます。` + (rec.length ? `今受けている奨学金は${rec.join("、")}です。` : "奨学金は何も受けていません。") + `利用の目的は${(purposes.length ? purposes : ["学業・生活費"]).join("、")}です。`;
+}
 
 /* ---------- 安全な Markdown 表示（HTML として解釈しない） ---------- */
 function inline(parent, text) {
@@ -520,22 +562,26 @@ function showChat() {
 
 $("form").addEventListener("submit", (e) => {
   e.preventDefault();
-  const rec = [...document.querySelectorAll("#receiving input:checked")].map(i => i.value);
-  const msg = `${$("uni").value.trim()}（${$("upref").value}）の${$("fld").value.trim()}、${$("grade").value}年です。出身高校は${$("home").value}、今は${$("res").value}に住んでいて、保護者は${$("guard").value}に住んでいます。` + (rec.length ? `今受けている奨学金は${rec.join("、")}です。` : "奨学金は何も受けていません。");
-  showChat(); setStep(2); send(msg, "条件を受け付けました。奨学金を探しています（1〜2分ほどかかります）");
+  showChat(); setStep(2); send(describeProfile(), "条件を受け付けました。奨学金・助成金を探しています（1〜2分ほどかかります）");
 });
-$("sample").onclick = () => { $("uni").value = "筑波大学"; $("upref").value = "茨城県"; $("fld").value = "理工学群"; $("grade").value = "3"; $("home").value = "埼玉県"; $("res").value = "茨城県"; $("guard").value = "埼玉県"; syncFields(); };
+$("sample").onclick = () => {
+  $("status").value = "大学生"; applyStatus();
+  $("uni").value = "筑波大学"; $("upref").value = "茨城県"; $("fld").value = "理工学群"; $("grade").value = "3"; $("home").value = "埼玉県"; $("res").value = "茨城県"; $("guard").value = "埼玉県";
+  document.querySelectorAll("#purposes input").forEach(i => { i.checked = i.value === "学業・生活費"; });
+  syncFields();
+};
 $("composer").addEventListener("submit", (e) => { e.preventDefault(); const t = $("text").value.trim(); if (!t) return; $("text").value = ""; syncFields(); send(t); });
 $("text").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); $("composer").requestSubmit(); } });
 $("reset").onclick = () => { if (busy) return; queue.length = 0; sid = null; log.replaceChildren(); $("chat").hidden = true; $("profile").hidden = false; $("intro").hidden = false; setStep(1); refresh(); window.scrollTo({ top: 0 }); };
 
 /* ---------- 結果の一覧と保存 ---------- */
-const SECTIONS = [["eligible", "応募できる"], ["needs_check", "要確認"], ["unverified", "未確認の候補"], ["closed", "募集終了"]];
+const SECTIONS = [["eligible", "応募できる"], ["needs_check", "要確認"], ["unverified", "未確認の候補"], ["closed", "募集終了"], ["off_purpose", "目的が違うため除外"]];
 const NOTE = {
   eligible: "公式ページの募集要項を読み、あなたの条件がすべて合うと確認できたものです。",
   needs_check: "条件の一部を確認できていません。各項目の「確認すること」を、公式ページで確かめてください。",
   unverified: "見つけましたが、公式ページの募集要項を読めていません。団体のサイトで確かめてください。",
-  closed: "締切を過ぎています。来年の参考にどうぞ。"
+  closed: "締切を過ぎています。来年の参考にどうぞ。",
+  off_purpose: "お金の使いみちが、あなたが選んだ目的と違うものです。目的を変えて探すと、応募できる場合があります。"
 };
 function officialLink(url, label) {
   if (typeof url !== "string" || !url.startsWith("https://")) return null;
@@ -594,7 +640,7 @@ function renderResults(res) {
     const sum = el("summary"); sum.append(el("span", label), el("span", String(list.length), "count" + (key === "eligible" ? " alert" : "")), svg(ICON.chev));
     box.append(sum);
     box.append(el("p", NOTE[key], "body-medium muted"));
-    for (const it of list) { box.append(itemRow(it, label)); if (key !== "closed") all.push([it, label]); }
+    for (const it of list) { box.append(itemRow(it, label)); if (key !== "closed" && key !== "off_purpose") all.push([it, label]); }
     card.append(box);
   }
   if (!total) card.append(el("p", "条件に合う候補は見つかりませんでした。条件を変えて、もう一度試してください。", "empty"));

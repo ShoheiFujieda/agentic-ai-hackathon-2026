@@ -186,3 +186,100 @@ def test_別分野の言葉にはスポーツと美術を含む():
     assert OTHER_FIELDS.search("（公財）ヨネックススポーツ振興財団")
     assert OTHER_FIELDS.search("（公財）現代美術文化振興財団")
     assert not OTHER_FIELDS.search("（一財）TCS奨学会")
+
+
+# ---------- 幅広い利用者と目的（10/15） ----------
+from hackathon_agent.scholarship.judge import OFF_PURPOSE  # noqa: E402
+
+
+def _base_cond(**over):
+    cond = {
+        "official": True,
+        "period": {"status": "確認", "deadline": "2027-03-31", "fiscal_year": 2026},
+        "targets": {"status": "制限なし"},
+        "region": {"status": "制限なし"},
+        "fields": {"status": "制限なし"},
+        "concurrent": {"status": "確認", "rules": {}},
+        "application_route": "直接応募",
+    }
+    cond.update(over)
+    return cond
+
+
+def _me(**over):
+    base = dict(
+        school_type="大学",
+        grade=3,
+        field_keywords=["情報"],
+        home_prefecture="埼玉県",
+        residence="茨城県",
+        school_location="茨城県",
+        guardian_residence="埼玉県",
+        receiving=[],
+    )
+    base.update(over)
+    return Profile(**base)
+
+
+TODAY2 = date(2026, 10, 15)
+
+
+def test_在学生のみの奨学金は卒業後の人には対象外():
+    cond = _base_cond(graduates={"status": "在学生のみ"})
+    me = _me(graduated=True, years_since_graduation=1, grade=0)
+    assert judge(cond, me, TODAY2).status == INELIGIBLE
+
+
+def test_卒業後の年数の上限を超えると対象外_以内なら応募できる():
+    cond = _base_cond(graduates={"status": "卒業生も可", "max_years": 2})
+    assert judge(cond, _me(graduated=True, years_since_graduation=3, grade=0), TODAY2).status == INELIGIBLE
+    assert judge(cond, _me(graduated=True, years_since_graduation=2, grade=0), TODAY2).status == ELIGIBLE
+
+
+def test_卒業後の応募可否が読めなければ要確認():
+    cond = _base_cond(graduates={"status": "不明"})
+    assert judge(cond, _me(graduated=True, years_since_graduation=1, grade=0), TODAY2).status == NEEDS_CHECK
+
+
+def test_卒業生のみの奨学金は在学生には対象外():
+    cond = _base_cond(graduates={"status": "卒業生のみ", "max_years": 2})
+    assert judge(cond, _me(), TODAY2).status == INELIGIBLE
+
+
+def test_卒業後の人は学年の条件で落とさない():
+    cond = _base_cond(
+        targets={"status": "制限あり", "list": [{"school_type": "大学", "grades": [3, 4]}]},
+        graduates={"status": "卒業生も可", "max_years": 2},
+    )
+    assert judge(cond, _me(graduated=True, years_since_graduation=1, grade=0), TODAY2).status == ELIGIBLE
+
+
+def test_高校生の条件を判定できる():
+    cond = _base_cond(targets={"status": "制限あり", "list": [{"school_type": "高校", "grades": [3]}]})
+    assert judge(cond, _me(school_type="高校", grade=3), TODAY2).status == ELIGIBLE
+    assert judge(cond, _me(school_type="高校", grade=1), TODAY2).status == INELIGIBLE
+    assert judge(cond, _me(), TODAY2).status == INELIGIBLE  # 大学生は対象外
+
+
+def test_使途が目的と明らかに違えば目的が違うに分ける():
+    cond = _base_cond(purposes={"status": "制限あり", "list": ["留学"]})
+    r = judge(cond, _me(purposes=["学業・生活費"]), TODAY2)
+    assert r.status == OFF_PURPOSE and "留学" in r.reasons[0]
+
+
+def test_使途が目的に合えば応募できる():
+    cond = _base_cond(purposes={"status": "制限あり", "list": ["留学", "研究"]})
+    assert judge(cond, _me(purposes=["留学"]), TODAY2).status == ELIGIBLE
+
+
+def test_目的が留学で使途が読めなければ要確認_学業だけなら気にしない():
+    cond = _base_cond(purposes={"status": "不明"})
+    assert judge(cond, _me(purposes=["留学"]), TODAY2).status == NEEDS_CHECK
+    assert judge(cond, _me(purposes=["学業・生活費"]), TODAY2).status == ELIGIBLE
+    assert judge(_base_cond(), _me(), TODAY2).status == ELIGIBLE  # 項目自体が無い（従来の結果）も変わらない
+
+
+def test_引用が確認できない使途は判定に使わない():
+    cond = _base_cond(purposes={"status": "制限あり", "list": ["留学"], "quote_verified": False})
+    # 使途が「不明」扱いになるので、目的が学業だけなら応募できるのまま
+    assert judge(cond, _me(purposes=["学業・生活費"]), TODAY2).status == ELIGIBLE

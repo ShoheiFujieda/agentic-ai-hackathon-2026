@@ -23,7 +23,7 @@ from google.genai import types
 from pypdf import PdfReader
 
 from . import cache, extract, web
-from .judge import CLOSED, ELIGIBLE, INELIGIBLE, NEEDS_CHECK, Profile, judge
+from .judge import CLOSED, DEFAULT_PURPOSES, ELIGIBLE, INELIGIBLE, NEEDS_CHECK, OFF_PURPOSE, Profile, judge
 from .prefilter import prefilter
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ NEGATIVE_TTL = timedelta(
     hours=6
 )  # 「公式ページを確認できなかった」結果を覚えておく時間（後で見つかるかもしれないので短い）
 MAX_FAILED_TO_CACHE = 2  # 発見の検索が6本中この本数まで失敗しても、結果は共有キャッシュに保存する（Gemini の一時的な時間切れは珍しくないため）
-CACHE_VERSION = "v2"  # 抜き出し方を変えたら上げて、古いキャッシュを使わないようにする
+CACHE_VERSION = "v3"  # v3: 卒業後・使途（目的）の条件を抜き出すようにした  # 抜き出し方を変えたら上げて、古いキャッシュを使わないようにする
 UNVERIFIED = "未確認の候補"
 
 # まとめサイト（一覧ページとしては読むが、公式情報としては扱わない）
@@ -185,20 +185,81 @@ def field_keywords(text: str) -> list[str]:
 
 
 # ---------- 1. 発見 ----------
-def build_queries(profile: Profile, university: str, field_text: str, year: int) -> list[str]:
-    """プロフィールから検索語（質問文）をコードで作る。同じ検索が重ならないようにする。"""
+SCHOOL_LABEL = {
+    "高校": "高校",
+    "大学": "大学",
+    "大学院": "大学院",
+    "短大": "短大",
+    "高専": "高専",
+    "専門学校": "専門学校",
+}
+PURPOSE_WORDS = {
+    "学業・生活費": "給付型奨学金",
+    "留学": "留学向けの奨学金・留学支援金",
+    "研究": "研究助成・研究奨励金",
+    "プロジェクト・活動": "プロジェクト・活動への助成金・支援金・賞金",
+}
+
+
+def _who(profile: Profile) -> str:
+    """検索語で使う、本人の立場の言い方。"""
+    school = SCHOOL_LABEL.get(profile.school_type, profile.school_type)
+    if profile.graduated:
+        years = profile.years_since_graduation
+        after = f"卒業後{years}年の" if years is not None else "卒業後の"
+        return f"{after}社会人"
+    if school == "高校":
+        return f"高校{profile.grade}年生"
+    if school == "大学":
+        return f"大学{profile.grade}年生"
+    return f"{school}生"
+
+
+def _pool(profile: Profile, purpose: str, university: str, field_text: str, year: int) -> list[str]:
+    """1つの目的について、検索語（質問文）の候補を、優先度の高い順に作る。"""
+    who = _who(profile)
+    words = PURPOSE_WORDS[purpose]
+    home, res, guard = profile.home_prefecture, profile.residence, profile.guardian_residence
+    if purpose == "学業・生活費":
+        subject = f"{field_text}を学ぶ" if field_text else ""
+        qs = [
+            f"{subject}{who}が応募できる、民間財団・企業の給付型奨学金（{year}年度の募集）",
+            f"{home}出身の{who}が応募できる奨学金（財団・企業・自治体の給付型、{year}年度）",
+            f"{res}に住む{who}向けの民間・自治体の給付型奨学金（{year}年度の募集）",
+            f"保護者が{guard}に住んでいる{who}向けの給付型奨学金（{year}年度）",
+        ]
+        if university:
+            qs.append(f"{university}の学生が応募できる民間奨学金の募集一覧（{year}年度）")
+        qs.append(f"{who}向け 給付型奨学金 民間財団 募集中の一覧（{year}年度）")
+        return qs
     qs = [
-        f"{field_text}を学ぶ大学{profile.grade}年生が応募できる、民間財団・企業の給付型奨学金（{year}年度の募集）",
-        f"{profile.home_prefecture}出身の大学生が応募できる奨学金（財団・企業・自治体の給付型、{year}年度）",
-        f"{profile.residence}に住む大学生向けの民間・自治体の給付型奨学金（{year}年度の募集）",
-        f"保護者が{profile.guardian_residence}に住んでいる大学生向けの給付型奨学金（{year}年度）",
-        f"{university}の学生が応募できる民間奨学金の募集一覧（{year}年度）",
-        f"大学生・学部生向け 給付型奨学金 民間財団 募集中の一覧（{year}年度）",
+        f"{who}が応募できる{words}（{year}年度の募集）",
+        f"{home}出身、または{res}在住の{who}向けの{words}（{year}年度）",
+        f"{words} 民間財団・企業・自治体 募集中の一覧（{year}年度）",
     ]
+    if university:
+        qs.append(f"{university}の学生向けの{words}の募集一覧（{year}年度）")
+    qs += [
+        f"{who}向けの{words} 返済不要・給付型（{year}年度）",
+        f"保護者が{guard}に住んでいる{who}向けの{words}（{year}年度）",
+    ]
+    return qs
+
+
+def build_queries(profile: Profile, university: str, field_text: str, year: int) -> list[str]:
+    """プロフィール（立場・目的・地域）から検索語（質問文）をコードで作る。同じ検索が重ならないようにする。
+
+    目的ごとに検索語の候補を作り、目的をまたいで交互に並べる（留学・研究・活動を先に）。
+    目的が1つなら、その目的の検索語を優先度順に使う。学業・生活費だけのときは、従来どおりの6本。
+    """
+    purposes = profile.purposes or DEFAULT_PURPOSES
+    ordered = [p for p in purposes if p != "学業・生活費"] + (["学業・生活費"] if "学業・生活費" in purposes else [])
+    pools = [_pool(profile, p, university, field_text, year) for p in ordered]
     out: list[str] = []
-    for q in qs:
-        if q not in out:
-            out.append(q)
+    for i in range(max(len(p) for p in pools)):
+        for pool in pools:
+            if i < len(pool) and pool[i] not in out:
+                out.append(pool[i])
     return out
 
 
@@ -323,13 +384,17 @@ EXTRACT_PROMPT = """以下の <page> は奨学金の運営団体（または大�
  "international_only": true/false/null,
  "application_route": "直接応募|大学経由|不明",
  "route_quote": "",
- "targets": {{"status": "制限あり|制限なし|不明", "list": [{{"school_type": "大学|大学院|短大|高専|専門学校", "grades": [1, 2]}}], "quote": ""}},
+ "targets": {{"status": "制限あり|制限なし|不明", "list": [{{"school_type": "高校|大学|大学院|短大|高専|専門学校", "grades": [1, 2]}}], "quote": ""}},
  "region": {{"status": "制限あり|制限なし|不明", "logic": "いずれか|すべて", "conditions": [{{"type": "本人の出身|本人の住所|在学校の所在地|保護者の住所", "area": "埼玉県"}}], "quote": ""}},
  "fields": {{"status": "制限あり|制限なし|不明", "list": ["工学系"], "quote": ""}},
+ "graduates": {{"status": "在学生のみ|卒業生も可|卒業生のみ|不明", "max_years": 2, "quote": ""}},
+ "purposes": {{"status": "制限あり|制限なし|不明", "list": ["学業・生活費", "留学", "研究", "プロジェクト・活動"], "quote": ""}},
  "concurrent": {{"status": "確認|不明", "rules": {{"JASSO貸与": "可|不可|記載なし", "JASSO給付": "可|不可|記載なし", "他の民間給付": "可|不可|記載なし"}}, "quote": ""}},
  "amount": {{"type": "給付|貸与|不明", "yearly_yen": 0, "quote": ""}},
  "other_requirements": [{{"kind": "一般|特別", "summary": "20字以内の要約", "quote": ""}}]
 }}
+- graduates は、卒業後の人（社会人）が応募できるか。「卒業後2年以内」のような上限は max_years に年数を入れる（上限がなければ null）。書かれていなければ status を「不明」にする
+- purposes は、お金の使いみち（使途）の制限。list には、使途として書かれているものだけを、次の4つの言葉から選んで入れる: 学費・生活費→「学業・生活費」、留学→「留学」、研究→「研究」、プロジェクト・活動・起業→「プロジェクト・活動」。使途が自由で限定がなければ「制限なし」、書かれていなければ「不明」
 - other_requirements には、学校種別・学年・地域・分野以外の条件をすべて入れる。kind は次のどちらか
   - "一般": 成績・人物・意欲、経済的な困難（所得の上限を含む）、年齢、日本国籍、報告や面接への協力
   - "特別": 一部の人にしか当てはまらない事情（遺児・障害・被災・ひとり親、特定の資格や職業を目指す、特定の団体の会員、特定の学校の出身、特定の企業への就職など）
@@ -367,7 +432,7 @@ def with_guideline_pdf(page: dict) -> dict:
 
 def verify_quotes(cond: dict, text: str) -> None:
     """各項目の引用が本当に原文にあるかを確かめ、印を付ける（AIの作り話を判定に使わない）。"""
-    for key in ("period", "targets", "region", "fields", "concurrent", "amount"):
+    for key in ("period", "targets", "region", "fields", "graduates", "purposes", "concurrent", "amount"):
         sec = cond.get(key)
         if isinstance(sec, dict) and sec.get("status") not in (None, "不明", "制限なし"):
             sec["quote_verified"] = web.quote_in(sec.get("quote") or "", text)
@@ -479,7 +544,7 @@ def check_candidate(
     period = cond.get("period") or {}
     status = j.status
     reasons = list(j.reasons)
-    if status not in (ELIGIBLE, NEEDS_CHECK, INELIGIBLE, CLOSED):
+    if status not in (ELIGIBLE, NEEDS_CHECK, INELIGIBLE, CLOSED, OFF_PURPOSE):
         # 公式情報なしなどは、黙って落とさずに理由つきで要確認へ入れる
         reasons = [f"{status}: " + "、".join(reasons)]
         status = NEEDS_CHECK
@@ -496,6 +561,24 @@ def check_candidate(
         "official_url": cond["source_url"],
         "sources": sources,
     }
+
+
+def _dedupe_by_url(results: list[dict]) -> list[dict]:
+    """名前の違う候補が、同じ公式ページ・同じ判定のとき、1件にまとめる（言い換えの重複を防ぐ）。"""
+    seen: dict[tuple, dict] = {}
+    out: list[dict] = []
+    for r in results:
+        url = r.get("official_url") or ""
+        if not url:
+            out.append(r)
+            continue
+        key = (url, r["status"])
+        if key in seen:
+            seen[key]["mentions"] = seen[key].get("mentions", 0) + r.get("mentions", 0)
+            continue
+        seen[key] = r
+        out.append(r)
+    return out
 
 
 # ---------- 全体 ----------
@@ -590,6 +673,8 @@ def search(profile: Profile, university: str, field_text: str, today: date, budg
         for core, c in over + skipped_time
     ]
 
+    results = _dedupe_by_url(results)
+
     def pick(status: str) -> list[dict]:
         return [r for r in results if r["status"] == status]
 
@@ -600,6 +685,7 @@ def search(profile: Profile, university: str, field_text: str, today: date, budg
         "eligible": by_deadline(pick(ELIGIBLE)),
         "needs_check": by_deadline(pick(NEEDS_CHECK)),
         "closed": by_deadline(pick(CLOSED)),
+        "off_purpose": pick(OFF_PURPOSE),
         "unverified": pick(UNVERIFIED) + unverified_extra,
         "ineligible_count": len(pick(INELIGIBLE)),
         "excluded_by_name": len(excluded),

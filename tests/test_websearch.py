@@ -51,8 +51,16 @@ class _Resp:
 
 
 def _patch(monkeypatch, cond, page_text=PAGE, sources=None):
-    sources = sources if sources is not None else [{"url": "https://foundation.example.or.jp/boshu", "title": "募集"}]
-    monkeypatch.setattr(websearch, "_grounded", lambda prompt: {"text": "", "sources": sources})
+    def grounded(prompt):
+        if sources is not None:
+            return {"text": "", "sources": sources}
+        # 候補（プロンプトに団体名が入る）ごとに、別の公式ページのURLを返す
+        return {
+            "text": "",
+            "sources": [{"url": f"https://foundation.example.or.jp/{abs(hash(prompt)) % 10**8}", "title": "募集"}],
+        }
+
+    monkeypatch.setattr(websearch, "_grounded", grounded)
     monkeypatch.setattr(
         websearch,
         "read_page",
@@ -134,7 +142,7 @@ def test_公式ページで条件を確認できれば応募できると判定�
     r = websearch.check_candidate("テスト財団", CAND, ME, TODAY)
     assert r["status"] == ELIGIBLE
     assert r["deadline"] == "2026-11-30" and r["amount"].startswith("年額 480,000円")
-    assert r["official_url"] == "https://foundation.example.or.jp/boshu"
+    assert r["official_url"].startswith("https://foundation.example.or.jp/")
 
 
 def test_締切を過ぎていれば募集終了に分ける(monkeypatch):
@@ -336,3 +344,66 @@ def test_再検索では見つからなかった候補も待たずに未確認�
     monkeypatch.setattr(websearch, "_grounded", lambda prompt: calls.append(1) or {"text": "", "sources": []})
     second = websearch.search(ME, "筑波大学", "理工学群", TODAY, websearch.Budget(verify=1, seconds=60))
     assert not calls and len(second["unverified"]) == 1 and second["stats"]["from_cache"] == 1
+
+
+# ---------- 立場と目的の検索語（10/15） ----------
+def test_目的が学業だけなら従来どおりの検索語():
+    qs = websearch.build_queries(ME, "筑波大学", "理工学群", 2026)
+    assert len(qs) == 6 and "理工学群を学ぶ大学3年生" in qs[0]
+
+
+def test_留学が目的なら留学の検索語を先に使う():
+    me = Profile("大学", 3, ["情報"], "埼玉県", "茨城県", "茨城県", "埼玉県", [], purposes=["留学"])
+    qs = websearch.build_queries(me, "筑波大学", "理工学群", 2026)
+    assert len(qs) >= 6 and all("留学" in q for q in qs)  # 目的が留学だけなら、6本すべて留学向け
+
+
+def test_学業と留学の両方なら留学の検索語を先に_学業の検索語も使う():
+    me = Profile("大学", 3, ["情報"], "埼玉県", "茨城県", "茨城県", "埼玉県", [], purposes=["学業・生活費", "留学"])
+    qs = websearch.build_queries(me, "筑波大学", "理工学群", 2026)
+    assert "留学" in qs[0] and any("筑波大学" in q for q in qs) and len(qs) >= 6
+    first6 = qs[:6]
+    assert sum("留学" in q for q in first6) == 3 and sum("留学" not in q for q in first6) == 3  # 目的ごとに配分する
+
+
+def test_高校生と卒業後の人の立場の言い方():
+    hs = Profile("高校", 2, [], "埼玉県", "埼玉県", "埼玉県", "埼玉県", [])
+    assert "高校2年生" in websearch.build_queries(hs, "", "", 2026)[0]
+    grad = Profile("大学", 0, [], "埼玉県", "東京都", "東京都", "埼玉県", [], graduated=True, years_since_graduation=1)
+    q = websearch.build_queries(grad, "", "", 2026)[0]
+    assert "卒業後1年" in q and "社会人" in q and "最終学歴" not in q
+
+
+def test_プロジェクトの助成を目的に探す検索語には助成金の言い方を含める():
+    me = Profile("大学", 2, [], "埼玉県", "東京都", "東京都", "埼玉県", [], purposes=["プロジェクト・活動"])
+    assert "助成金" in websearch.build_queries(me, "", "", 2026)[0]
+
+
+def test_使途が違う候補は目的が違うに分けて返す(monkeypatch):
+    cond = _cond()
+    cond["purposes"] = {"status": "制限あり", "list": ["留学"], "quote": "留学のための給付"}
+    page = PAGE + "\n留学のための給付"
+    _patch(monkeypatch, cond, page_text=page)
+    found = [{"scholarship": "留学奨学金", "organization": "公益財団法人テスト留学財団"}]
+    monkeypatch.setattr(websearch, "discover", lambda queries: (found, [], 0))
+    r = websearch.search(ME, "筑波大学", "理工学群", TODAY, websearch.Budget(verify=2, seconds=60))
+    assert [i["name"] for i in r["off_purpose"]] == ["留学奨学金"]
+    assert r["eligible"] == [] and r["needs_check"] == []
+
+
+def test_要項の読み取りに卒業後と使途の項目を求めている():
+    assert '"graduates"' in websearch.EXTRACT_PROMPT and '"purposes"' in websearch.EXTRACT_PROMPT
+    assert "高校" in websearch.EXTRACT_PROMPT.split('"targets"')[1].split("\n")[0]
+
+
+def test_名前が違っても同じ公式ページ_同じ判定なら1件にまとめる():
+    rows = [
+        {"name": "A給付金制度", "official_url": "https://x.example/a", "status": "要確認", "mentions": 1},
+        {"name": "A給付金", "official_url": "https://x.example/a", "status": "要確認", "mentions": 2},
+        {"name": "別の制度", "official_url": "https://x.example/b", "status": "要確認", "mentions": 1},
+        {"name": "URLなし1", "official_url": "", "status": "未確認の候補", "mentions": 1},
+        {"name": "URLなし2", "official_url": "", "status": "未確認の候補", "mentions": 1},
+    ]
+    out = websearch._dedupe_by_url(rows)
+    assert [r["name"] for r in out] == ["A給付金制度", "別の制度", "URLなし1", "URLなし2"]
+    assert out[0]["mentions"] == 3
