@@ -68,3 +68,22 @@ def test_本人以外は承認できない(user):
 def test_画面はHTMLとして解釈しない書き方になっている():
     html = (Path("ui") / "index.html").read_text(encoding="utf-8")
     assert "innerHTML" not in html and "insertAdjacentHTML" not in html and "document.write" not in html
+
+
+def test_利用者向けサイトもHTMLとして解釈しない書き方になっている():
+    html = (Path("ui") / "site.html").read_text(encoding="utf-8")
+    assert "innerHTML" not in html and "insertAdjacentHTML" not in html and "document.write" not in html
+    assert "eval(" not in html
+
+
+def test_サイトの選択肢が本体の許可リストと一致している():
+    import re
+
+    from hackathon_agent.scholarship.prefilter import PREFECTURES
+    from hackathon_agent.tools import FACULTY_KEYWORDS
+
+    html = (Path("ui") / "site.html").read_text(encoding="utf-8")
+    gakugun = re.search(r"const GAKUGUN = \[(.*?)\];", html, re.S).group(1)
+    assert re.findall(r'"([^"]+)"', gakugun) == list(FACULTY_KEYWORDS)
+    pref = re.search(r'const PREF = "(.*?)"\.split', html, re.S).group(1).split(" ")
+    assert set(pref) == set(PREFECTURES)

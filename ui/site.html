@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>奨学金エージェント</title>
+<style>
+  :root {
+    --bg: #f6f6f3; --panel: #ffffff; --text: #1b1b19; --muted: #66665f; --line: #e1e1da;
+    --accent: #1f5fbf; --accent-bg: #e8f0fc; --ok: #19703f; --warn: #965600; --bad: #ad2a21;
+    --ok-bg: #e2f3e8; --warn-bg: #fcefd6; --bad-bg: #fae3e0; --chip: #eeeee8;
+    --user-bg: #1f5fbf; --user-text: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141413; --panel: #1e1e1c; --text: #ecece7; --muted: #9b9b93; --line: #32322e;
+      --accent: #86adf2; --accent-bg: #1c2a42; --ok: #72d29c; --warn: #f0bb66; --bad: #f4958e;
+      --ok-bg: #19321f; --warn-bg: #3a2e14; --bad-bg: #3b201d; --chip: #2a2a27;
+      --user-bg: #2d5fb4; --user-text: #ffffff;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.7 system-ui, "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif; }
+  header { max-width: 1160px; margin: 0 auto; padding: 18px 16px 6px; display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; justify-content: space-between; }
+  h1 { font-size: 21px; margin: 0; letter-spacing: .02em; }
+  .tagline { color: var(--muted); font-size: 14px; }
+  .layout { max-width: 1160px; margin: 0 auto; padding: 8px 16px 40px; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 16px; align-items: start; }
+  @media (max-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+  h2 { font-size: 16px; margin: 0 0 2px; }
+  .sub { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 2px; }
+  select, input[type=text], textarea { width: 100%; font: inherit; color: inherit; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+  textarea { resize: vertical; min-height: 44px; }
+  button { font: inherit; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--text); padding: 8px 14px; cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  button.ghost { background: transparent; }
+  button:disabled { opacity: .55; cursor: default; }
+  button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px 12px; }
+  .checks { display: flex; flex-wrap: wrap; gap: 6px 16px; padding-top: 4px; }
+  .checks label { display: inline-flex; align-items: center; gap: 6px; color: var(--text); font-size: 14px; margin: 0; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  #log { display: flex; flex-direction: column; gap: 14px; margin: 16px 0; }
+  .msg { max-width: 100%; }
+  .msg.user { align-self: flex-end; background: var(--user-bg); color: var(--user-text); border-radius: 14px 14px 4px 14px; padding: 8px 14px; max-width: 85%; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .msg.bot { align-self: stretch; background: var(--panel); border: 1px solid var(--line); border-radius: 14px 14px 14px 4px; padding: 6px 16px 10px; overflow-wrap: anywhere; }
+  .msg.bot h3 { font-size: 15px; margin: 14px 0 4px; }
+  .msg.bot p { margin: 6px 0; }
+  .msg.bot ul, .msg.bot ol { margin: 4px 0; padding-left: 1.4em; }
+  .msg.bot hr { border: 0; border-top: 1px solid var(--line); margin: 10px 0; }
+  .msg.bot code { background: var(--chip); border-radius: 4px; padding: 0 4px; font-size: 13px; }
+  .status { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; background: var(--accent-bg); color: var(--accent); border-radius: 999px; padding: 4px 14px; font-size: 13px; }
+  .status::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 2px solid currentColor; border-top-color: transparent; animation: spin 0.9s linear infinite; }
+  .status.done::before { animation: none; border: 0; content: "✓"; width: auto; height: auto; }
+  .status.stop { background: var(--warn-bg); color: var(--warn); }
+  .status.stop::before { animation: none; border: 0; content: "⚠"; width: auto; height: auto; }
+  @media (prefers-reduced-motion: reduce) { .status::before { animation: none; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .approval { align-self: stretch; border: 1px solid var(--warn); background: var(--warn-bg); border-radius: 12px; padding: 12px 14px; }
+  .approval b { color: var(--warn); }
+  .approval .detail { font-size: 13px; color: var(--muted); margin: 4px 0 10px; overflow-wrap: anywhere; }
+  .composer { display: flex; gap: 8px; align-items: flex-end; }
+  .composer textarea { flex: 1; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+  .chip { background: var(--chip); border: 0; border-radius: 999px; padding: 4px 12px; font-size: 13px; }
+  .error { color: var(--bad); font-size: 14px; }
+  .side { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 12px; }
+  @media (max-width: 900px) { .side { position: static; } }
+  .row { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; padding: 6px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .row:first-of-type { border-top: 0; }
+  .row .name { flex: 1 1 160px; min-width: 0; overflow-wrap: anywhere; }
+  .month { font-weight: 600; font-size: 13px; color: var(--muted); margin: 10px 0 0; }
+  .badge { display: inline-block; font-size: 12px; border-radius: 999px; padding: 0 9px; background: var(--chip); white-space: nowrap; }
+  .badge.ok { background: var(--ok-bg); color: var(--ok); }
+  .badge.warn { background: var(--warn-bg); color: var(--warn); }
+  .badge.bad { background: var(--bad-bg); color: var(--bad); }
+  .empty { color: var(--muted); font-size: 14px; margin: 4px 0; }
+  .scrollbox { max-height: 280px; overflow-y: auto; }
+  .small { font-size: 12px; color: var(--muted); }
+  a { color: var(--accent); }
+  footer { max-width: 1160px; margin: 0 auto; padding: 0 16px 28px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>奨学金エージェント</h1>
+  <span class="tagline">応募できる奨学金を、期限に間に合ううちに。</span>
+</header>
+
+<div class="layout">
+  <main>
+    <section class="card" id="profile" aria-labelledby="h-prof">
+      <h2 id="h-prof">あなたの条件</h2>
+      <p class="sub">筑波大学の学群生向けです。入力した内容だけを使って、応募資格をコードで判定します。</p>
+      <form id="form">
+        <div class="grid">
+          <div><label for="gakugun">学群</label><select id="gakugun" required></select></div>
+          <div><label for="grade">学年</label><select id="grade" required></select></div>
+          <div><label for="home">出身高校の所在地</label><select id="home" required></select></div>
+          <div><label for="res">今住んでいる都道府県</label><select id="res" required></select></div>
+          <div><label for="guard">保護者の住所</label><select id="guard" required></select></div>
+        </div>
+        <div style="margin-top:12px">
+          <label id="l-rec">今受けている奨学金</label>
+          <div class="checks" role="group" aria-labelledby="l-rec" id="receiving">
+            <label><input type="checkbox" value="JASSO貸与"> JASSO貸与</label>
+            <label><input type="checkbox" value="JASSO給付"> JASSO給付</label>
+            <label><input type="checkbox" value="他の民間給付"> 他の民間給付</label>
+          </div>
+          <p class="small" style="margin:4px 0 0">なければ、何も選ばずに進みます。</p>
+        </div>
+        <div class="actions">
+          <button class="primary" type="submit" id="go">奨学金を探す</button>
+          <button class="ghost" type="button" id="sample">入力例を入れる</button>
+        </div>
+      </form>
+    </section>
+
+    <div id="log" aria-live="polite"></div>
+
+    <section class="card" id="chat" hidden aria-label="続けて質問する">
+      <div class="chips" id="chips"></div>
+      <form class="composer" id="composer">
+        <textarea id="text" rows="2" maxlength="1000" placeholder="例: 1番目の奨学金の提出書類を教えて" aria-label="メッセージ"></textarea>
+        <button class="primary" type="submit" id="send">送信</button>
+      </form>
+      <div class="actions" style="margin-top:8px"><button class="ghost" type="button" id="reset">新しい相談を始める</button></div>
+    </section>
+  </main>
+
+  <aside class="side" aria-label="関連する情報">
+    <section class="card" aria-labelledby="h-cal">
+      <h2 id="h-cal">来年の準備カレンダー</h2>
+      <p class="sub" id="cal-sub">探したあとに表示されます。</p>
+      <div class="scrollbox" id="calendar"></div>
+    </section>
+    <section class="card" aria-labelledby="h-ap">
+      <h2 id="h-ap">承認待ち</h2>
+      <p class="sub">共有データへの書き込みは、あなたの承認が必要です。AI は承認できません。</p>
+      <div id="pending"></div>
+    </section>
+    <section class="card" aria-labelledby="h-au">
+      <h2 id="h-au">操作の記録</h2>
+      <p class="sub">エージェントが何をしたか。<a href="/admin/" target="_blank" rel="noopener">詳しく見る</a></p>
+      <div class="scrollbox" id="audit"></div>
+    </section>
+  </aside>
+</div>
+<footer>判定の出典は筑波大学の公開一覧です。最終的な応募の可否は、各団体の募集要項と大学の窓口で確かめてください。</footer>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const el = (tag, text, cls) => { const e = document.createElement(tag); if (text !== undefined) e.textContent = text; if (cls) e.className = cls; return e; };
+const USER = "user", APP = "hackathon_agent";
+const GAKUGUN = ["人文・文化学群", "社会・国際学群", "人間学群", "生命環境学群", "理工学群", "情報学群", "医学群", "体育専門学群", "芸術専門学群"];
+const PREF = "北海道 青森県 岩手県 宮城県 秋田県 山形県 福島県 茨城県 栃木県 群馬県 埼玉県 千葉県 東京都 神奈川県 新潟県 富山県 石川県 福井県 山梨県 長野県 岐阜県 静岡県 愛知県 三重県 滋賀県 京都府 大阪府 兵庫県 奈良県 和歌山県 鳥取県 島根県 岡山県 広島県 山口県 徳島県 香川県 愛媛県 高知県 福岡県 佐賀県 長崎県 熊本県 大分県 宮崎県 鹿児島県 沖縄県".split(" ");
+const STEP = { find_scholarships: "筑波大学の公開一覧から、条件に合う奨学金を探しています（初回は数十秒かかります）", get_scholarship_detail: "詳細ページを確認しています", register_shared_scholarship: "共有データへの登録を確認しています" };
+const DECISION = { allowed: ["許可", "ok"], executed: ["実行", "ok"], pending: ["承認待ち", "warn"], blocked: ["停止", "bad"], approved: ["承認", "ok"], rejected: ["却下", "bad"] };
+
+let sid = null, busy = false;
+const queue = []; // 回答の生成中に押された送信（承認のあとの続きなど）は、順番を待たせる
+
+function fill(sel, items, ph) {
+  const s = $(sel); s.replaceChildren();
+  if (ph) { const o = el("option", ph); o.value = ""; s.append(o); }
+  for (const x of items) { const o = el("option", String(x)); o.value = x; s.append(o); }
+}
+fill("gakugun", GAKUGUN, "選んでください");
+fill("grade", [1, 2, 3, 4, 5, 6], "選んでください");
+for (const id of ["home", "res", "guard"]) fill(id, PREF, "選んでください");
+
+/* ---------- 安全な Markdown 表示（HTML として解釈しない） ---------- */
+function inline(parent, text) {
+  const re = /(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\(https:\/\/[^)\s]+\))/g;
+  let last = 0, m;
+  while ((m = re.exec(text))) {
+    if (m.index > last) parent.append(text.slice(last, m.index));
+    const t = m[0];
+    if (t.startsWith("**")) parent.append(el("strong", t.slice(2, -2)));
+    else if (t.startsWith("`")) parent.append(el("code", t.slice(1, -1)));
+    else { const k = t.indexOf("]("); const a = el("a", t.slice(1, k)); a.href = t.slice(k + 2, -1); a.target = "_blank"; a.rel = "noopener noreferrer"; parent.append(a); }
+    last = m.index + t.length;
+  }
+  if (last < text.length) parent.append(text.slice(last));
+}
+function markdown(parent, src) {
+  const lines = src.replace(/\r/g, "").split("\n");
+  let list = null, stack = [];
+  const closeList = () => { list = null; stack = []; };
+  for (const raw of lines) {
+    const line = raw.replace(/\s+$/, "");
+    if (!line.trim()) { closeList(); continue; }
+    let m;
+    if ((m = /^(#{1,4})\s+(.*)$/.exec(line))) { closeList(); const h = el("h3"); inline(h, m[2]); parent.append(h); }
+    else if (/^-{3,}$/.test(line.trim())) { closeList(); parent.append(el("hr")); }
+    else if ((m = /^(\s*)([-*]|\d+\.)\s+(.*)$/.exec(line))) {
+      const depth = Math.floor(m[1].length / 2), ordered = /\d/.test(m[2]);
+      while (stack.length > depth + 1) stack.pop();
+      while (stack.length < depth + 1) {
+        const l = el(ordered ? "ol" : "ul");
+        (stack.length ? stack[stack.length - 1].lastElementChild || stack[stack.length - 1] : parent).append(l);
+        stack.push(l);
+      }
+      list = stack[depth]; const li = el("li"); inline(li, m[3]); list.append(li);
+    } else { closeList(); const p = el("p"); inline(p, line); parent.append(p); }
+  }
+}
+
+/* ---------- 会話 ---------- */
+const log = $("log");
+// 新しく加わった要素が見える位置までだけスクロールする（ページの一番下へは飛ばない）
+const reveal = (e, block) => e.scrollIntoView({ behavior: "smooth", block: block || "nearest" });
+function addUser(text) { const d = el("div", text, "msg user"); log.append(d); reveal(d); }
+function renderBot(d, text) { d.replaceChildren(); markdown(d, text); }
+function addBot(text) { const d = el("div", undefined, "msg bot"); renderBot(d, text); log.append(d); reveal(d, "start"); return d; }
+function addStatus(text, cls) { const d = el("div", text, "status" + (cls ? " " + cls : "")); log.append(d); reveal(d); return d; }
+
+async function newSession() {
+  sid = "web-" + Math.random().toString(36).slice(2, 10);
+  const r = await fetch(`/apps/${APP}/users/${USER}/sessions/${sid}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+  if (!r.ok) throw new Error("セッションを作れませんでした（" + r.status + "）");
+}
+
+async function send(text) {
+  if (busy) { queue.push(text); return; }
+  busy = true; setBusy(true);
+  addUser(text);
+  let status = null;
+  const done = () => { if (status) { status.classList.add("done"); status.classList.remove("stop"); status = null; } };
+  try {
+    if (!sid) await newSession();
+    const r = await fetch("/run_sse", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ app_name: APP, user_id: USER, session_id: sid, new_message: { role: "user", parts: [{ text }] }, streaming: true })
+    });
+    if (!r.ok || !r.body) throw new Error("HTTP " + r.status);
+    const reader = r.body.getReader(), dec = new TextDecoder();
+    let buf = "";
+    let live = null, liveText = "";
+    const handle = (ev) => {
+      for (const p of (ev.content && ev.content.parts) || []) {
+        if (p.functionCall) {
+          if (ev.partial) continue; // 途中経過の重複は無視する
+          done(); status = addStatus(STEP[p.functionCall.name] || "処理しています");
+        } else if (p.functionResponse) {
+          const res = p.functionResponse.response || {};
+          done();
+          if (res.status === "pending" && res.approval_id) addApproval(res.approval_id, p.functionResponse.name);
+          else if (res.status === "blocked") addStatus("安全のため止めました：" + (res.reason || ""), "stop");
+          status = addStatus("結果をまとめています");
+        } else if (p.text && !p.thought && ev.content.role !== "user") {
+          done();
+          if (ev.partial) { liveText += p.text; if (!live) live = addBot(liveText); else renderBot(live, liveText); }
+          else { liveText = p.text; if (!live) live = addBot(liveText); else renderBot(live, liveText); live = null; liveText = ""; }
+        }
+      }
+    };
+    for (;;) {
+      const { value, done: fin } = await reader.read();
+      if (value) buf += dec.decode(value, { stream: true });
+      let i;
+      while ((i = buf.indexOf("\n\n")) >= 0) {
+        const chunk = buf.slice(0, i); buf = buf.slice(i + 2);
+        const data = chunk.split("\n").filter(l => l.startsWith("data:")).map(l => l.slice(5).trim()).join("");
+        if (data) { try { handle(JSON.parse(data)); } catch (e) { /* 壊れた行は読み飛ばす */ } }
+      }
+      if (fin) break;
+    }
+    done();
+  } catch (e) {
+    if (status) status.remove();
+    log.append(el("div", "応答を得られませんでした（" + e.message + "）。もう一度送ってください。", "error"));
+  } finally {
+    busy = false; setBusy(false); refresh();
+    if (queue.length) send(queue.shift());
+  }
+}
+function setBusy(b) { for (const id of ["go", "send"]) $(id).disabled = b; }
+
+function showChat() {
+  $("chat").hidden = false; $("profile").hidden = true;
+  const chips = $("chips"); chips.replaceChildren();
+  for (const t of ["1番目の奨学金の提出書類を教えて", "対象外になった理由を教えて", "「（奨学金名）」を共有データに加えたい。公式ページは https://…"]) {
+    const b = el("button", t, "chip"); b.type = "button"; b.onclick = () => { $("text").value = t; $("text").focus(); }; chips.append(b);
+  }
+}
+
+$("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const rec = [...document.querySelectorAll("#receiving input:checked")].map(i => i.value);
+  const msg = `${$("gakugun").value}の${$("grade").value}年です。出身高校は${$("home").value}、今は${$("res").value}に住んでいて、保護者は${$("guard").value}に住んでいます。` + (rec.length ? `今受けている奨学金は${rec.join("、")}です。` : "奨学金は何も受けていません。");
+  showChat(); send(msg);
+});
+$("sample").onclick = () => { $("gakugun").value = "理工学群"; $("grade").value = "3"; $("home").value = "埼玉県"; $("res").value = "茨城県"; $("guard").value = "埼玉県"; };
+$("composer").addEventListener("submit", (e) => { e.preventDefault(); const t = $("text").value.trim(); if (!t) return; $("text").value = ""; send(t); });
+$("text").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); $("composer").requestSubmit(); } });
+$("reset").onclick = () => { if (busy) return; queue.length = 0; sid = null; log.replaceChildren(); $("chat").hidden = true; $("profile").hidden = false; refresh(); window.scrollTo({ top: 0 }); };
+
+/* ---------- 承認 ---------- */
+async function decide(id, approve, comment) {
+  const r = await fetch(`/admin/api/approvals/${encodeURIComponent(id)}/decide`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ user_id: USER, approve, comment: comment || "" }) });
+  return r.json();
+}
+function addApproval(id, tool) {
+  const card = el("div", undefined, "approval"), t = el("div"); t.append(el("b", "あなたの承認が必要です"), " （共有データへの書き込み）");
+  const d = el("div", "承認ID: " + id + "。AI は承認できません。内容を確かめて、あなたが決めてください。", "detail");
+  const ok = el("button", "承認する", "primary"), ng = el("button", "却下する"), msg = el("span", "", "small");
+  const row = el("div", undefined, "actions"); row.style.marginTop = "0"; row.append(ok, ng, msg);
+  const act = (approve) => async () => {
+    ok.disabled = ng.disabled = true;
+    try {
+      const j = await decide(id, approve);
+      msg.textContent = j.message || j.detail || "";
+      if (j.ok) { card.style.opacity = ".75"; if (approve) send(`承認しました。承認IDは ${id} です。登録を続けてください。`); else addBot("却下しました。登録は行いません。"); }
+      else ok.disabled = ng.disabled = false;
+    } catch (e) { msg.textContent = "送信できませんでした"; ok.disabled = ng.disabled = false; }
+  };
+  ok.onclick = act(true); ng.onclick = act(false);
+  card.append(t, d, row); log.append(card); reveal(card);
+}
+
+/* ---------- サイドパネル ---------- */
+const fmt = (iso) => iso ? new Date(iso).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
+const short = (o) => { const s = JSON.stringify(o); return s && s.length > 90 ? s.slice(0, 90) + "…" : (s || ""); };
+async function refresh() {
+  let d;
+  try { const r = await fetch("/admin/api/state?user_id=" + USER); if (!r.ok) throw 0; d = await r.json(); } catch (e) { return; }
+  // カレンダー
+  const cal = $("calendar"); cal.replaceChildren();
+  $("cal-sub").textContent = d.calendar.items.length ? "例年の締切月から逆算した、準備を始める目安です。条件は募集時に確認が必要です。" : "探したあとに表示されます。";
+  const by = {}; for (const it of d.calendar.items) (by[it.usual_deadline_month] ||= []).push(it);
+  const base = d.calendar.today ? new Date(d.calendar.today).getMonth() + 1 : new Date().getMonth() + 1;
+  for (const m of Object.keys(by).map(Number).sort((a, b) => ((a - base + 12) % 12) - ((b - base + 12) % 12))) {
+    cal.append(el("div", "例年の締切: " + m + "月", "month"));
+    for (const it of by[m]) {
+      const row = el("div", undefined, "row"); row.append(el("span", it.organization, "name"));
+      row.append(el("span", it.prepare_from === "今すぐ" ? "今すぐ準備" : it.prepare_from + "から準備", "badge" + (it.prepare_from === "今すぐ" ? " warn" : "")));
+      if (typeof it.url === "string" && it.url.startsWith("https://")) { const a = el("a", "公式"); a.href = it.url; a.target = "_blank"; a.rel = "noopener noreferrer"; row.append(a); }
+      cal.append(row);
+    }
+  }
+  // 承認待ち
+  const pd = $("pending"); pd.replaceChildren();
+  const pend = d.approvals.filter(a => a.status === "pending");
+  if (!pend.length) pd.append(el("p", "承認待ちはありません。", "empty"));
+  for (const a of pend) {
+    const row = el("div", undefined, "row"); row.append(el("span", (a.args && a.args.name) || a.tool, "name"), el("span", "承認待ち", "badge warn"));
+    const ok = el("button", "承認"), ng = el("button", "却下", "ghost");
+    ok.onclick = async () => { ok.disabled = ng.disabled = true; await decide(a.id, true); refresh(); };
+    ng.onclick = async () => { ok.disabled = ng.disabled = true; await decide(a.id, false); refresh(); };
+    row.append(ok, ng); pd.append(row);
+  }
+  // 記録
+  const au = $("audit"); au.replaceChildren();
+  if (!d.audit.length) au.append(el("p", "まだ記録がありません。", "empty"));
+  for (const r of d.audit.slice(0, 12)) {
+    const [t, c] = DECISION[r.decision] || [r.decision, ""];
+    const row = el("div", undefined, "row"); row.append(el("span", fmt(r.at), "small"), el("span", r.tool), el("span", t, "badge " + c));
+    au.append(row);
+  }
+}
+refresh();
+</script>
+</body>
+</html>
