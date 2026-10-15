@@ -5,129 +5,182 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>奨学金エージェント</title>
 <style>
+  /* 黒・白・グレーだけで構成する。強調は濃淡（黒い塗り／グレーの塗り／枠線）で表す */
   :root {
-    --bg: #f6f6f3; --panel: #ffffff; --text: #1b1b19; --muted: #66665f; --line: #e1e1da;
-    --accent: #1f5fbf; --accent-bg: #e8f0fc; --ok: #19703f; --warn: #965600; --bad: #ad2a21;
-    --ok-bg: #e2f3e8; --warn-bg: #fcefd6; --bad-bg: #fae3e0; --chip: #eeeee8;
-    --user-bg: #1f5fbf; --user-text: #ffffff;
+    --bg: #fafafa; --panel: #ffffff; --soft: #f3f3f3; --text: #0a0a0a; --muted: #6b6b6b; --line: #e6e6e6; --line-strong: #cfcfcf;
+    --ink: #0a0a0a; --on-ink: #ffffff;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #141413; --panel: #1e1e1c; --text: #ecece7; --muted: #9b9b93; --line: #32322e;
-      --accent: #86adf2; --accent-bg: #1c2a42; --ok: #72d29c; --warn: #f0bb66; --bad: #f4958e;
-      --ok-bg: #19321f; --warn-bg: #3a2e14; --bad-bg: #3b201d; --chip: #2a2a27;
-      --user-bg: #2d5fb4; --user-text: #ffffff;
+      --bg: #0a0a0a; --panel: #141414; --soft: #1c1c1c; --text: #f5f5f5; --muted: #9b9b9b; --line: #2a2a2a; --line-strong: #404040;
+      --ink: #f5f5f5; --on-ink: #0a0a0a;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.3);
     }
   }
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.7 system-ui, "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif; }
-  header { max-width: 1160px; margin: 0 auto; padding: 18px 16px 6px; display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; justify-content: space-between; }
-  h1 { font-size: 21px; margin: 0; letter-spacing: .02em; }
-  .tagline { color: var(--muted); font-size: 14px; }
-  .layout { max-width: 1160px; margin: 0 auto; padding: 8px 16px 40px; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 16px; align-items: start; }
-  @media (max-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr); } }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
-  h2 { font-size: 16px; margin: 0 0 2px; }
-  .sub { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
-  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 2px; }
-  select, input[type=text], textarea { width: 100%; font: inherit; color: inherit; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
-  textarea { resize: vertical; min-height: 44px; }
-  button { font: inherit; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--text); padding: 8px 14px; cursor: pointer; }
-  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
-  button.ghost { background: transparent; }
-  button:disabled { opacity: .55; cursor: default; }
-  button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px 12px; }
-  .checks { display: flex; flex-wrap: wrap; gap: 6px 16px; padding-top: 4px; }
-  .checks label { display: inline-flex; align-items: center; gap: 6px; color: var(--text); font-size: 14px; margin: 0; }
-  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-  #log { display: flex; flex-direction: column; gap: 14px; margin: 16px 0; }
-  .msg { max-width: 100%; }
-  .msg.user { align-self: flex-end; background: var(--user-bg); color: var(--user-text); border-radius: 14px 14px 4px 14px; padding: 8px 14px; max-width: 85%; white-space: pre-wrap; overflow-wrap: anywhere; }
-  .msg.bot { align-self: stretch; background: var(--panel); border: 1px solid var(--line); border-radius: 14px 14px 14px 4px; padding: 6px 16px 10px; overflow-wrap: anywhere; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.75 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--text); text-underline-offset: 3px; text-decoration-color: var(--line-strong); }
+  a:hover { text-decoration-color: var(--text); }
+
+  header { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .bar { max-width: 1160px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .01em; }
+  .logo { width: 28px; height: 28px; border-radius: 8px; background: var(--ink); color: var(--on-ink); display: grid; place-items: center; font-size: 14px; font-weight: 700; }
+  .tagline { color: var(--muted); font-size: 13px; }
+  @media (max-width: 640px) { .tagline { display: none; } }
+
+  .layout { max-width: 1160px; margin: 0 auto; padding: 28px 20px 48px; display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start; }
+  @media (max-width: 920px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+
+  .hero h1 { font-size: clamp(26px, 4vw, 36px); line-height: 1.25; letter-spacing: -.01em; margin: 0 0 10px; }
+  .hero p { color: var(--muted); margin: 0 0 20px; max-width: 40em; }
+  .steps { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 0 20px; padding: 0; }
+  @media (max-width: 640px) { .steps { grid-template-columns: 1fr; } }
+  .steps li { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.5; }
+  .steps b { display: block; font-size: 14px; margin-bottom: 2px; }
+  .steps .n { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); color: var(--on-ink); font-size: 12px; margin-right: 6px; }
+
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
+  h2 { font-size: 16px; margin: 0 0 4px; letter-spacing: .01em; }
+  .sub { color: var(--muted); font-size: 13px; margin: 0 0 14px; }
+  .hint { color: var(--muted); font-size: 12px; margin: 4px 0 0; line-height: 1.5; }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  select, input[type=text], textarea { width: 100%; font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--line-strong); border-radius: 10px; padding: 10px 12px; transition: border-color .15s, box-shadow .15s; }
+  select:hover, input[type=text]:hover, textarea:hover { border-color: var(--muted); }
+  textarea { resize: vertical; min-height: 48px; }
+  ::placeholder { color: var(--muted); opacity: .7; }
+  button { font: inherit; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--panel); color: var(--text); padding: 9px 16px; cursor: pointer; transition: background .15s, border-color .15s, transform .05s; }
+  button:hover { background: var(--soft); }
+  button:active { transform: translateY(1px); }
+  button.primary { background: var(--ink); border-color: var(--ink); color: var(--on-ink); font-weight: 600; }
+  button.primary:hover { opacity: .88; background: var(--ink); }
+  button.ghost { background: transparent; border-color: transparent; color: var(--muted); }
+  button.ghost:hover { background: var(--soft); color: var(--text); }
+  button.big { padding: 12px 22px; font-size: 15px; }
+  button:disabled { opacity: .5; cursor: default; }
+  :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px 16px; }
+  .group-title { font-size: 12px; font-weight: 700; letter-spacing: .08em; color: var(--muted); margin: 22px 0 10px; text-transform: none; }
+  .group-title:first-of-type { margin-top: 0; }
+  .checks { display: flex; flex-wrap: wrap; gap: 8px; }
+  .checks label { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; font-size: 14px; margin: 0; border: 1px solid var(--line-strong); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+  .checks label:has(input:checked) { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+  .checks input { accent-color: var(--ink); }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 22px; }
+
+  #log { display: flex; flex-direction: column; gap: 14px; margin: 20px 0; }
+  .msg.user { align-self: flex-end; background: var(--ink); color: var(--on-ink); border-radius: 18px 18px 4px 18px; padding: 10px 16px; max-width: 85%; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .msg.bot { align-self: stretch; background: var(--panel); border: 1px solid var(--line); border-radius: 18px 18px 18px 4px; padding: 8px 20px 12px; overflow-wrap: anywhere; box-shadow: var(--shadow); }
   .msg.bot h3 { font-size: 15px; margin: 14px 0 4px; }
   .msg.bot p { margin: 6px 0; }
   .msg.bot ul, .msg.bot ol { margin: 4px 0; padding-left: 1.4em; }
   .msg.bot hr { border: 0; border-top: 1px solid var(--line); margin: 10px 0; }
-  .msg.bot code { background: var(--chip); border-radius: 4px; padding: 0 4px; font-size: 13px; }
-  .status { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; background: var(--accent-bg); color: var(--accent); border-radius: 999px; padding: 4px 14px; font-size: 13px; }
-  .status::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 2px solid currentColor; border-top-color: transparent; animation: spin 0.9s linear infinite; }
-  .status.done::before { animation: none; border: 0; content: "✓"; width: auto; height: auto; }
-  .status.stop { background: var(--warn-bg); color: var(--warn); }
-  .status.stop::before { animation: none; border: 0; content: "⚠"; width: auto; height: auto; }
-  @media (prefers-reduced-motion: reduce) { .status::before { animation: none; } }
+  .msg.bot code { background: var(--soft); border-radius: 4px; padding: 0 4px; font-size: 13px; }
+
+  .status { align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px 7px 14px; font-size: 13.5px; }
+  .status::before { content: ""; flex: none; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--ink); border-top-color: transparent; animation: spin .8s linear infinite; }
+  .status.done { color: var(--muted); }
+  .status.done::before { animation: none; border: 0; content: "✓"; width: auto; height: auto; line-height: 1; }
+  .status.stop::before { animation: none; border: 0; content: "⚠"; width: auto; height: auto; line-height: 1; }
+  .status .timer { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  @media (prefers-reduced-motion: reduce) { .status::before { animation: none; border-top-color: var(--ink); } }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .approval { align-self: stretch; border: 1px solid var(--warn); background: var(--warn-bg); border-radius: 12px; padding: 12px 14px; }
-  .approval b { color: var(--warn); }
-  .approval .detail { font-size: 13px; color: var(--muted); margin: 4px 0 10px; overflow-wrap: anywhere; }
-  .composer { display: flex; gap: 8px; align-items: flex-end; }
+
+  .approval { align-self: stretch; border: 2px solid var(--ink); background: var(--panel); border-radius: 16px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .approval h3 { margin: 0 0 6px; font-size: 15px; }
+  .approval p { margin: 4px 0; font-size: 14px; }
+  .approval dl { margin: 10px 0; padding: 10px 12px; background: var(--soft); border-radius: 10px; font-size: 13px; display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; }
+  .approval dt { color: var(--muted); } .approval dd { margin: 0; overflow-wrap: anywhere; }
+  .approval .note { color: var(--muted); font-size: 12.5px; }
+
+  .composer { display: flex; gap: 10px; align-items: flex-end; }
   .composer textarea { flex: 1; }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
-  .chip { background: var(--chip); border: 0; border-radius: 999px; padding: 4px 12px; font-size: 13px; }
-  .error { color: var(--bad); font-size: 14px; }
-  .side { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 12px; }
-  @media (max-width: 900px) { .side { position: static; } }
-  .row { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; padding: 6px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+  .chip { background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px; font-size: 13px; }
+  .error { font-size: 14px; border: 1px solid var(--line-strong); border-left: 4px solid var(--ink); border-radius: 10px; padding: 10px 14px; background: var(--panel); }
+  .error::before { content: "⚠ "; }
+
+  .side { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 76px; }
+  @media (max-width: 920px) { .side { position: static; } }
+  .row { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
   .row:first-of-type { border-top: 0; }
-  .row .name { flex: 1 1 160px; min-width: 0; overflow-wrap: anywhere; }
-  .month { font-weight: 600; font-size: 13px; color: var(--muted); margin: 10px 0 0; }
-  .badge { display: inline-block; font-size: 12px; border-radius: 999px; padding: 0 9px; background: var(--chip); white-space: nowrap; }
-  .badge.ok { background: var(--ok-bg); color: var(--ok); }
-  .badge.warn { background: var(--warn-bg); color: var(--warn); }
-  .badge.bad { background: var(--bad-bg); color: var(--bad); }
+  .row .name { flex: 1 1 150px; min-width: 0; overflow-wrap: anywhere; }
+  .badge { display: inline-block; font-size: 12px; font-weight: 600; border-radius: 999px; padding: 1px 10px; background: var(--soft); border: 1px solid var(--line); white-space: nowrap; }
+  .badge.ok { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+  .badge.warn { background: var(--panel); border-color: var(--ink); }
+  .badge.bad { background: transparent; color: var(--muted); border-style: dashed; }
   .empty { color: var(--muted); font-size: 14px; margin: 4px 0; }
-  .scrollbox { max-height: 280px; overflow-y: auto; }
-  .small { font-size: 12px; color: var(--muted); }
+  .scrollbox { max-height: 300px; overflow-y: auto; }
+  .small { font-size: 12.5px; color: var(--muted); }
+
   .results { align-self: stretch; }
-  .item { border-top: 1px solid var(--line); padding: 10px 0; }
-  .item:first-of-type { border-top: 0; }
-  .item .title { font-weight: 600; overflow-wrap: anywhere; }
-  .item .meta { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; margin: 2px 0; font-size: 13px; color: var(--muted); }
-  .item ul { margin: 4px 0 4px 1.2em; padding: 0; font-size: 13px; }
-  .item .acts { display: flex; gap: 10px; align-items: center; margin-top: 4px; }
-  .item button { padding: 2px 12px; font-size: 13px; }
-  .rhead { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
-  details.sec { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 8px; }
-  details.sec > summary { cursor: pointer; font-weight: 600; font-size: 15px; }
-  details.sec > p.small { margin: 2px 0 6px; }
-  a { color: var(--accent); }
-  footer { max-width: 1160px; margin: 0 auto; padding: 0 16px 28px; color: var(--muted); font-size: 12px; }
+  .rhead { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+  .item { border-top: 1px solid var(--line); padding: 14px 0; }
+  .item .title { font-weight: 700; overflow-wrap: anywhere; }
+  .item .meta { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; margin: 4px 0; font-size: 13px; color: var(--muted); }
+  .item .why { font-size: 12px; font-weight: 700; color: var(--muted); margin: 8px 0 0; letter-spacing: .04em; }
+  .item ul { margin: 2px 0 4px 1.2em; padding: 0; font-size: 13.5px; }
+  .item .acts { display: flex; gap: 12px; align-items: center; margin-top: 8px; font-size: 14px; }
+  .item button { padding: 3px 14px; font-size: 13px; }
+  details.sec { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 12px; }
+  details.sec > summary { cursor: pointer; font-weight: 700; font-size: 15.5px; list-style: none; display: flex; align-items: center; gap: 8px; }
+  details.sec > summary::-webkit-details-marker { display: none; }
+  details.sec > summary::before { content: "▸"; color: var(--muted); font-size: 12px; transition: transform .15s; }
+  details.sec[open] > summary::before { transform: rotate(90deg); }
+  details.sec > p.small { margin: 4px 0 0; }
+  footer { max-width: 1160px; margin: 0 auto; padding: 0 20px 32px; color: var(--muted); font-size: 12.5px; }
 </style>
 </head>
 <body>
 <header>
-  <h1>奨学金エージェント</h1>
-  <span class="tagline">民間まで含めて、応募できる奨学金を漏れなく探す。</span>
+  <div class="bar">
+    <div class="brand"><span class="logo" aria-hidden="true">奨</span>奨学金エージェント</div>
+    <span class="tagline">民間まで含めて、応募できる奨学金を漏れなく探す</span>
+  </div>
 </header>
 
 <div class="layout">
   <main>
+    <section id="intro" class="hero" aria-label="使い方">
+      <h1>あなたが応募できる奨学金を、<br>民間まで漏れなく。</h1>
+      <p>条件を入れると、AI が大学の一覧だけでなく、民間財団・企業・自治体の奨学金までインターネットから探し、<b>応募できるかどうか</b>を各団体の公式ページで確かめて、一覧にします。</p>
+      <ol class="steps">
+        <li><b><span class="n">1</span>条件を入力</b>大学・学年・住んでいる地域など、1分で入力できます。</li>
+        <li><b><span class="n">2</span>AI が探す</b>公式ページを読んで判定します。1〜2分ほどかかります。</li>
+        <li><b><span class="n">3</span>結果を保存</b>気になるものを保存して、CSV ファイルで持ち帰れます。</li>
+      </ol>
+    </section>
+
     <section class="card" id="profile" aria-labelledby="h-prof">
       <h2 id="h-prof">あなたの条件</h2>
-      <p class="sub">民間財団・企業・自治体の奨学金まで、Web から探します。入力した内容だけを使って、応募資格をコードで判定します。</p>
+      <p class="sub">入力した内容は、応募できるかどうかの判定にだけ使います。</p>
       <form id="form">
+        <p class="group-title">大学について</p>
         <div class="grid">
           <div><label for="uni">大学名</label><input type="text" id="uni" maxlength="50" placeholder="例: 筑波大学" autocomplete="off" required></div>
-          <div><label for="upref">大学の所在地</label><select id="upref" required></select></div>
+          <div><label for="upref">大学の所在地</label><select id="upref" required></select><p class="hint">大学（キャンパス）がある都道府県</p></div>
           <div><label for="fld">学部・学群・分野</label><input type="text" id="fld" maxlength="50" placeholder="例: 理工学群" autocomplete="off" required></div>
           <div><label for="grade">学年</label><select id="grade" required></select></div>
-          <div><label for="home">出身高校の所在地</label><select id="home" required></select></div>
+        </div>
+        <p class="group-title">地域について</p>
+        <div class="grid">
+          <div><label for="home">出身高校の所在地</label><select id="home" required></select><p class="hint">卒業した高校がある都道府県</p></div>
           <div><label for="res">今住んでいる都道府県</label><select id="res" required></select></div>
-          <div><label for="guard">保護者の住所</label><select id="guard" required></select></div>
+          <div><label for="guard">保護者の住所</label><select id="guard" required></select><p class="hint">地域限定の奨学金の判定に使います</p></div>
         </div>
-        <div style="margin-top:12px">
-          <label id="l-rec">今受けている奨学金</label>
-          <div class="checks" role="group" aria-labelledby="l-rec" id="receiving">
-            <label><input type="checkbox" value="JASSO貸与"> JASSO貸与</label>
-            <label><input type="checkbox" value="JASSO給付"> JASSO給付</label>
-            <label><input type="checkbox" value="他の民間給付"> 他の民間給付</label>
-          </div>
-          <p class="small" style="margin:4px 0 0">なければ、何も選ばずに進みます。</p>
+        <p class="group-title">今受けている奨学金</p>
+        <div class="checks" role="group" aria-label="今受けている奨学金" id="receiving">
+          <label><input type="checkbox" value="JASSO貸与"> JASSO（貸与型）</label>
+          <label><input type="checkbox" value="JASSO給付"> JASSO（給付型）</label>
+          <label><input type="checkbox" value="他の民間給付"> 他の民間の給付型</label>
         </div>
+        <p class="hint">受けていなければ、何も選ばずに進んでください。併用できない奨学金を除くために使います。</p>
         <div class="actions">
-          <button class="primary" type="submit" id="go">奨学金を探す</button>
-          <button class="ghost" type="button" id="sample">入力例を入れる</button>
+          <button class="primary big" type="submit" id="go">奨学金を探す</button>
+          <button class="ghost" type="button" id="sample">入力例を入れてみる</button>
         </div>
       </form>
     </section>
@@ -135,45 +188,48 @@
     <div id="log" aria-live="polite"></div>
 
     <section class="card" id="chat" hidden aria-label="続けて質問する">
+      <h2>続けて質問する</h2>
+      <p class="sub">結果について、AI に聞いてみましょう。下の例をクリックすると入力されます。</p>
       <div class="chips" id="chips"></div>
       <form class="composer" id="composer">
-        <textarea id="text" rows="2" maxlength="1000" placeholder="例: 1番目の奨学金の提出書類を教えて" aria-label="メッセージ"></textarea>
+        <textarea id="text" rows="2" maxlength="1000" placeholder="聞きたいことを入力（Ctrl + Enter でも送信できます）" aria-label="メッセージ"></textarea>
         <button class="primary" type="submit" id="send">送信</button>
       </form>
-      <div class="actions" style="margin-top:8px"><button class="ghost" type="button" id="reset">新しい相談を始める</button></div>
+      <div class="actions" style="margin-top:12px"><button class="ghost" type="button" id="reset">最初からやり直す</button></div>
     </section>
   </main>
 
-  <aside class="side" aria-label="関連する情報">
+  <aside class="side" aria-label="保存・許可・記録">
     <section class="card" aria-labelledby="h-sv">
       <h2 id="h-sv">保存した一覧</h2>
-      <p class="sub">結果の「保存」で、ここに溜まります。 <a href="/admin/api/saved.csv?user_id=user" id="csv">CSV でダウンロード</a></p>
+      <p class="sub">気になる奨学金を「保存」すると、ここに集まります。 <a href="/admin/api/saved.csv?user_id=user" id="csv">CSV でダウンロード</a></p>
       <div class="scrollbox" id="saved"></div>
     </section>
     <section class="card" aria-labelledby="h-ap">
-      <h2 id="h-ap">承認待ち</h2>
-      <p class="sub">共有データへの書き込みは、あなたの承認が必要です。AI は承認できません。</p>
+      <h2 id="h-ap">許可待ち</h2>
+      <p class="sub">AI が、他の人にも影響する操作（共有リストへの追加など）をするときは、あなたの許可を求めます。許可するまで実行されません。</p>
       <div id="pending"></div>
     </section>
     <section class="card" aria-labelledby="h-au">
       <h2 id="h-au">操作の記録</h2>
-      <p class="sub">エージェントが何をしたか。<a href="/admin/" target="_blank" rel="noopener">詳しく見る</a></p>
+      <p class="sub">AI が何をしたかを、安全のためにすべて自動で記録しています。 <a href="/admin/" target="_blank" rel="noopener">詳しく見る</a></p>
       <div class="scrollbox" id="audit"></div>
     </section>
   </aside>
 </div>
-<footer>判定は、各団体の公式ページの募集要項（引用を原文と照合）をもとに、コードで行っています。最終的な応募の可否は、各団体の募集要項と大学の窓口で確かめてください。</footer>
+<footer>判定は、各団体の公式ページの募集要項（引用を原文と照合）をもとに、プログラムが行っています。最終的な応募の可否は、各団体の募集要項と大学の窓口で必ず確かめてください。</footer>
 
 <script>
 const $ = (id) => document.getElementById(id);
 const el = (tag, text, cls) => { const e = document.createElement(tag); if (text !== undefined) e.textContent = text; if (cls) e.className = cls; return e; };
 const USER = "user", APP = "hackathon_agent";
 const PREF = "北海道 青森県 岩手県 宮城県 秋田県 山形県 福島県 茨城県 栃木県 群馬県 埼玉県 千葉県 東京都 神奈川県 新潟県 富山県 石川県 福井県 山梨県 長野県 岐阜県 静岡県 愛知県 三重県 滋賀県 京都府 大阪府 兵庫県 奈良県 和歌山県 鳥取県 島根県 岡山県 広島県 山口県 徳島県 香川県 愛媛県 高知県 福岡県 佐賀県 長崎県 熊本県 大分県 宮崎県 鹿児島県 沖縄県".split(" ");
-const STEP = { find_scholarships: "Web 全体（民間財団・企業・自治体）と大学の一覧から、条件に合う奨学金を探しています（1〜2分かかります）", get_scholarship_detail: "詳細ページを確認しています", register_shared_scholarship: "共有データへの登録を確認しています" };
-const DECISION = { allowed: ["許可", "ok"], executed: ["実行", "ok"], pending: ["承認待ち", "warn"], blocked: ["停止", "bad"], approved: ["承認", "ok"], rejected: ["却下", "bad"] };
+const STEP = { find_scholarships: "インターネット全体（民間財団・企業・自治体）と大学の一覧から、条件に合う奨学金を探しています（1〜2分ほどかかります）", get_scholarship_detail: "詳しい情報を確認しています", register_shared_scholarship: "共有リストへの追加について確認しています" };
+const TOOL_LABEL = { find_scholarships: "奨学金の検索", get_scholarship_detail: "詳しい情報の取得", register_shared_scholarship: "共有リストへの追加", "(approval)": "許可の判断", "(save_list)": "保存リストへの保存", "(model)": "AI の応答" };
+const DECISION = { allowed: ["実行OK", ""], executed: ["完了", "ok"], pending: ["許可待ち", "warn"], blocked: ["安全のため停止", "bad"], approved: ["許可した", "ok"], rejected: ["許可しなかった", "bad"], error: ["エラー", "bad"] };
 
 let sid = null, busy = false;
-const queue = []; // 回答の生成中に押された送信（承認のあとの続きなど）は、順番を待たせる
+const queue = []; // 回答の生成中に押された送信（許可のあとの続きなど）は、順番を待たせる
 
 function fill(sel, items, ph) {
   const s = $(sel); s.replaceChildren();
@@ -228,20 +284,33 @@ const reveal = (e, block) => e.scrollIntoView({ behavior: "smooth", block: block
 function addUser(text) { const d = el("div", text, "msg user"); log.append(d); reveal(d); }
 function renderBot(d, text) { d.replaceChildren(); markdown(d, text); }
 function addBot(text) { const d = el("div", undefined, "msg bot"); renderBot(d, text); log.append(d); reveal(d, "start"); return d; }
-function addStatus(text, cls) { const d = el("div", text, "status" + (cls ? " " + cls : "")); log.append(d); reveal(d); return d; }
+
+/* 処理中の表示。送信した瞬間に出し、経過時間を数える（待たされている理由と長さが分かるように） */
+function addStatus(text, cls, timed) {
+  const d = el("div", undefined, "status" + (cls ? " " + cls : ""));
+  d.label = el("span", text); d.append(d.label);
+  if (timed) {
+    const t0 = Date.now(), tm = el("span", "", "timer"); d.append(tm);
+    d.timer = setInterval(() => { tm.textContent = "経過 " + Math.floor((Date.now() - t0) / 1000) + " 秒"; }, 1000);
+    tm.textContent = "経過 0 秒";
+  }
+  log.append(d); reveal(d); return d;
+}
+function endStatus(d) { if (d) { clearInterval(d.timer); d.classList.add("done"); d.classList.remove("stop"); } }
 
 async function newSession() {
   sid = "web-" + Math.random().toString(36).slice(2, 10);
   const r = await fetch(`/apps/${APP}/users/${USER}/sessions/${sid}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
-  if (!r.ok) throw new Error("セッションを作れませんでした（" + r.status + "）");
+  if (!r.ok) throw new Error("接続できませんでした（" + r.status + "）");
 }
 
-async function send(text) {
-  if (busy) { queue.push(text); return; }
+async function send(text, initial) {
+  if (busy) { queue.push([text, initial]); return; }
   busy = true; setBusy(true);
   addUser(text);
-  let status = null;
-  const done = () => { if (status) { status.classList.add("done"); status.classList.remove("stop"); status = null; } };
+  // 送信した瞬間に表示する（サーバーからの最初の応答を待たない）
+  let status = addStatus(initial || "送信しました。AI が内容を確認しています", "", true);
+  const done = () => { endStatus(status); status = null; };
   try {
     if (!sid) await newSession();
     const r = await fetch("/run_sse", {
@@ -256,14 +325,16 @@ async function send(text) {
       for (const p of (ev.content && ev.content.parts) || []) {
         if (p.functionCall) {
           if (ev.partial) continue; // 途中経過の重複は無視する
-          done(); status = addStatus(STEP[p.functionCall.name] || "処理しています");
+          const label = STEP[p.functionCall.name] || "処理しています";
+          if (status) status.label.textContent = label; // 最初の表示を、具体的な内容に更新する
+          else status = addStatus(label, "", true);
         } else if (p.functionResponse) {
           const res = p.functionResponse.response || {};
           done();
           if (p.functionResponse.name === "find_scholarships" && res.status === "ok") renderResults(res);
-          else if (res.status === "pending" && res.approval_id) addApproval(res.approval_id, p.functionResponse.name);
-          else if (res.status === "blocked") addStatus("安全のため止めました：" + (res.reason || ""), "stop");
-          status = addStatus("結果をまとめています");
+          else if (res.status === "pending" && res.approval_id) addApproval(res.approval_id);
+          else if (res.status === "blocked") { const s = addStatus("安全のため、この操作は止めました：" + (res.reason || ""), "stop"); clearInterval(s.timer); }
+          status = addStatus("結果をまとめています", "", true);
         } else if (p.text && !p.thought && ev.content.role !== "user") {
           done();
           if (ev.partial) { liveText += p.text; if (!live) live = addBot(liveText); else renderBot(live, liveText); }
@@ -284,19 +355,20 @@ async function send(text) {
     }
     done();
   } catch (e) {
-    if (status) status.remove();
-    log.append(el("div", "応答を得られませんでした（" + e.message + "）。もう一度送ってください。", "error"));
+    if (status) { clearInterval(status.timer); status.remove(); }
+    log.append(el("div", "うまく応答を受け取れませんでした（" + e.message + "）。もう一度送ってください。", "error"));
   } finally {
     busy = false; setBusy(false); refresh();
-    if (queue.length) send(queue.shift());
+    $("chat").hidden = false; // 最初の応答が終わったら、続けて質問できるようにする
+    if (queue.length) { const [t, i] = queue.shift(); send(t, i); }
   }
 }
-function setBusy(b) { for (const id of ["go", "send"]) $(id).disabled = b; }
+function setBusy(b) { $("go").disabled = $("send").disabled = b; $("send").textContent = b ? "処理中…" : "送信"; }
 
 function showChat() {
-  $("chat").hidden = false; $("profile").hidden = true;
+  $("profile").hidden = true; $("intro").hidden = true;
   const chips = $("chips"); chips.replaceChildren();
-  for (const t of ["1番目の奨学金の提出書類を教えて", "対象外になった理由を教えて", "「（奨学金名）」を共有データに加えたい。公式ページは https://…"]) {
+  for (const t of ["対象外になった理由を教えて", "締切が近い順に、特におすすめを教えて", "「（奨学金の名前）」を共有リストに追加したい。公式ページは https://…"]) {
     const b = el("button", t, "chip"); b.type = "button"; b.onclick = () => { $("text").value = t; $("text").focus(); }; chips.append(b);
   }
 }
@@ -305,19 +377,24 @@ $("form").addEventListener("submit", (e) => {
   e.preventDefault();
   const rec = [...document.querySelectorAll("#receiving input:checked")].map(i => i.value);
   const msg = `${$("uni").value.trim()}（${$("upref").value}）の${$("fld").value.trim()}、${$("grade").value}年です。出身高校は${$("home").value}、今は${$("res").value}に住んでいて、保護者は${$("guard").value}に住んでいます。` + (rec.length ? `今受けている奨学金は${rec.join("、")}です。` : "奨学金は何も受けていません。");
-  showChat(); send(msg);
+  showChat(); send(msg, "条件を受け付けました。奨学金を探しています（1〜2分ほどかかります）");
 });
 $("sample").onclick = () => { $("uni").value = "筑波大学"; $("upref").value = "茨城県"; $("fld").value = "理工学群"; $("grade").value = "3"; $("home").value = "埼玉県"; $("res").value = "茨城県"; $("guard").value = "埼玉県"; };
 $("composer").addEventListener("submit", (e) => { e.preventDefault(); const t = $("text").value.trim(); if (!t) return; $("text").value = ""; send(t); });
 $("text").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); $("composer").requestSubmit(); } });
-$("reset").onclick = () => { if (busy) return; queue.length = 0; sid = null; log.replaceChildren(); $("chat").hidden = true; $("profile").hidden = false; refresh(); window.scrollTo({ top: 0 }); };
+$("reset").onclick = () => { if (busy) return; queue.length = 0; sid = null; log.replaceChildren(); $("chat").hidden = true; $("profile").hidden = false; $("intro").hidden = false; refresh(); window.scrollTo({ top: 0 }); };
 
 /* ---------- 結果の一覧と保存 ---------- */
 const SECTIONS = [["eligible", "応募できる"], ["needs_check", "要確認"], ["unverified", "未確認の候補"], ["closed", "募集終了"]];
-const NOTE = { eligible: "公式ページの募集要項で、すべての条件を確認できたものです。", needs_check: "条件の一部が確認できていません。理由の項目を、公式ページで確かめてください。", unverified: "見つけましたが、運営団体の公式ページで募集要項を確認できていないものです。団体のサイトで確かめてください。", closed: "締切を過ぎているものです。来年の参考になります。" };
+const NOTE = {
+  eligible: "公式ページの募集要項を読み、あなたの条件がすべて合うと確認できたものです。",
+  needs_check: "条件の一部を確認できていません。各項目の「確認すること」を、公式ページで確かめてください。",
+  unverified: "見つけましたが、公式ページの募集要項を読めていません。団体のサイトで確かめてください。",
+  closed: "締切を過ぎています。来年の参考にどうぞ。"
+};
 function officialLink(url) {
   if (typeof url !== "string" || !url.startsWith("https://")) return null;
-  const a = el("a", "公式ページ"); a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer"; return a;
+  const a = el("a", "公式ページを開く"); a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer"; return a;
 }
 function itemRow(it, label) {
   const row = el("div", undefined, "item");
@@ -330,14 +407,15 @@ function itemRow(it, label) {
   if (it.source) meta.append(el("span", it.source, "badge"));
   row.append(meta);
   if (it.reasons && it.reasons.length) {
+    row.append(el("div", label === "応募できる" ? "確認できたこと" : "確認すること", "why"));
     const ul = el("ul"); for (const r of it.reasons.slice(0, 2)) ul.append(el("li", r));
-    if (it.reasons.length > 2) ul.append(el("li", "ほか " + (it.reasons.length - 2) + " 件の確認事項"));
+    if (it.reasons.length > 2) ul.append(el("li", "ほか " + (it.reasons.length - 2) + " 件（公式ページで確認してください）"));
     row.append(ul);
   }
   const acts = el("div", undefined, "acts");
   const link = officialLink(it.official_url); if (link) acts.append(link);
-  const b = el("button", "保存"); b.type = "button";
-  b.onclick = async () => { b.disabled = true; const ok = await saveItems([[it, label]]); b.textContent = ok ? "保存済み" : "保存できませんでした"; if (!ok) b.disabled = false; };
+  const b = el("button", "保存する"); b.type = "button";
+  b.onclick = async () => { b.disabled = true; const ok = await saveItems([[it, label]]); b.textContent = ok ? "保存しました ✓" : "保存できませんでした"; if (!ok) b.disabled = false; };
   acts.append(b); row.append(acts);
   return row;
 }
@@ -348,9 +426,9 @@ function renderResults(res) {
   card.append(head);
   const w = (res.searched && res.searched.web) || {};
   const how = [];
-  if (w.queries) how.push("Web を " + w.queries + " 通りの検索で探し、候補 " + w.candidates + " 件のうち " + w.verified + " 件を公式ページで確認");
-  if (res.searched && res.searched.university_list) how.push(res.searched.university_list + "も確認");
-  card.append(el("p", "基準日 " + res.today + "。" + how.join("。") + (w.seconds ? "（" + Math.round(w.seconds) + "秒）" : "") + "。", "sub"));
+  if (w.queries) how.push("インターネットを " + w.queries + " 通りの方法で探し、見つかった " + w.candidates + " 件のうち " + w.verified + " 件を公式ページで確認しました");
+  if (res.searched && res.searched.university_list) how.push(res.searched.university_list + "も確認しました");
+  card.append(el("p", res.today + " 時点の情報です。" + how.join("。") + (w.seconds ? "（所要 " + Math.round(w.seconds) + " 秒）" : "") + "。", "sub"));
   for (const n of res.notes || []) card.append(el("p", n, "error"));
   const all = [];
   let total = 0;
@@ -365,11 +443,11 @@ function renderResults(res) {
     for (const it of list) { box.append(itemRow(it, label)); if (key !== "closed") all.push([it, label]); }
     card.append(box);
   }
-  if (!total) card.append(el("p", "条件に合う候補は見つかりませんでした。", "empty"));
-  if (res.ineligible_count) card.append(el("p", "条件に合わず対象外と判定したもの: " + res.ineligible_count + "件", "small"));
+  if (!total) card.append(el("p", "条件に合う候補は見つかりませんでした。条件を変えて、もう一度試してください。", "empty"));
+  if (res.ineligible_count) card.append(el("p", "条件に合わないと判定して除いたもの: " + res.ineligible_count + "件", "small"));
   if (all.length) {
-    const b = el("button", "表示中の " + all.length + " 件をすべて保存", "primary"); b.type = "button";
-    b.onclick = async () => { b.disabled = true; const ok = await saveItems(all); b.textContent = ok ? "保存しました" : "保存できませんでした"; if (!ok) b.disabled = false; };
+    const b = el("button", "上の " + all.length + " 件をまとめて保存", "primary"); b.type = "button";
+    b.onclick = async () => { b.disabled = true; const ok = await saveItems(all); b.textContent = ok ? "保存しました ✓" : "保存できませんでした"; if (!ok) b.disabled = false; };
     head.append(b);
   }
   log.append(card); reveal(card, "start");
@@ -389,65 +467,83 @@ async function saveItems(pairs) {
 async function loadSaved() {
   let d; try { const r = await fetch("/admin/api/saved?user_id=" + USER); if (!r.ok) throw 0; d = await r.json(); } catch (e) { return; }
   const box = $("saved"); box.replaceChildren();
-  if (!d.items.length) { box.append(el("p", "まだ保存していません。", "empty")); return; }
+  if (!d.items.length) { box.append(el("p", "まだ保存したものはありません。", "empty")); return; }
   for (const it of d.items) {
     const row = el("div", undefined, "row");
     row.append(el("span", it.name, "name"), el("span", it.status, "badge" + (it.status === "応募できる" ? " ok" : it.status === "要確認" ? " warn" : "")));
-    if (it.deadline) row.append(el("span", it.deadline, "small"));
-    const link = officialLink(it.official_url); if (link) { link.textContent = "公式"; row.append(link); }
+    if (it.deadline) row.append(el("span", "締切 " + it.deadline, "small"));
+    const link = officialLink(it.official_url); if (link) { link.textContent = "公式ページ"; row.append(link); }
     const rm = el("button", "外す", "ghost"); rm.type = "button";
     rm.onclick = async () => { rm.disabled = true; await fetch("/admin/api/saved/" + encodeURIComponent(it.id) + "?user_id=" + USER, { method: "DELETE" }); loadSaved(); };
     row.append(rm); box.append(row);
   }
 }
 
-/* ---------- 承認 ---------- */
+/* ---------- 許可（AI が影響の大きい操作をするとき、本人が決める） ---------- */
 async function decide(id, approve, comment) {
   const r = await fetch(`/admin/api/approvals/${encodeURIComponent(id)}/decide`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ user_id: USER, approve, comment: comment || "" }) });
   return r.json();
 }
-function addApproval(id, tool) {
-  const card = el("div", undefined, "approval"), t = el("div"); t.append(el("b", "あなたの承認が必要です"), " （共有データへの書き込み）");
-  const d = el("div", "承認ID: " + id + "。AI は承認できません。内容を確かめて、あなたが決めてください。", "detail");
-  const ok = el("button", "承認する", "primary"), ng = el("button", "却下する"), msg = el("span", "", "small");
-  const row = el("div", undefined, "actions"); row.style.marginTop = "0"; row.append(ok, ng, msg);
+async function approvalDetail(id) {
+  try { const r = await fetch("/admin/api/state?user_id=" + USER); const d = await r.json(); return (d.approvals || []).find(a => a.id === id); } catch (e) { return null; }
+}
+function addApproval(id) {
+  const card = el("div", undefined, "approval");
+  card.append(el("h3", "確認してください：共有リストに追加しますか？"));
+  card.append(el("p", "AI が、次の奨学金を「共有リスト」に追加しようとしています。共有リストは、このサイトを使う他の人にも見える、奨学金の候補リストです。追加すると他の人にも表示されるため、実行する前にあなたの許可が必要です。"));
+  const dl = el("dl"); card.append(dl);
+  approvalDetail(id).then(a => {
+    const args = (a && a.args) || {};
+    for (const [k, v] of [["奨学金の名前", args.name], ["公式ページ", args.official_url], ["追加する理由", args.reason]]) {
+      if (!v) continue;
+      dl.append(el("dt", k));
+      const dd = el("dd");
+      if (k === "公式ページ" && /^https:\/\//.test(v)) { const x = el("a", v); x.href = v; x.target = "_blank"; x.rel = "noopener noreferrer"; dd.append(x); } else dd.textContent = v;
+      dl.append(dd);
+    }
+    if (!dl.children.length) dl.remove();
+  });
+  const ok = el("button", "追加を許可する", "primary"), ng = el("button", "許可しない"), msg = el("span", "", "small");
+  const row = el("div", undefined, "actions"); row.style.marginTop = "12px"; row.append(ok, ng, msg);
   const act = (approve) => async () => {
     ok.disabled = ng.disabled = true;
+    msg.textContent = "許可の内容を反映しています…"; // 押した瞬間に反応を見せる
     try {
       const j = await decide(id, approve);
-      msg.textContent = j.message || j.detail || "";
-      if (j.ok) { card.style.opacity = ".75"; if (approve) send(`承認しました。承認IDは ${id} です。登録を続けてください。`); else addBot("却下しました。登録は行いません。"); }
+      msg.textContent = j.ok ? (approve ? "許可しました" : "許可しませんでした") : (j.message || j.detail || "");
+      if (j.ok) { card.style.opacity = ".7"; if (approve) send(`承認しました。承認IDは ${id} です。登録を続けてください。`, "許可を受け付けました。共有リストに追加しています"); else addBot("許可されなかったので、共有リストには追加しません。"); }
       else ok.disabled = ng.disabled = false;
     } catch (e) { msg.textContent = "送信できませんでした"; ok.disabled = ng.disabled = false; }
   };
   ok.onclick = act(true); ng.onclick = act(false);
-  card.append(t, d, row); log.append(card); reveal(card);
+  card.append(row);
+  card.append(el("p", "許可の操作は、AI ではなくあなたにしかできません。", "note"));
+  log.append(card); reveal(card);
 }
 
 /* ---------- サイドパネル ---------- */
 const fmt = (iso) => iso ? new Date(iso).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
-const short = (o) => { const s = JSON.stringify(o); return s && s.length > 90 ? s.slice(0, 90) + "…" : (s || ""); };
 async function refresh() {
   let d;
   try { const r = await fetch("/admin/api/state?user_id=" + USER); if (!r.ok) throw 0; d = await r.json(); } catch (e) { return; }
   loadSaved();
-  // 承認待ち
   const pd = $("pending"); pd.replaceChildren();
   const pend = d.approvals.filter(a => a.status === "pending");
-  if (!pend.length) pd.append(el("p", "承認待ちはありません。", "empty"));
+  if (!pend.length) pd.append(el("p", "いま許可を待っている操作はありません。", "empty"));
   for (const a of pend) {
-    const row = el("div", undefined, "row"); row.append(el("span", (a.args && a.args.name) || a.tool, "name"), el("span", "承認待ち", "badge warn"));
-    const ok = el("button", "承認"), ng = el("button", "却下", "ghost");
+    const row = el("div", undefined, "row");
+    row.append(el("span", "「" + ((a.args && a.args.name) || (TOOL_LABEL[a.tool] || a.tool)) + "」を共有リストに追加", "name"));
+    const ok = el("button", "許可"), ng = el("button", "許可しない", "ghost");
     ok.onclick = async () => { ok.disabled = ng.disabled = true; await decide(a.id, true); refresh(); };
     ng.onclick = async () => { ok.disabled = ng.disabled = true; await decide(a.id, false); refresh(); };
     row.append(ok, ng); pd.append(row);
   }
-  // 記録
   const au = $("audit"); au.replaceChildren();
-  if (!d.audit.length) au.append(el("p", "まだ記録がありません。", "empty"));
+  if (!d.audit.length) au.append(el("p", "まだ記録はありません。", "empty"));
   for (const r of d.audit.slice(0, 12)) {
     const [t, c] = DECISION[r.decision] || [r.decision, ""];
-    const row = el("div", undefined, "row"); row.append(el("span", fmt(r.at), "small"), el("span", r.tool), el("span", t, "badge " + c));
+    const row = el("div", undefined, "row");
+    row.append(el("span", fmt(r.at), "small"), el("span", TOOL_LABEL[r.tool] || r.tool, "name"), el("span", t, "badge " + c));
     au.append(row);
   }
 }
