@@ -31,7 +31,7 @@
 
 - **人間の承認（10/13）**：対象は共有データへの書き込み、承認者は依頼した本人（10/14に管理者案から変更。`DESIGN_SPEC.md` 3.5、`docs/research/2026-10-13_human_approval.md`）。ツール `register_shared_scholarship`（高リスク）を実装。承認のテスト10件（`tests/test_shared_write.py`）、pytest は計77件
 - **管理画面（10/14）**：`ui/`（FastAPI＋1枚のHTML）。承認待ちの承認／却下、承認の履歴と所要時間、監査ログ、来年の準備カレンダー。起動は `uv run uvicorn ui.app:app --port 9100`。同一オリジンのPOSTのみ・本人のみ承認・Web由来の文字列はテキスト表示。テスト6件（`tests/test_ui.py`）。**公開前に IAP などの認証が必要**
-- **利用者向けサイト（10/15）**：`ui/site.html` を `/` に出し、ADK の開発者向け画面は本番から外した（`main.py` の `web=False`。ローカルの開発は `adk web` のまま）。プロフィール入力フォーム、会話（`/run_sse` の逐次受信、処理中の進捗表示、安全な Markdown 表示）、チャット内の承認カード（本人が承認すると続きを自動送信。生成中に押しても順番待ちにする）、サイドパネル（カレンダー・承認待ち・操作の記録）。ローカルで通し確認済み。テスト99件。公開（allUsers の run.invoker）に切り替え済みで、未認証は401
+- **利用者向けサイト（10/15）**：`ui/site.html` を `/` に出し、ADK の開発者向け画面は本番から外した（`main.py` の `web=False`。ローカルの開発は `adk web` のまま）。プロフィール入力フォーム、会話（`/run_sse` の逐次受信、処理中の進捗表示、安全な Markdown 表示）、チャット内の承認カード（本人が承認すると続きを自動送信。生成中に押しても順番待ちにする）、サイドパネル（カレンダー・承認待ち・操作の記録）。ローカルと本番（HTTP）で通し確認済み。テスト99件。公開（allUsers の run.invoker）に切り替え済みで、未認証は401
 - **デプロイ（10/14）**：リビジョン `hackathon-agent-00003-c4l`（最大インスタンス1、`APP_USER=tester`、`APP_PASSWORD` は Secret Manager から注入、まだ未認証の呼び出しは許可していない＝IAM で非公開）。Dockerfile は Cloud Build で成功。本番で検索19秒、承認→実行、監査ログ、未認証401／誤った認証401／403を確認。公開前の確認は `X-Serverless-Authorization: Bearer $(gcloud auth print-identity-token)` を付ける（`Authorization` は Basic 認証が使うため）。サービス全体の `maxScale` 注釈は20のまま（リビジョンは1）
 - **デプロイの準備（10/14、ローカルのみ）**：`main.py`（ADK の会話画面 `/` と管理画面 `/admin/` を1サービスに）、`ui/auth.py`（Basic 認証。未設定は全拒否）、`Dockerfile`、`.gcloudignore` の追加。構成は `DESIGN_SPEC.md` 3.7。ローカルで `APP_USER=… APP_PASSWORD=… uv run uvicorn main:app --port 8080` を起動し、認証なしは全経路401、会話は約42秒、承認→実行まで確認。認証のテスト13件、pytest は計97件。**Secret Manager（10/14）**：API を有効化し、秘密 `scholarship-app-password`（24文字、版1）を作成済み。値は Cloud Console の Secret Manager で確認する（ログイン用のユーザー名 `APP_USER` は環境変数で渡す）。専用SA `hackathon-agent-sa` に、この秘密だけの `secretAccessor` を付与済み。ユーザー名は `tester`。**Dockerfile は Docker が無く未検証（Cloud Build で初めて確かめる）**
 - **評価セット（10/13）**：`hackathon_agent/evals/` に adk eval の4ケース（正常系・聞き返し・存在しない学群・指示の無視要求）。結果は `docs/experiments/2026-10-13_adk_eval/`。ページ内インジェクションは `tests/test_injection.py`（F10 合格）。検索回数の上限は `tests/test_guard.py`
@@ -39,7 +39,7 @@
 ### 未完了（優先順）
 0. **ユーザーの試用（10/14）の改善ポイント待ち**。ローカルで会話画面と管理画面を試用済み（`.claude/launch.json` の `adk-web` と `admin-ui`）。共有された内容を、下の項目より先に整理する
 1. **画面の残り**：結果の3区分と並べ替えの表示（F08）、検索語・止めた理由のログ表示（F12。F03・F07 が前提）。最小版は完了
-2. **新サイトのデプロイと、公開URLでの再確認（F15）**。その後、アーキテクチャ図・説明文・デモ動画・`main` への取り込み。提出までに公開URL＋アプリ側ログイン（テスト用アカウント）へ切り替える（F15）
+2. **公開URLの最終確認（F15）**：新サイトはリビジョン `hackathon-agent-00004-wt7` で公開済み。ログインしていない別のブラウザで、`tester` ＋ Secret Manager のパスワードでログインして探索を1回実行できるかをユーザーが確認し、済んだら F15 を true にする。その後、アーキテクチャ図・説明文・デモ動画・`main` への取り込み。提出までに公開URL＋アプリ側ログイン（テスト用アカウント）へ切り替える（F15）
 3. 未決事項：ログイン方式（メール受信不要）。本人確認が今は `--by` のユーザーID の一致だけで弱い（ログインと合わせて直す）
 4. 比較実験の全方式の比較（`DESIGN_SPEC.md` 1.4、F13）と、Web 全体を探す部分（①〜⑤）を縦1本につなぐか（日程次第で「拡張予定」）
 5. ユーザーにお願い中：ガクシーにログインして「学年の選択肢」と「締切後の奨学金が出るか」をスクリーンショットで確認
