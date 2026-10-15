@@ -6,7 +6,7 @@
 <title>奨学金エージェント</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
   /* ---------------------------------------------------------------
      デザインの方針（Figma「UIデザインの7原則」に沿う）
@@ -16,29 +16,27 @@
      コントラスト: 文字と背景は WCAG AA 以上
      アクセシビリティ: 44px のタップ領域、キーボード操作、動きを抑える設定に対応
      近接・整列: 関連する要素は近く、補助的な操作は離す。8px グリッドに揃える
-     配色は黒・白・グレーだけ。強調は濃淡と枠線で表す
+     配色は黒・白・グレーだけ。強調は濃淡と枠線で表す。装飾的なアニメーション・光・背景模様は使わない（動くのは処理中の回転表示だけ）
      --------------------------------------------------------------- */
   :root {
     --bg: #fafafa; --panel: #ffffff; --soft: #f2f2f2; --text: #0a0a0a; --muted: #606060; --line: #e4e4e4; --line-strong: #c9c9c9;
-    --ink: #0a0a0a; --on-ink: #ffffff; --dot: rgba(0,0,0,.09); --glow: rgba(0,0,0,.10);
-    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.05);
+    --ink: #0a0a0a; --on-ink: #ffffff;
+    --shadow: 0 1px 2px rgba(0,0,0,.04);
     --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px;
     --r-sm: 8px; --r-md: 12px; --r-lg: 20px;
     --font: "Inter", "Noto Sans JP", system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
-    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --mono: ui-monospace, Menlo, Consolas, monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #09090b; --panel: #121214; --soft: #1b1b1e; --text: #f4f4f5; --muted: #a1a1a6; --line: #26262a; --line-strong: #3f3f46;
-      --ink: #f4f4f5; --on-ink: #09090b; --dot: rgba(255,255,255,.08); --glow: rgba(255,255,255,.10);
-      --shadow: 0 1px 2px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.35);
+      --ink: #f4f4f5; --on-ink: #09090b;
+      --shadow: none;
     }
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body { margin: 0; background: var(--bg); color: var(--text); font: 400 15px/1.8 var(--font); -webkit-font-smoothing: antialiased; position: relative; min-height: 100vh; }
-  /* AI らしい、ごく薄いドットの格子 */
-  body::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background-image: radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 0); background-size: 24px 24px; mask-image: linear-gradient(to bottom, #000, transparent 85%); -webkit-mask-image: linear-gradient(to bottom, #000, transparent 85%); }
   a { color: var(--text); text-underline-offset: 3px; text-decoration-color: var(--line-strong); text-decoration-thickness: 1px; }
   a:hover { text-decoration-color: var(--text); }
   .skip { position: absolute; left: var(--s4); top: -80px; background: var(--ink); color: var(--on-ink); padding: var(--s2) var(--s4); border-radius: var(--r-sm); z-index: 20; }
@@ -48,9 +46,7 @@
   header { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
   .bar { max-width: 1160px; margin: 0 auto; padding: var(--s3) var(--s5); display: flex; align-items: center; justify-content: space-between; gap: var(--s3); }
   .brand { display: flex; align-items: center; gap: var(--s3); font-weight: 700; letter-spacing: .01em; }
-  .logo { width: 32px; height: 32px; border-radius: 10px; background: var(--ink); color: var(--on-ink); display: grid; place-items: center; font: 800 17px/1 var(--font); letter-spacing: -.02em; box-shadow: 0 0 0 4px var(--glow); }
-  .chip-ai { font: 500 11px/1 var(--mono); letter-spacing: .06em; border: 1px solid var(--line-strong); border-radius: 999px; padding: 4px 8px; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
-  .chip-ai::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); animation: pulse 2s ease-in-out infinite; }
+  .logo { width: 32px; height: 32px; border-radius: 10px; background: var(--ink); color: var(--on-ink); display: grid; place-items: center; font: 700 17px/1 var(--font); }
   .tagline { color: var(--muted); font-size: 13px; }
   @media (max-width: 720px) { .tagline { display: none; } }
 
@@ -59,21 +55,17 @@
 
   /* ---- ヒーローとステップ（現在地） ---- */
   .hero { position: relative; margin-bottom: var(--s5); }
-  .hero::before { content: ""; position: absolute; left: -10%; top: -60px; width: 70%; height: 220px; z-index: -1; background: radial-gradient(closest-side, var(--glow), transparent); filter: blur(30px); animation: drift 9s ease-in-out infinite alternate; }
-  .eyebrow { font: 500 12px/1 var(--mono); letter-spacing: .14em; color: var(--muted); margin: 0 0 var(--s3); text-transform: uppercase; }
-  .eyebrow::before { content: "✦ "; color: var(--text); }
   .hero h1 { font-size: clamp(30px, 4.6vw, 44px); line-height: 1.25; letter-spacing: -.015em; font-weight: 800; margin: 0 0 var(--s4); font-feature-settings: "palt"; }
-  .shimmer { background: linear-gradient(100deg, var(--text) 20%, var(--muted) 45%, var(--text) 70%); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: sheen 6s linear infinite; }
   .lead { color: var(--muted); font-size: 16px; line-height: 1.85; margin: 0 0 var(--s5); max-width: 38em; }
   .lead b { color: var(--text); font-weight: 600; }
 
   .stepper { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s3); margin: 0 0 var(--s5); padding: 0; }
   .stepper li { position: relative; padding-top: var(--s3); border-top: 2px solid var(--line-strong); color: var(--muted); font-size: 13px; line-height: 1.55; transition: border-color .3s, color .3s; }
   .stepper li b { display: block; color: inherit; font-size: 14px; font-weight: 700; margin-bottom: 2px; }
-  .stepper li .no { font: 500 11px/1 var(--mono); letter-spacing: .1em; display: block; margin-bottom: 6px; }
+  .stepper li .no { font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px; }
   .stepper li.active { border-top-color: var(--ink); color: var(--text); }
   .stepper li.done { border-top-color: var(--ink); color: var(--muted); }
-  .stepper li.done .no::after { content: " ✓"; }
+  .stepper li.done .no::after { content: "  完了"; }
   .compact .stepper li:not(.active) { font-size: 0; }
   .compact .stepper li:not(.active) b, .compact .stepper li:not(.active) .no { font-size: 12px; }
   .compact .stepper li:not(.active) b { margin: 0; }
@@ -88,7 +80,7 @@
   label { display: block; font-size: 13px; font-weight: 600; margin-bottom: var(--s2); }
   select, input[type=text], textarea { width: 100%; min-height: 44px; font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--line-strong); border-radius: var(--r-md); padding: 10px var(--s3); transition: border-color .15s, box-shadow .15s; }
   select:hover, input[type=text]:hover, textarea:hover { border-color: var(--muted); }
-  select:focus, input[type=text]:focus, textarea:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 4px var(--glow); }
+  select:focus, input[type=text]:focus, textarea:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
   textarea { resize: vertical; min-height: 52px; }
   ::placeholder { color: var(--muted); opacity: .75; }
 
@@ -107,7 +99,7 @@
 
   /* ---- フォーム: 8px グリッドに整列し、関連する項目を近く、グループの間は離す ---- */
   .group { margin: 0 0 var(--s5); padding: 0; border: 0; min-width: 0; }
-  .group > legend { font: 600 11px/1 var(--mono); letter-spacing: .12em; color: var(--muted); margin: 0 0 var(--s3); padding: 0; }
+  .group > legend { font-size: 14px; font-weight: 700; color: var(--text); margin: 0 0 var(--s3); padding: 0; }
   .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s4); }
   @media (max-width: 640px) { .grid { grid-template-columns: minmax(0, 1fr); } }
   .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -115,7 +107,7 @@
   details.optional { border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s3) var(--s4); margin: 0 0 var(--s5); }
   details.optional > summary { cursor: pointer; font-size: 14px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: var(--s3); min-height: 28px; }
   details.optional > summary::-webkit-details-marker { display: none; }
-  details.optional > summary::after { content: "＋"; color: var(--muted); font-family: var(--mono); }
+  details.optional > summary::after { content: "＋"; color: var(--muted); }
   details.optional[open] > summary::after { content: "－"; }
   details.optional .body { margin-top: var(--s3); }
   .checks { display: flex; flex-wrap: wrap; gap: var(--s2); }
@@ -127,11 +119,8 @@
 
   /* ---- 会話 ---- */
   #log { display: flex; flex-direction: column; gap: var(--s4); margin: var(--s5) 0; }
-  #log > * { animation: rise .4s cubic-bezier(.2,.7,.2,1) both; }
   .msg.user { align-self: flex-end; background: var(--ink); color: var(--on-ink); border-radius: var(--r-lg) var(--r-lg) var(--s1) var(--r-lg); padding: var(--s3) var(--s4); max-width: 86%; white-space: pre-wrap; overflow-wrap: anywhere; }
   .msg.bot { align-self: stretch; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg) var(--r-lg) var(--r-lg) var(--s1); padding: var(--s2) var(--s5) var(--s3); overflow-wrap: anywhere; box-shadow: var(--shadow); position: relative; }
-  .msg.bot::before { content: "✦ AI"; display: block; font: 600 11px/1 var(--mono); letter-spacing: .12em; color: var(--muted); padding-top: var(--s3); }
-  .msg.bot.live > :last-child::after { content: "▍"; margin-left: 2px; animation: blink 1s steps(2) infinite; }
   .msg.bot h3 { font-size: 15px; margin: var(--s4) 0 var(--s1); }
   .msg.bot p { margin: var(--s2) 0; }
   .msg.bot ul, .msg.bot ol { margin: var(--s1) 0; padding-left: 1.4em; }
@@ -141,13 +130,12 @@
   /* 処理中の表示: 光が流れる帯＋経過時間（待たされている理由と長さが分かる） */
   .status { align-self: flex-start; position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: var(--s3); background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 10px var(--s4); font-size: 13.5px; }
   .status::before { content: ""; flex: none; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--ink); border-top-color: transparent; animation: spin .8s linear infinite; }
-  .status:not(.done):not(.stop)::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, var(--glow) 50%, transparent 70%); transform: translateX(-100%); animation: scan 1.8s ease-in-out infinite; pointer-events: none; }
   .status.done { color: var(--muted); }
   .status.done::before { animation: none; border: 0; content: "✓"; width: auto; height: auto; line-height: 1; }
   .status.stop::before { animation: none; border: 0; content: "⚠"; width: auto; height: auto; line-height: 1; }
-  .status .timer { font: 500 12px var(--mono); color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .status .timer { font-size: 12.5px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-  .approval { align-self: stretch; border: 2px solid var(--ink); background: var(--panel); border-radius: var(--r-lg); padding: var(--s5); box-shadow: 0 0 0 6px var(--glow); }
+  .approval { align-self: stretch; border: 2px solid var(--ink); background: var(--panel); border-radius: var(--r-lg); padding: var(--s5); }
   .approval h3 { margin: 0 0 var(--s2); font-size: 17px; }
   .approval p { margin: var(--s1) 0; font-size: 14px; }
   .approval dl { margin: var(--s4) 0; padding: var(--s3) var(--s4); background: var(--soft); border-radius: var(--r-md); font-size: 13.5px; display: grid; grid-template-columns: auto 1fr; gap: var(--s1) var(--s4); }
@@ -167,10 +155,10 @@
   details.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 0 var(--s5); box-shadow: var(--shadow); }
   details.panel > summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: 56px; font-size: 15px; font-weight: 700; }
   details.panel > summary::-webkit-details-marker { display: none; }
-  details.panel > summary::after { content: "＋"; font: 500 14px var(--mono); color: var(--muted); }
+  details.panel > summary::after { content: "＋"; font-size: 14px; color: var(--muted); }
   details.panel[open] > summary::after { content: "－"; }
   details.panel .body { padding: 0 0 var(--s5); }
-  details.panel .count { font: 600 11px/1 var(--mono); border-radius: 999px; padding: 4px 8px; background: var(--soft); border: 1px solid var(--line); margin-left: var(--s2); }
+  details.panel .count { font-size: 12px; font-weight: 600; line-height: 1; border-radius: 999px; padding: 4px 8px; background: var(--soft); border: 1px solid var(--line); margin-left: var(--s2); }
   details.panel .count.alert { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
   .row { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s3); align-items: center; padding: var(--s3) 0; border-top: 1px solid var(--line); font-size: 14px; }
   .row:first-of-type { border-top: 0; }
@@ -188,7 +176,7 @@
   .item { border-top: 1px solid var(--line); padding: var(--s4) 0; }
   .item .title { font-weight: 700; font-size: 16px; line-height: 1.5; overflow-wrap: anywhere; }
   .item .meta { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; margin: var(--s2) 0; font-size: 13px; color: var(--muted); }
-  .item .why { font: 600 11px/1 var(--mono); letter-spacing: .08em; color: var(--muted); margin: var(--s3) 0 var(--s1); }
+  .item .why { font-size: 12.5px; font-weight: 700; color: var(--muted); margin: var(--s3) 0 var(--s1); }
   .item ul { margin: 0 0 var(--s2) 1.2em; padding: 0; font-size: 13.5px; }
   .item .acts { display: flex; gap: var(--s4); align-items: center; margin-top: var(--s3); font-size: 14px; }
   details.sec { border-top: 1px solid var(--line); margin-top: var(--s4); padding-top: var(--s3); }
@@ -200,17 +188,10 @@
   footer { max-width: 1160px; margin: 0 auto; padding: 0 var(--s5) var(--s6); color: var(--muted); font-size: 12.5px; }
 
   @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-  @keyframes blink { 50% { opacity: 0; } }
-  @keyframes pulse { 50% { opacity: .25; } }
-  @keyframes sheen { to { background-position: -220% 0; } }
-  @keyframes scan { to { transform: translateX(100%); } }
-  @keyframes drift { to { transform: translate(8%, 12%) scale(1.1); } }
   /* 動きを抑える設定の人には、アニメーションを止める */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
     .status:not(.done)::before { border-top-color: var(--ink); }
-    .shimmer { color: var(--text); background: none; }
   }
 </style>
 </head>
@@ -218,7 +199,7 @@
 <a class="skip" href="#main">本文へ移動</a>
 <header>
   <div class="bar">
-    <div class="brand"><span class="logo" aria-hidden="true">S</span>奨学金エージェント <span class="chip-ai">AI AGENT</span></div>
+    <div class="brand"><span class="logo" aria-hidden="true">S</span>奨学金エージェント</div>
     <span class="tagline">民間まで含めて、応募できる奨学金を漏れなく探す</span>
   </div>
 </header>
@@ -226,15 +207,14 @@
 <div class="layout">
   <main id="main">
     <section id="intro" class="hero" aria-label="このサイトについて">
-      <p class="eyebrow">Scholarship Agent</p>
-      <h1>あなたが応募できる奨学金を、<br><span class="shimmer">民間まで漏れなく。</span></h1>
+      <h1>あなたが応募できる奨学金を、<br>民間まで漏れなく。</h1>
       <p class="lead">条件を入れると、AI が大学の一覧だけでなく、民間財団・企業・自治体の奨学金までインターネットから探し、<b>応募できるかどうか</b>を各団体の公式ページで確かめて、一覧にします。</p>
     </section>
 
     <ol class="stepper" id="stepper" aria-label="進み具合">
-      <li class="active" data-step="1"><span class="no">STEP 01</span><b>条件を入力</b>大学・学年・地域など、1分で入力できます。</li>
-      <li data-step="2"><span class="no">STEP 02</span><b>AI が探す</b>公式ページを読んで判定します。1〜2分ほどかかります。</li>
-      <li data-step="3"><span class="no">STEP 03</span><b>結果を見て保存</b>気になるものを保存し、CSV で持ち帰れます。</li>
+      <li class="active" data-step="1"><span class="no">1</span><b>条件を入力</b>大学・学年・地域など、1分で入力できます。</li>
+      <li data-step="2"><span class="no">2</span><b>AI が探す</b>公式ページを読んで判定します。1〜2分ほどかかります。</li>
+      <li data-step="3"><span class="no">3</span><b>結果を見て保存</b>気になるものを保存し、CSV で持ち帰れます。</li>
     </ol>
 
     <section class="card" id="profile" aria-labelledby="h-prof">
@@ -242,7 +222,7 @@
       <p class="sub">入力した内容は、応募できるかどうかの判定にだけ使います。</p>
       <form id="form">
         <fieldset class="group">
-          <legend>01 · 大学について</legend>
+          <legend>大学について</legend>
           <div class="grid">
             <div><label for="uni">大学名</label><input type="text" id="uni" maxlength="50" placeholder="例: 筑波大学" autocomplete="off" required></div>
             <div><label for="upref">大学の所在地</label><select id="upref" required></select><p class="hint">大学（キャンパス）がある都道府県</p></div>
@@ -251,7 +231,7 @@
           </div>
         </fieldset>
         <fieldset class="group">
-          <legend>02 · 地域について</legend>
+          <legend>地域について</legend>
           <div class="grid three">
             <div><label for="home">出身高校の所在地</label><select id="home" required></select><p class="hint">卒業した高校がある都道府県</p></div>
             <div><label for="res">今住んでいる都道府県</label><select id="res" required></select></div>
@@ -389,7 +369,7 @@ const log = $("log");
 const reveal = (e, block) => e.scrollIntoView({ behavior: "smooth", block: block || "nearest" });
 function addUser(text) { const d = el("div", text, "msg user"); log.append(d); reveal(d); }
 function renderBot(d, text) { d.replaceChildren(); markdown(d, text); }
-function addBot(text, live) { const d = el("div", undefined, "msg bot" + (live ? " live" : "")); renderBot(d, text); log.append(d); reveal(d, "start"); return d; }
+function addBot(text, live) { const d = el("div", undefined, "msg bot"); renderBot(d, text); log.append(d); reveal(d, "start"); return d; }
 
 /* 処理中の表示。送信した瞬間に出し、経過時間を数える（待たされている理由と長さが分かるように） */
 function addStatus(text, cls, timed) {
@@ -515,7 +495,7 @@ function itemRow(it, label) {
   if (it.source) meta.append(el("span", it.source, "badge"));
   row.append(meta);
   if (it.reasons && it.reasons.length) {
-    row.append(el("div", label === "応募できる" ? "CONFIRMED · 確認できたこと" : "TO CHECK · 確認すること", "why"));
+    row.append(el("div", label === "応募できる" ? "確認できたこと" : "確認すること", "why"));
     const ul = el("ul"); for (const r of it.reasons.slice(0, 2)) ul.append(el("li", r));
     if (it.reasons.length > 2) ul.append(el("li", "ほか " + (it.reasons.length - 2) + " 件（公式ページで確認してください）"));
     row.append(ul);
