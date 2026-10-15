@@ -1,4 +1,4 @@
-# 本番の URL に、サンプル条件で検索を1回ずつ流して、共有キャッシュを温める（撮影・審査の前に実行する）。
+﻿# 本番の URL に、サンプル条件で検索を1回ずつ流して、共有キャッシュを温める（撮影・審査の前に実行する）。
 # パスワードは Secret Manager から読む（画面にもファイルにも出さない）。実行する人に、その秘密の閲覧権限が必要。
 param([string]$Base = "https://hackathon-agent-525978871269.us-central1.run.app")
 $env:PYTHONUTF8 = 1; [Console]::OutputEncoding = [Text.Encoding]::UTF8
