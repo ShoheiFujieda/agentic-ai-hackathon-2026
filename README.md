@@ -24,8 +24,8 @@
 | 筑波大学の公開一覧 | `hackathon_agent/scholarship/tsukuba.py` `service.py` | 大学経由の奨学金（大学名に「筑波」を含むとき併用） |
 | ガバナンス | `hackathon_agent/governance/` | `guard.py`（許可リスト・引数検証・上限）、`approvals.py`（人間の承認）、`audit.py`（監査ログ）、`fallback.py` |
 | 画面と API | `ui/`, `main.py` | 利用者向けサイト（Material Design 3）、許可・保存・CSV の API、Basic 認証 |
-| 評価・テスト | `tests/`, `hackathon_agent/evals/` | 自動テスト約170件、`adk eval` の評価セット |
-| 実験 | `scripts/exp_*.py`, `docs/experiments/` | 一覧ページ経由の集合拡張、30件の公式要項での照合、普通の AI 検索との比較 |
+| 評価・テスト | `tests/`, `hackathon_agent/evals/` | 自動テスト約175件、`adk eval` の評価セット |
+| 実験 | `scripts/exp_*.py`, `docs/experiments/` | 一覧ページ経由の集合拡張、30件の公式要項での照合、素のAI（同じメッセージ）との比較 |
 
 ## 使っている Google Cloud の製品
 - 実行: **Cloud Run**（`Dockerfile`、最大1インスタンス、専用サービスアカウント）
