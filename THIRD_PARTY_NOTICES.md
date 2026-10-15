@@ -33,7 +33,7 @@
 - 画面のアイコンは、Material Icons（© Google、Apache-2.0）の図形を、SVG としてコードに埋め込んで使用
 - 画面の設計は、Material Design 3（Google）の考え方に沿って、独自に実装した（Material Design のソースコードは使用していない）
 
-- アーキテクチャ図の Cloud Run・Vertex AI のアイコンは、Google Cloud のプロダクト アイコン（公式ライブラリ https://cloud.google.com/icons の `core-products-icons.zip`、© Google）。図の作成のために、同ライブラリの案内に従って使用（`docs/submission/icons/`）
+- アーキテクチャ図のアイコンは、Google Cloud のプロダクト アイコン（公式ライブラリ https://cloud.google.com/icons、© Google）。Cloud Run・Vertex AI は `core-products-icons.zip`、Firestore（データベース）・Secret Manager（セキュリティ）は、製品固有のアイコンが無いため `category-icons.zip` のカテゴリのアイコンを使用。図の作成のために、同ライブラリの案内に従って使用（`docs/submission/icons/`）
 
 ## 外部のデータ
 - 奨学金の情報は、各団体の公式ページおよび筑波大学の公開一覧から、robots.txt を守って取得した公開情報
