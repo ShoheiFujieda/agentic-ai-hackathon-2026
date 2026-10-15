@@ -219,32 +219,42 @@ def _who(profile: Profile) -> str:
 
 
 def _pool(profile: Profile, purpose: str, university: str, field_text: str, year: int) -> list[str]:
-    """1つの目的について、検索語（質問文）の候補を、優先度の高い順に作る。"""
+    """1つの目的について、検索語（質問文）の候補を、優先度の高い順に作る。
+
+    年度を「{year}年度の募集」と固定しない。秋には、春に締め切った前年度分ばかりが出て、
+    いま応募できるもの（次年度採用・締切がこれから）が出にくいため（10/15 の比較実験で確認）。
+    「給付型」「民間財団」への絞りは、先頭の数本だけにして、公的・自治体・大学のものも拾う。
+    """
     who = _who(profile)
     words = PURPOSE_WORDS[purpose]
     home, res, guard = profile.home_prefecture, profile.residence, profile.guardian_residence
+    now = f"いま応募できる（募集中、または{year + 1}年度採用の募集）"
     if purpose == "学業・生活費":
         subject = f"{field_text}を学ぶ" if field_text else ""
         qs = [
-            f"{subject}{who}が応募できる、民間財団・企業の給付型奨学金（{year}年度の募集）",
-            f"{home}出身の{who}が応募できる奨学金（財団・企業・自治体の給付型、{year}年度）",
-            f"{res}に住む{who}向けの民間・自治体の給付型奨学金（{year}年度の募集）",
-            f"保護者が{guard}に住んでいる{who}向けの給付型奨学金（{year}年度）",
+            f"{subject}{who}が{now}奨学金",
+            f"{who}向け {year + 1}年度採用の奨学金 募集開始 財団・企業・自治体",
+            f"{home}出身の{who}が{now}奨学金（財団・企業・自治体）",
+            f"{res}に住む{who}が{now}自治体・公的な奨学金と、民間の給付型奨学金",
         ]
         if university:
-            qs.append(f"{university}の学生が応募できる民間奨学金の募集一覧（{year}年度）")
-        qs.append(f"{who}向け 給付型奨学金 民間財団 募集中の一覧（{year}年度）")
+            qs.append(f"{university}の学生が{now}奨学金（学内・民間）")
+        qs += [
+            f"保護者が{guard}に住んでいる{who}が{now}奨学金",
+            f"{who}向け 給付型奨学金 民間財団 募集中の一覧（{year}年度・{year + 1}年度）",
+        ]
         return qs
     qs = [
-        f"{who}が応募できる{words}（{year}年度の募集）",
-        f"{home}出身、または{res}在住の{who}向けの{words}（{year}年度）",
-        f"{words} 民間財団・企業・自治体 募集中の一覧（{year}年度）",
+        f"{who}が{now}{words}",
+        f"{who}向け {year + 1}年度採用の{words} 募集開始",
+        f"{home}出身、または{res}在住の{who}が{now}{words}",
+        f"{words} 民間財団・企業・自治体 募集中の一覧（{year}年度・{year + 1}年度）",
     ]
     if university:
-        qs.append(f"{university}の学生向けの{words}の募集一覧（{year}年度）")
+        qs.append(f"{university}の学生向けの{words}の募集一覧（募集中）")
     qs += [
-        f"{who}向けの{words} 返済不要・給付型（{year}年度）",
-        f"保護者が{guard}に住んでいる{who}向けの{words}（{year}年度）",
+        f"{who}向けの{words} 返済不要・給付型（募集中）",
+        f"保護者が{guard}に住んでいる{who}向けの{words}（募集中）",
     ]
     return qs
 

@@ -347,9 +347,13 @@ def test_再検索では見つからなかった候補も待たずに未確認�
 
 
 # ---------- 立場と目的の検索語（10/15） ----------
-def test_目的が学業だけなら従来どおりの検索語():
+def test_目的が学業だけなら学業の検索語_年度を固定せず今応募できるものを探す():
     qs = websearch.build_queries(ME, "筑波大学", "理工学群", 2026)
-    assert len(qs) == 6 and "理工学群を学ぶ大学3年生" in qs[0]
+    assert len(qs) >= 6 and "理工学群を学ぶ大学3年生" in qs[0]
+    assert "2027年度採用" in qs[0] and all(
+        "給付型" not in q for q in qs[:3]
+    )  # 秋は次年度採用・募集中を探す。給付型に絞らない
+    assert not any("2026年度の募集" in q for q in qs)
 
 
 def test_留学が目的なら留学の検索語を先に使う():

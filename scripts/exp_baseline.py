@@ -92,12 +92,15 @@ PROFILES = {
 STATUSES = ("応募できる", "要確認", "募集終了", "対象外", "目的が違う", "未確認の候補")
 
 
+def ask_message(who: str) -> str:
+    """利用者がエージェントに送るのと同じ内容のメッセージ（対象者の説明 ＋ 依頼）。"""
+    return who + "\n応募できる奨学金・助成金を、漏れなく教えてください。"
+
+
 def baseline_candidates(who: str) -> list[dict]:
-    """普通のAI検索: 1回だけ聞いて、出てきた候補を受け取る。"""
-    res = websearch._grounded(
-        f"次の人が応募できる奨学金・助成金を、{TODAY.year}年度の募集を中心に、10件程度、検索して教えてください。\n対象者: {who}"
-        + websearch.DISCOVER_FORMAT
-    )
+    """素のAI: エージェントと同じメッセージを、Gemini＋Google検索に1回だけ渡す（検索語の設計・一覧展開・照合は無し）。
+    回答を表に読み取るための出力形式の指定だけを足す。"""
+    res = websearch._grounded(ask_message(who) + websearch.DISCOVER_FORMAT)
     return websearch._items(res["text"])
 
 
@@ -114,7 +117,7 @@ def run(name: str) -> dict:
     t0 = time.time()
     print(f"== {name}: {spec['label']}", flush=True)
 
-    # A. 普通のAI検索 → 公式ページで照合
+    # A. 素のAI（同じメッセージ）→ その回答を、公式ページで照合して正誤を測る（評価用）
     cands = baseline_candidates(spec["who"])
     merged = websearch.merge([cands])
     chosen = list(merged.items())[:MAX_BASELINE]
@@ -122,7 +125,7 @@ def run(name: str) -> dict:
         checked = list(pool.map(lambda kv: websearch.check_candidate(kv[0], kv[1], profile, TODAY), chosen))
     a_counts = count(checked)
     a_valid = {websearch.core_name(r["organization"]) for r in checked if r["status"] in (ELIGIBLE, NEEDS_CHECK)}
-    print(f"   A 普通のAI検索: 候補 {len(merged)} 件（検証 {len(chosen)} 件）→ {a_counts}", flush=True)
+    print(f"   A 素のAI: 候補 {len(merged)} 件（検証 {len(chosen)} 件）→ {a_counts}", flush=True)
 
     # B. 本エージェント
     res = websearch.search(profile, spec["university"], spec["field"], TODAY)

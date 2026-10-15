@@ -4,17 +4,17 @@
     "college": {
       "profile": "筑波大学・理工学群・大学3年（学業・生活費）",
       "baseline": {
-        "candidates": 9,
-        "checked": 9,
+        "candidates": 12,
+        "checked": 12,
         "by_status": {
           "応募できる": 1,
-          "要確認": 2,
+          "要確認": 3,
           "募集終了": 3,
-          "対象外": 1,
+          "対象外": 3,
           "目的が違う": 0,
           "未確認の候補": 2
         },
-        "applicable_or_check": 3,
+        "applicable_or_check": 4,
         "items": [
           {
             "name": "給付奨学金（高等教育の修学支援新制度）",
@@ -27,13 +27,105 @@
             ]
           },
           {
-            "name": "「がんばれ！日本の大学生」応援給付金",
+            "name": "筑波大学学生奨学金「つくばスカラシップ」",
+            "organization": "国立大学法人筑波大学",
+            "status": "要確認",
+            "deadline": null,
+            "official_url": "https://school.js88.com/shogakukin/detail/st10si2004700",
+            "reasons": [
+              "学年: 条件に合っています",
+              "大学経由の応募です。指定校かどうかと学内締切を学生課に確認してください"
+            ]
+          },
+          {
+            "name": "がんばれ日本の大学生 応援給付金",
             "organization": "公益財団法人キーエンス財団",
             "status": "募集終了",
             "deadline": "2026-04-15",
             "official_url": "https://www.keyence-foundation.or.jp/scholarship02/application/requirements/",
             "reasons": [
               "締切（2026-04-15）を過ぎています"
+            ]
+          },
+          {
+            "name": "大学生奨学金",
+            "organization": "公益財団法人似鳥国際奨学財団",
+            "status": "募集終了",
+            "deadline": "2026-04-20",
+            "official_url": "https://www.nitori-shougakuzaidan.com/wp-content/themes/shougakuzidan/pdf/application/2026-japanese.pdf",
+            "reasons": [
+              "締切（2026-04-20）を過ぎています"
+            ]
+          },
+          {
+            "name": "佐々木泰樹育英会奨学金",
+            "organization": "公益財団法人佐々木泰樹育英会",
+            "status": "未確認の候補",
+            "deadline": null,
+            "official_url": "",
+            "reasons": [
+              "運営団体の公式ページで募集要項を確認できませんでした。団体のサイトを直接確認してください"
+            ]
+          },
+          {
+            "name": "タクト奨学金",
+            "organization": "公益財団法人公益推進協会",
+            "status": "要確認",
+            "deadline": "2026-12-23",
+            "official_url": "https://kosuikyo.com/%E5%A5%A8%E5%AD%A6%E9%87%91",
+            "reasons": [
+              "あなたに当てはまるか確認してください: 税理士等資格取得に専念"
+            ]
+          },
+          {
+            "name": "首藤奨学金",
+            "organization": "公益財団法人首藤奨学財団",
+            "status": "対象外",
+            "deadline": "2026-11-30",
+            "official_url": "https://www.shuto-zaidan.or.jp/news/4107/",
+            "reasons": [
+              "地域の条件に合いません"
+            ]
+          },
+          {
+            "name": "岩佐教育文化財団奨学金",
+            "organization": "公益財団法人岩佐教育文化財団",
+            "status": "応募できる",
+            "deadline": "2026-11-06",
+            "official_url": "https://www.iwasazaidan.or.jp/scholarship/",
+            "reasons": [
+              "学年: 条件に合っています",
+              "その他の条件: 経済的に学費の支弁が困難、学業に励む意思があり将来の夢を持つ優秀者"
+            ]
+          },
+          {
+            "name": "吉川徹財団奨学金",
+            "organization": "公益財団法人吉川徹財団",
+            "status": "未確認の候補",
+            "deadline": null,
+            "official_url": "",
+            "reasons": [
+              "運営団体の公式ページで募集要項を確認できませんでした。団体のサイトを直接確認してください"
+            ]
+          },
+          {
+            "name": "MIRAIASU奨学金",
+            "organization": "一般財団法人MIRAIASU育英財団",
+            "status": "対象外",
+            "deadline": null,
+            "official_url": "https://www.meijigakuin.ac.jp/assets/campuslife/scholarship_information/y_361010_2026.pdf",
+            "reasons": [
+              "対象の分野（経済学部）に含まれません"
+            ]
+          },
+          {
+            "name": "TCS奨学会奨学金",
+            "organization": "一般財団法人TCS奨学会",
+            "status": "要確認",
+            "deadline": null,
+            "official_url": "https://tcs-foundation.or.jp/",
+            "reasons": [
+              "確認できなかった条件: 締切、対象学年、地域条件、学部・分野"
             ]
           },
           {
@@ -45,31 +137,98 @@
             "reasons": [
               "大学の学生は対象外です"
             ]
+          }
+        ]
+      },
+      "agent": {
+        "by_status": {
+          "応募できる": 1,
+          "要確認": 4,
+          "募集終了": 7,
+          "目的が違う": 2,
+          "未確認の候補": 4,
+          "対象外": 4
+        },
+        "applicable_or_check": 5,
+        "stats": {
+          "queries": 6,
+          "hubs_read": 0,
+          "candidates": 23,
+          "verified": 18,
+          "from_cache": 11,
+          "discover_seconds": 9.5,
+          "discover_failed": 0,
+          "seconds": 85.0,
+          "truncated": false
+        },
+        "items": [
+          {
+            "name": "岩佐教育文化財団奨学金",
+            "organization": "公益財団法人岩佐教育文化財団",
+            "status": "応募できる",
+            "deadline": "2026-11-06",
+            "official_url": "https://www.iwasazaidan.or.jp/scholarship/",
+            "reasons": [
+              "学年: 条件に合っています",
+              "その他の条件: 経済的に学費の支弁が困難、学業に励む意思があり将来の夢を持つ優秀者"
+            ]
           },
           {
-            "name": "筑波大学学生奨学金「つくばスカラシップ」学業成績優秀者支援奨学金",
+            "name": "令和9年度大学院・大学奨学生",
+            "organization": "公益財団法人林レオロジー記念財団",
+            "status": "要確認",
+            "deadline": "2026-10-23",
+            "official_url": "https://www.hayashi-rheology.or.jp/recruitment/entrance/college.html",
+            "reasons": [
+              "学年: 条件に合っています",
+              "分野: 条件に合っています",
+              "その他の条件: 品行方正で学習意欲が高いこと、学業成績が一定水準以上であること、9月進学・進級者は除く、大学学部毎に応募者1名程度、大学関係者の推薦が必要",
+              "大学経由の応募です。指定校かどうかと学内締切を学生課に確認してください"
+            ]
+          },
+          {
+            "name": "タクト奨学金",
+            "organization": "公益財団法人公益推進協会",
+            "status": "要確認",
+            "deadline": "2026-12-23",
+            "official_url": "https://kosuikyo.com/%E5%A5%A8%E5%AD%A6%E9%87%91",
+            "reasons": [
+              "あなたに当てはまるか確認してください: 税理士等資格取得に専念"
+            ]
+          },
+          {
+            "name": "TCS奨学会奨学金",
+            "organization": "公益財団法人TCS奨学会",
+            "status": "要確認",
+            "deadline": null,
+            "official_url": "https://tcs-foundation.or.jp/",
+            "reasons": [
+              "確認できなかった条件: 締切、対象学年、地域条件、学部・分野"
+            ]
+          },
+          {
+            "name": "つくばスカラシップ（緊急支援）",
             "organization": "国立大学法人筑波大学",
             "status": "要確認",
             "deadline": null,
-            "official_url": "https://school.js88.com/shogakukin/detail/st8si2004700",
+            "official_url": "https://school.js88.com/shogakukin/detail/st10si2004700",
             "reasons": [
               "学年: 条件に合っています",
-              "その他の条件: 2年次秋学期までの学業成績が特に優秀",
-              "確認できなかった条件: 締切、地域条件"
+              "あなたに当てはまるか確認してください: 家計支持者の死亡や失職による家計急変"
             ]
           },
           {
-            "name": "戸部眞紀財団 奨学金",
-            "organization": "公益財団法人戸部眞紀財団",
-            "status": "募集終了",
-            "deadline": "2026-05-12",
-            "official_url": "https://tobe-maki.or.jp/scholarship/",
+            "name": "佐々木泰樹育英会奨学金",
+            "organization": "公益財団法人佐々木泰樹育英会",
+            "status": "未確認の候補",
+            "deadline": null,
+            "official_url": "",
             "reasons": [
-              "締切（2026-05-12）を過ぎています"
+              "運営団体の公式ページで募集要項を確認できませんでした。団体のサイトを直接確認してください"
             ]
           },
           {
-            "name": "MIRAIASU育英財団 奨学金（理工系学部枠）",
+            "name": "MIRAIASU育英財団奨学金",
             "organization": "一般財団法人MIRAIASU育英財団",
             "status": "未確認の候補",
             "deadline": null,
@@ -79,8 +238,8 @@
             ]
           },
           {
-            "name": "吉川徹財団 給付型奨学金",
-            "organization": "公益財団法人吉川徹財団",
+            "name": "一般社団法人ことば・みらい・スカラシップ",
+            "organization": "一般社団法人ことば・みらい・スカラシップ",
             "status": "未確認の候補",
             "deadline": null,
             "official_url": "",
@@ -89,53 +248,8 @@
             ]
           },
           {
-            "name": "TCS奨学会 奨学金",
-            "organization": "一般財団法人TCS奨学会",
-            "status": "要確認",
-            "deadline": null,
-            "official_url": "https://tcs-foundation.or.jp/",
-            "reasons": [
-              "確認できなかった条件: 締切、対象学年、地域条件、学部・分野"
-            ]
-          },
-          {
-            "name": "岩佐教育文化財団 奨学生",
-            "organization": "公益財団法人岩佐教育文化財団",
-            "status": "応募できる",
-            "deadline": "2026-11-06",
-            "official_url": "https://www.iwasazaidan.or.jp/scholarship/",
-            "reasons": [
-              "学年: 条件に合っています",
-              "その他の条件: 経済的に学費の支弁が困難、学業に励む意思があり将来の夢を持つ優秀者"
-            ]
-          }
-        ]
-      },
-      "agent": {
-        "by_status": {
-          "応募できる": 0,
-          "要確認": 0,
-          "募集終了": 13,
-          "目的が違う": 0,
-          "未確認の候補": 1,
-          "対象外": 0
-        },
-        "applicable_or_check": 0,
-        "stats": {
-          "queries": 6,
-          "hubs_read": 0,
-          "candidates": 14,
-          "verified": 13,
-          "from_cache": 13,
-          "discover_seconds": 0.2,
-          "discover_failed": 0,
-          "seconds": 33.7,
-          "truncated": false
-        },
-        "items": [
-          {
-            "name": "給付型奨学金（大学生）",
-            "organization": "公益財団法人似鳥国際奨学財団",
+            "name": "日本人大学院生奨学金",
+            "organization": "公益財団法人本庄国際奨学財団",
             "status": "未確認の候補",
             "deadline": null,
             "official_url": "",
@@ -144,163 +258,37 @@
             ]
           },
           {
-            "name": "tetote教育奨学金",
-            "organization": "公益財団法人tetote教育財団",
+            "name": "皇太子明仁親王奨学金（海外留学）",
+            "organization": "皇太子明仁親王奨学金委員会",
             "status": "募集終了",
-            "deadline": "2026-03-15",
-            "official_url": "https://tetote-kyoiku.com/scholarship/",
+            "deadline": "2009-09-14",
+            "official_url": "https://www.keidanren.or.jp/japanese/journal/times/2009/0827/02.html",
             "reasons": [
-              "締切（2026-03-15）を過ぎています"
+              "締切（2009-09-14）を過ぎています"
             ]
           },
           {
-            "name": "奨学生（学部2年生・3年生対象）",
-            "organization": "公益財団法人野島財団",
+            "name": "高久国際奨学財団奨学金",
+            "organization": "一般財団法人高久国際奨学財団",
             "status": "募集終了",
-            "deadline": "2026-03-31",
-            "official_url": "https://foundation.nojima.co.jp/scholarship/requirements",
+            "deadline": "2025-11-30",
+            "official_url": "http://takaku-foundation.com/bosyu/gaikokujin_2025.html",
             "reasons": [
-              "締切（2026-03-31）を過ぎています"
+              "締切（2025-11-30）を過ぎています"
             ]
           },
           {
-            "name": "「がんばれ！日本の大学生」応援給付金",
-            "organization": "公益財団法人キーエンス財団",
+            "name": "渡邉利三国際奨学金",
+            "organization": "公益財団法人パスウェイズ・ジャパン",
             "status": "募集終了",
-            "deadline": "2026-04-15",
-            "official_url": "https://www.keyence-foundation.or.jp/scholarship02/application/requirements/",
+            "deadline": "2026-01-05",
+            "official_url": "https://pathways-j.org/twis_2026",
             "reasons": [
-              "締切（2026-04-15）を過ぎています"
+              "締切（2026-01-05）を過ぎています"
             ]
           },
           {
-            "name": "日本証券奨学財団奨学金",
-            "organization": "公益財団法人日本証券奨学財団",
-            "status": "募集終了",
-            "deadline": "2026-04-22",
-            "official_url": "https://jssf.or.jp/scholarship.html",
-            "reasons": [
-              "締切（2026-04-22）を過ぎています"
-            ]
-          },
-          {
-            "name": "「埼玉発世界行き」奨学金（地域活躍コース）",
-            "organization": "公益財団法人埼玉県国際交流協会",
-            "status": "募集終了",
-            "deadline": "2026-04-27",
-            "official_url": "https://www.ggsaitama.jp/for-japanese/studying-abroad/",
-            "reasons": [
-              "締切（2026-04-27）を過ぎています"
-            ]
-          },
-          {
-            "name": "学奨財団奨学金",
-            "organization": "一般財団法人大学生奨学財団",
-            "status": "募集終了",
-            "deadline": "2026-04-30",
-            "official_url": "https://gakusho.or.jp/",
-            "reasons": [
-              "締切（2026-04-30）を過ぎています"
-            ]
-          },
-          {
-            "name": "公益財団法人高千穂交易奨学財団 奨学金",
-            "organization": "公益財団法人高千穂交易奨学財団",
-            "status": "募集終了",
-            "deadline": "2026-05-06",
-            "official_url": "https://www.tksf.or.jp/scholarship/",
-            "reasons": [
-              "締切（2026-05-06）を過ぎています"
-            ]
-          },
-          {
-            "name": "一般財団法人岡部亨和奨学財団奨学生",
-            "organization": "一般財団法人岡部亨和奨学財団",
-            "status": "募集終了",
-            "deadline": "2026-05-07",
-            "official_url": "https://www.okabe-kyowa.or.jp/scholarship.html",
-            "reasons": [
-              "締切（2026-05-07）を過ぎています"
-            ]
-          },
-          {
-            "name": "奨学生（学部生・大学院生対象）",
-            "organization": "公益財団法人戸部眞紀財団",
-            "status": "募集終了",
-            "deadline": "2026-05-12",
-            "official_url": "https://tobe-maki.or.jp/scholarship/",
-            "reasons": [
-              "締切（2026-05-12）を過ぎています"
-            ]
-          },
-          {
-            "name": "佐々木洋寧奨学財団奨学金",
-            "organization": "公益財団法人佐々木洋寧奨学財団",
-            "status": "募集終了",
-            "deadline": "2026-05-15",
-            "official_url": "https://h-sasaki.org/scholorship/",
-            "reasons": [
-              "締切（2026-05-15）を過ぎています"
-            ]
-          },
-          {
-            "name": "トヨタ女性技術者育成基金 奨学金",
-            "organization": "一般財団法人トヨタ女性技術者育成基金",
-            "status": "募集終了",
-            "deadline": "2026-05-24",
-            "official_url": "https://www.toyota-rikeijosei.or.jp/training/index.html",
-            "reasons": [
-              "締切（2026-05-24）を過ぎています"
-            ]
-          },
-          {
-            "name": "原・フルタイムシステム工学育英奨学金",
-            "organization": "公益財団法人原・フルタイムシステム工学育英財団",
-            "status": "募集終了",
-            "deadline": "2026-06-10",
-            "official_url": "https://hara-kagaku.org/scholarship.html",
-            "reasons": [
-              "締切（2026-06-10）を過ぎています"
-            ]
-          },
-          {
-            "name": "JPC奨学財団奨学金",
-            "organization": "公益財団法人JPC奨学財団",
-            "status": "募集終了",
-            "deadline": "2026-06-15",
-            "official_url": "https://www.netjpc.com/company/scholarship/summary.html",
-            "reasons": [
-              "締切（2026-06-15）を過ぎています"
-            ]
-          }
-        ],
-        "candidates_total": 14,
-        "listed": 14
-      },
-      "overlap": {
-        "both": 0,
-        "only_agent": 0,
-        "only_baseline": 3
-      },
-      "minutes": 1.8
-    },
-    "highschool": {
-      "profile": "高校3年生（学業・生活費）",
-      "baseline": {
-        "candidates": 10,
-        "checked": 10,
-        "by_status": {
-          "応募できる": 0,
-          "要確認": 4,
-          "募集終了": 5,
-          "対象外": 0,
-          "目的が違う": 0,
-          "未確認の候補": 1
-        },
-        "applicable_or_check": 4,
-        "items": [
-          {
-            "name": "貸与奨学金（第一種奨学金・第二種奨学金）",
+            "name": "給付奨学金（在学採用・二次採用）",
             "organization": "独立行政法人日本学生支援機構",
             "status": "募集終了",
             "deadline": "2026-02-27",
@@ -310,32 +298,7 @@
             ]
           },
           {
-            "name": "本多静六博士奨学金",
-            "organization": "埼玉県",
-            "status": "要確認",
-            "deadline": "2026-10-22",
-            "official_url": "https://www.pref.saitama.lg.jp/f2204/j-s/s-kyuhukin.html",
-            "reasons": [
-              "学年: 条件に合っています",
-              "地域: 条件に合っています",
-              "目的: 条件に合っています",
-              "あなたに当てはまるか確認してください: 児童養護施設入所者等で措置費支給時は対象外"
-            ]
-          },
-          {
-            "name": "生活福祉資金（教育支援資金）",
-            "organization": "社会福祉法人埼玉県社会福祉協議会",
-            "status": "要確認",
-            "deadline": null,
-            "official_url": "https://www.fukushi-saitama.or.jp/site/problem_36.html",
-            "reasons": [
-              "目的: 条件に合っています",
-              "その他の条件: 生活保護基準の概ね1.7倍以下の低所得世帯、生計中心者が連帯借受人となること、貸付後に領収書等を提出すること",
-              "確認できなかった条件: 締切、対象学年、地域条件"
-            ]
-          },
-          {
-            "name": "給付型奨学金",
+            "name": "キーエンス財団【大学院（修士課程）】奨学生",
             "organization": "公益財団法人キーエンス財団",
             "status": "募集終了",
             "deadline": "2026-04-15",
@@ -345,37 +308,137 @@
             ]
           },
           {
-            "name": "レオパレス21奨学制度",
-            "organization": "株式会社レオパレス21",
+            "name": "伊藤国際教育交流財団奨学金（2027年度）",
+            "organization": "公益財団法人伊藤国際教育交流財団",
             "status": "募集終了",
-            "deadline": "2026-08-31",
-            "official_url": "https://www.leopalace21.co.jp/scholarship/index.html",
+            "deadline": "2026-08-26",
+            "official_url": "https://www.itofound.or.jp/%E6%97%A5%E6%9C%AC%E4%BA%BA%E5%A5%A8%E5%AD%A6%E9%87%91%E5%88%B6%E5%BA%A6/3-%E5%8B%9F%E9%9B%86%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6%E6%97%A5%E6%9C%AC%E4%BA%BA",
             "reasons": [
-              "締切（2026-08-31）を過ぎています"
+              "締切（2026-08-26）を過ぎています"
             ]
           },
           {
-            "name": "長島記念財団育英奨学金",
-            "organization": "公益財団法人長島記念財団",
-            "status": "未確認の候補",
+            "name": "奨学金貸与事業",
+            "organization": "公益財団法人日本教育公務員弘済会埼玉支部",
+            "status": "募集終了",
+            "deadline": "2026-09-30",
+            "official_url": "https://www.kyoko.or.jp/business/study/",
+            "reasons": [
+              "締切（2026-09-30）を過ぎています"
+            ]
+          },
+          {
+            "name": "エプソン国際奨学財団奨学金（海外留学）",
+            "organization": "公益財団法人エプソン国際奨学財団",
+            "status": "目的が違う",
             "deadline": null,
-            "official_url": "",
+            "official_url": "https://www.epson-kokusaisyogaku.jp/cont1/main.html",
             "reasons": [
-              "運営団体の公式ページで募集要項を確認できませんでした。団体のサイトを直接確認してください"
+              "使途（留学）が、あなたの目的（学業・生活費）と違います"
             ]
           },
           {
-            "name": "似鳥国際奨学財団奨学金（大学生対象）",
-            "organization": "公益財団法人似鳥国際奨学財団",
+            "name": "食生活研究会海外留学奨学金",
+            "organization": "一般財団法人食生活研究会",
+            "status": "目的が違う",
+            "deadline": "2026-11-13",
+            "official_url": "https://www.z-ssk.org/ab_study/guideline.html",
+            "reasons": [
+              "使途（留学）が、あなたの目的（学業・生活費）と違います"
+            ]
+          }
+        ],
+        "candidates_total": 23,
+        "listed": 18
+      },
+      "overlap": {
+        "both": 4,
+        "only_agent": 1,
+        "only_baseline": 0
+      },
+      "minutes": 2.3
+    },
+    "highschool": {
+      "profile": "高校3年生（学業・生活費）",
+      "baseline": {
+        "candidates": 8,
+        "checked": 8,
+        "by_status": {
+          "応募できる": 0,
+          "要確認": 4,
+          "募集終了": 4,
+          "対象外": 0,
+          "目的が違う": 0,
+          "未確認の候補": 0
+        },
+        "applicable_or_check": 4,
+        "items": [
+          {
+            "name": "給付奨学金（高等教育の修学支援新制度）",
+            "organization": "独立行政法人日本学生支援機構",
             "status": "募集終了",
-            "deadline": "2026-04-20",
-            "official_url": "https://www.nitori-shougakuzaidan.com/wp-content/themes/shougakuzidan/pdf/application/2026-japanese.pdf",
+            "deadline": "2026-02-27",
+            "official_url": "https://ryugaku-nz.com/tobitate22026/",
             "reasons": [
-              "締切（2026-04-20）を過ぎています"
+              "締切（2026-02-27）を過ぎています"
             ]
           },
           {
-            "name": "大学等奨学生（予約採用）",
+            "name": "埼玉県高等学校等奨学金",
+            "organization": "埼玉県教育委員会",
+            "status": "要確認",
+            "deadline": "2026-10-22",
+            "official_url": "https://www.pref.saitama.lg.jp/f2204/j-s/s-kyuhukin.html",
+            "reasons": [
+              "学年: 条件に合っています",
+              "地域: 条件に合っています",
+              "目的: 条件に合っています",
+              "あなたに当てはまるか確認してください: 児童養護施設入所措置費支給者は対象外"
+            ]
+          },
+          {
+            "name": "生活福祉資金貸付制度（教育支援資金）",
+            "organization": "社会福祉法人埼玉県社会福祉協議会",
+            "status": "要確認",
+            "deadline": null,
+            "official_url": "https://www.koshigaya-syakyo.com/service-info/sv-kyoikushien/",
+            "reasons": [
+              "その他の条件: 世帯収入が生活保護基準の概ね1.7倍以下、就学本人が申込者、生計中心者が連帯借受人、貸付後に資金使途報告書を提出",
+              "確認できなかった条件: 締切、対象学年、地域条件"
+            ]
+          },
+          {
+            "name": "大学給付奨学金（予約型）",
+            "organization": "公益財団法人日本教育公務員弘済会埼玉支部",
+            "status": "募集終了",
+            "deadline": "2026-09-30",
+            "official_url": "https://www.kyoko.or.jp/business/study/",
+            "reasons": [
+              "締切（2026-09-30）を過ぎています"
+            ]
+          },
+          {
+            "name": "武蔵奨学金",
+            "organization": "公益財団法人武蔵奨学会",
+            "status": "募集終了",
+            "deadline": "2026-09-18",
+            "official_url": "https://musashi-shougakukai.or.jp/news/detail.php?id=24669",
+            "reasons": [
+              "締切（2026-09-18）を過ぎています"
+            ]
+          },
+          {
+            "name": "あしなが大学奨学金",
+            "organization": "一般財団法人あしなが育英会",
+            "status": "募集終了",
+            "deadline": "2026-09-20",
+            "official_url": "https://www.ashinaga.org/scholarship/for-applicants/",
+            "reasons": [
+              "締切（2026-09-20）を過ぎています"
+            ]
+          },
+          {
+            "name": "交通遺児育英会奨学金",
             "organization": "公益財団法人交通遺児育英会",
             "status": "要確認",
             "deadline": null,
@@ -386,53 +449,55 @@
             ]
           },
           {
-            "name": "大学・短大奨学金（予約採用）",
-            "organization": "一般財団法人あしなが育英会",
-            "status": "募集終了",
-            "deadline": "2026-09-20",
-            "official_url": "https://www.ashinaga.org/scholarship/for-applicants/",
-            "reasons": [
-              "締切（2026-09-20）を過ぎています"
-            ]
-          },
-          {
-            "name": "ジャパン未来スカラーシップ・プログラム奨学金",
-            "organization": "一般財団法人教育支援グローバル基金",
+            "name": "母子父子寡婦福祉資金（修学資金・就学支度資金）",
+            "organization": "埼玉県",
             "status": "要確認",
-            "deadline": null,
-            "official_url": "https://beyond-tomorrow.org/application/",
+            "deadline": "2026-10-22",
+            "official_url": "https://www.pref.saitama.lg.jp/f2204/j-s/s-kyuhukin.html",
             "reasons": [
               "学年: 条件に合っています",
+              "地域: 条件に合っています",
               "目的: 条件に合っています",
-              "あなたに当てはまるか確認してください: 死別離別、養護施設・里親家庭・生活保護等"
+              "あなたに当てはまるか確認してください: 児童養護施設入所者等で措置費支給時は対象外"
             ]
           }
         ]
       },
       "agent": {
         "by_status": {
-          "応募できる": 0,
-          "要確認": 3,
+          "応募できる": 1,
+          "要確認": 5,
           "募集終了": 10,
           "目的が違う": 0,
           "未確認の候補": 0,
-          "対象外": 1
+          "対象外": 3
         },
-        "applicable_or_check": 3,
+        "applicable_or_check": 6,
         "stats": {
-          "queries": 5,
+          "queries": 6,
           "hubs_read": 0,
-          "candidates": 16,
-          "verified": 14,
-          "from_cache": 16,
-          "discover_seconds": 0.2,
+          "candidates": 20,
+          "verified": 19,
+          "from_cache": 10,
+          "discover_seconds": 5.2,
           "discover_failed": 0,
-          "seconds": 1.1,
+          "seconds": 80.9,
           "truncated": false
         },
         "items": [
           {
-            "name": "埼玉県国公立高等学校等奨学のための給付金制度",
+            "name": "コカ・コーラ奨学生",
+            "organization": "公益財団法人コカ･コーラ教育・環境財団",
+            "status": "応募できる",
+            "deadline": "2026-10-31",
+            "official_url": "https://prtimes.jp/main/html/rd/p/000000028.000044194.html",
+            "reasons": [
+              "学年: 条件に合っています",
+              "その他の条件: 人物・学力優れ、経済的理由で進学困難、環境など持続可能性に関心・小論文提出"
+            ]
+          },
+          {
+            "name": "埼玉県国公立高等学校等奨学のための給付金",
             "organization": "埼玉県",
             "status": "要確認",
             "deadline": "2026-10-22",
@@ -445,28 +510,58 @@
             ]
           },
           {
-            "name": "さいたま市大学等進学「夢」支援（給付型奨学金）",
-            "organization": "さいたま市",
+            "name": "理工系大学への進学応援奨学金",
+            "organization": "公益財団法人ガクシー財団",
             "status": "要確認",
-            "deadline": "2026-10-30",
-            "official_url": "https://www.city.saitama.lg.jp/003/002/003/p114651.html",
+            "deadline": "2026-12-11",
+            "official_url": "https://www.torikyo.ed.jp/yonagoe-h/plugin/blogs/show/41/126/5222",
             "reasons": [
               "学年: 条件に合っています",
-              "目的: 条件に合っています",
-              "その他の条件: 学力評定3.0以上、熱意や志を記載した作文を提出",
-              "確認できなかった条件: 地域条件"
+              "その他の条件: 直近の評定平均4.0以上",
+              "確認できなかった条件: 地域条件、学部・分野"
             ]
           },
           {
-            "name": "埼玉県私立高等学校等奨学のための給付金",
-            "organization": "埼玉県総務部学事課",
+            "name": "高校生等の奨学給付事業（後期募集）",
+            "organization": "公益財団法人日本教育公務員弘済会",
             "status": "要確認",
-            "deadline": "2026-11-06",
-            "official_url": "https://www.pref.saitama.lg.jp/a0204/kyuuhukin/ippansenkoka.html",
+            "deadline": "2027-02-03",
+            "official_url": "https://urawakita-h.spec.ed.jp/wysiwyg/file/download/1/8418",
             "reasons": [
               "学年: 条件に合っています",
-              "その他の条件: 修学支援事業費補助金の受給資格保有",
-              "確認できなかった条件: 地域条件"
+              "あなたに当てはまるか確認してください: 保護者死亡・離婚等または病気等で就労難"
+            ]
+          },
+          {
+            "name": "交通遺児育英会奨学金（予約応募）",
+            "organization": "公益財団法人交通遺児育英会",
+            "status": "要確認",
+            "deadline": null,
+            "official_url": "https://www.kotsuiji.com/info-scholarship",
+            "reasons": [
+              "学年: 条件に合っています",
+              "あなたに当てはまるか確認してください: 保護者が交通事故で死亡または重度後遺障害"
+            ]
+          },
+          {
+            "name": "さつき会奨学金",
+            "organization": "さつき会",
+            "status": "要確認",
+            "deadline": null,
+            "official_url": "https://prtimes.jp/main/html/rd/p/000000008.000153854.html",
+            "reasons": [
+              "学年: 条件に合っています",
+              "あなたに当てはまるか確認してください: 女子学生限定、東京大学を受験する者"
+            ]
+          },
+          {
+            "name": "日本財団夢の奨学金（第12期・2027年度）",
+            "organization": "公益財団法人日本財団",
+            "status": "募集終了",
+            "deadline": "2025-06-30",
+            "official_url": "https://www.nippon-foundation.or.jp/who/news/information/2025/20250522-111989.html",
+            "reasons": [
+              "締切（2025-06-30）を過ぎています"
             ]
           },
           {
@@ -480,123 +575,7 @@
             ]
           },
           {
-            "name": "給付型奨学金（高校在校生対象）",
-            "organization": "一般財団法人コープみらい社会活動財団",
-            "status": "募集終了",
-            "deadline": "2026-03-31",
-            "official_url": "https://www.coopmirai-zaidan.or.jp/scholarship/bosyu/",
-            "reasons": [
-              "締切（2026-03-31）を過ぎています"
-            ]
-          },
-          {
-            "name": "給付型奨学金（高校生対象）",
-            "organization": "公益財団法人似鳥国際奨学財団",
-            "status": "募集終了",
-            "deadline": "2026-04-20",
-            "official_url": "https://www.nitori-shougakuzaidan.com/wp-content/themes/shougakuzidan/pdf/application/2026-japanese.pdf",
-            "reasons": [
-              "締切（2026-04-20）を過ぎています"
-            ]
-          },
-          {
-            "name": "第1種奨学生（高校3年生対象）",
-            "organization": "一般財団法人東京メソニック協会",
-            "status": "募集終了",
-            "deadline": "2026-07-17",
-            "official_url": "http://www.masonicfoundation.or.jp/scholarshipsystem.html",
-            "reasons": [
-              "締切（2026-07-17）を過ぎています"
-            ]
-          },
-          {
-            "name": "給付奨学生（高等学校最高学年対象）",
-            "organization": "公益財団法人那須記念財団",
-            "status": "募集終了",
-            "deadline": "2026-08-31",
-            "official_url": "https://www.nasu.or.jp/bosyu/index.html",
-            "reasons": [
-              "締切（2026-08-31）を過ぎています"
-            ]
-          },
-          {
-            "name": "川越市大学奨学金",
-            "organization": "川越市",
-            "status": "募集終了",
-            "deadline": "2026-08-31",
-            "official_url": "https://www.city.kawagoe.saitama.jp/kosodate/kyouiku/1004595/1004612/1004616.html",
-            "reasons": [
-              "締切（2026-08-31）を過ぎています"
-            ]
-          },
-          {
-            "name": "給付奨学金",
-            "organization": "公益財団法人 武蔵奨学会",
-            "status": "募集終了",
-            "deadline": "2026-09-18",
-            "official_url": "https://musashi-shougakukai.or.jp/news/detail.php?id=24669",
-            "reasons": [
-              "締切（2026-09-18）を過ぎています"
-            ]
-          },
-          {
-            "name": "進学応援奨学金2026",
-            "organization": "認定NPO法人キッズドア",
-            "status": "募集終了",
-            "deadline": "2026-09-23",
-            "official_url": "https://hope-tokyo.jp/activities_d/%E3%80%90%E9%80%B2%E5%AD%A6%E5%BF%9C%E6%8F%B4%E5%A5%A8%E5%AD%A6%E9%87%91-2026-supported-by-%E6%97%A5%E6%9C%AC%E7%94%9F%E5%91%BD%E3%80%91%E5%8B%9F%E9%9B%86%E9%96%8B%E5%A7%8B%E3%81%AE%E3%81%8A%E7%9F%A5/",
-            "reasons": [
-              "締切（2026-09-23）を過ぎています"
-            ]
-          },
-          {
-            "name": "進学応援奨学金 supported by 日本生命",
-            "organization": "認定特定非営利活動法人キッズドア",
-            "status": "募集終了",
-            "deadline": "2026-09-23",
-            "official_url": "https://prtimes.jp/main/html/rd/p/000000130.000100140.html",
-            "reasons": [
-              "締切（2026-09-23）を過ぎています"
-            ]
-          },
-          {
-            "name": "大学給付奨学生(予約型)",
-            "organization": "公益財団法人日本教育公務員弘済会埼玉支部",
-            "status": "募集終了",
-            "deadline": "2026-09-30",
-            "official_url": "https://www.kyoko.or.jp/business/study/",
-            "reasons": [
-              "締切（2026-09-30）を過ぎています"
-            ]
-          }
-        ],
-        "candidates_total": 16,
-        "listed": 13
-      },
-      "overlap": {
-        "both": 1,
-        "only_agent": 2,
-        "only_baseline": 3
-      },
-      "minutes": 1.1
-    },
-    "abroad": {
-      "profile": "東京大学・経済学部・大学3年（留学）",
-      "baseline": {
-        "candidates": 10,
-        "checked": 10,
-        "by_status": {
-          "応募できる": 0,
-          "要確認": 5,
-          "募集終了": 5,
-          "対象外": 0,
-          "目的が違う": 0,
-          "未確認の候補": 0
-        },
-        "applicable_or_check": 5,
-        "items": [
-          {
-            "name": "官民協働海外留学支援制度～トビタテ！留学JAPAN 新・日本代表プログラム（大学生等対象）",
+            "name": "大学等奨学生採用（予約採用）",
             "organization": "独立行政法人日本学生支援機構",
             "status": "募集終了",
             "deadline": "2026-02-27",
@@ -606,8 +585,104 @@
             ]
           },
           {
+            "name": "2027年度給付型奨学生",
+            "organization": "公益財団法人キーエンス財団",
+            "status": "募集終了",
+            "deadline": "2026-04-15",
+            "official_url": "https://www.keyence-foundation.or.jp/scholarship02/application/requirements/",
+            "reasons": [
+              "締切（2026-04-15）を過ぎています"
+            ]
+          },
+          {
+            "name": "高校生向け給付型奨学金",
+            "organization": "公益財団法人似鳥国際奨学財団",
+            "status": "募集終了",
+            "deadline": "2026-04-20",
+            "official_url": "https://www.nitori-shougakuzaidan.com/wp-content/themes/shougakuzidan/pdf/application/2026-japanese.pdf",
+            "reasons": [
+              "締切（2026-04-20）を過ぎています"
+            ]
+          },
+          {
+            "name": "2027年度奨学生",
+            "organization": "公益財団法人伊藤謝恩育英財団",
+            "status": "募集終了",
+            "deadline": "2026-05-15",
+            "official_url": "https://www.ito-foundation.or.jp/system/application.html",
+            "reasons": [
+              "締切（2026-05-15）を過ぎています"
+            ]
+          },
+          {
+            "name": "2027年度Ｚ会奨学金",
+            "organization": "株式会社Ｚ会",
+            "status": "募集終了",
+            "deadline": "2026-05-31",
+            "official_url": "https://www.zkai-gr.co.jp/news/10686/",
+            "reasons": [
+              "締切（2026-05-31）を過ぎています"
+            ]
+          },
+          {
+            "name": "八十二みらい財団 給付型奨学金",
+            "organization": "公益財団法人八十二みらい財団",
+            "status": "募集終了",
+            "deadline": "2026-09-05",
+            "official_url": "https://82mirai.or.jp/news/5568.html",
+            "reasons": [
+              "締切（2026-09-05）を過ぎています"
+            ]
+          },
+          {
+            "name": "大学奨学金（予約募集）",
+            "organization": "一般財団法人あしなが育英会",
+            "status": "募集終了",
+            "deadline": "2026-09-20",
+            "official_url": "https://www.ashinaga.org/scholarship/for-applicants/",
+            "reasons": [
+              "締切（2026-09-20）を過ぎています"
+            ]
+          },
+          {
+            "name": "外国につながる学生のための奨学金かながわ",
+            "organization": "一般財団法人外国につながる学生のための奨学金かながわ",
+            "status": "募集終了",
+            "deadline": null,
+            "official_url": "https://me-net.or.jp/documents/news/scholarships-for-foreigners.pdf",
+            "reasons": [
+              "2025年度の情報です。今年度の募集は未確認です"
+            ]
+          }
+        ],
+        "candidates_total": 20,
+        "listed": 16
+      },
+      "overlap": {
+        "both": 2,
+        "only_agent": 4,
+        "only_baseline": 2
+      },
+      "minutes": 1.8
+    },
+    "abroad": {
+      "profile": "東京大学・経済学部・大学3年（留学）",
+      "baseline": {
+        "candidates": 12,
+        "checked": 12,
+        "by_status": {
+          "応募できる": 0,
+          "要確認": 6,
+          "募集終了": 5,
+          "対象外": 1,
+          "目的が違う": 0,
+          "未確認の候補": 0
+        },
+        "applicable_or_check": 6,
+        "items": [
+          {
             "name": "東京大学海外派遣奨学事業 短期・超短期海外留学等奨学金",
-            "organization": "国立大学法人東京大学",
+            "organization": "国⽴⼤学法⼈東京⼤学",
             "status": "要確認",
             "deadline": null,
             "official_url": "https://www.u-tokyo.ac.jp/adm/go-global/ja/scholarship-list-kaigaihaken_s.html",
@@ -616,6 +691,26 @@
               "目的: 条件に合っています",
               "その他の条件: 自費のみでのプログラム参加が困難な者、JASSO協定派遣が決定していない者、FLY Programの支援を受けない者、過去に本奨学事業で採択されていない者、寄附者との交流会や報告会へ参加できる者",
               "大学経由の応募です。指定校かどうかと学内締切を学生課に確認してください"
+            ]
+          },
+          {
+            "name": "トビタテ！留学JAPAN 新・日本代表プログラム（大学生等対象）",
+            "organization": "文部科学省",
+            "status": "募集終了",
+            "deadline": "2026-02-27",
+            "official_url": "https://www.ryugaku.co.jp/corporate/topics/topic_026174.html",
+            "reasons": [
+              "締切（2026-02-27）を過ぎています"
+            ]
+          },
+          {
+            "name": "海外留学支援制度（協定派遣）",
+            "organization": "独立行政法人日本学生支援機構",
+            "status": "募集終了",
+            "deadline": "2026-02-27",
+            "official_url": "https://ryugaku-nz.com/tobitate22026/",
+            "reasons": [
+              "締切（2026-02-27）を過ぎています"
             ]
           },
           {
@@ -629,17 +724,7 @@
             ]
           },
           {
-            "name": "派遣留学奨学生",
-            "organization": "公益財団法人業務スーパージャパンドリーム財団",
-            "status": "募集終了",
-            "deadline": "2026-07-31",
-            "official_url": "https://www.kobebussan.or.jp/support/study_abroad.php",
-            "reasons": [
-              "締切（2026-07-31）を過ぎています"
-            ]
-          },
-          {
-            "name": "海外留学奨学生",
+            "name": "村田海外留学奨学会奨学金",
             "organization": "公益財団法人村田海外留学奨学会",
             "status": "募集終了",
             "deadline": "2026-08-03",
@@ -649,25 +734,47 @@
             ]
           },
           {
-            "name": "TOMODACHI住友商事奨学金プログラム",
-            "organization": "公益財団法人米日カウンシル－ジャパン",
+            "name": "日本人留学生奨学金",
+            "organization": "公益財団法人平和中島財団",
+            "status": "募集終了",
+            "deadline": "2025-10-31",
+            "official_url": "http://www.hnf.jp/shogaku/youkou/2026youkou_nihon.pdf",
+            "reasons": [
+              "締切（2025-10-31）を過ぎています"
+            ]
+          },
+          {
+            "name": "TOMODACHI 住友商事奨学金プログラム",
+            "organization": "公益財団法人米日カウンシル・ジャパン",
             "status": "要確認",
             "deadline": null,
             "official_url": "https://usjapantomodachi.org/ja/2025/12/42165/",
             "reasons": [
               "学年: 条件に合っています",
               "目的: 条件に合っています",
-              "あなたに当てはまるか確認してください: 指定12大学に在籍する学部生、在籍大学の学長からの推薦を受けられる者"
+              "あなたに当てはまるか確認してください: 指定12大学に在籍する学部生、米国の大学へ1年間交換留学が内定"
             ]
           },
           {
-            "name": "海外留学支援奨学金（長期）",
-            "organization": "公益財団法人フクシマグローバル人材支援奨学財団",
-            "status": "募集終了",
-            "deadline": "2026-02-27",
-            "official_url": "https://www.fukushima-global.or.jp/overseas.html",
+            "name": "川口靜記念奨学生",
+            "organization": "一般財団法人アジア国際交流奨学財団",
+            "status": "対象外",
+            "deadline": null,
+            "official_url": "http://www.asian-foundation.org/scholarship/foreigner.php",
             "reasons": [
-              "締切（2026-02-27）を過ぎています"
+              "留学生のみが対象です"
+            ]
+          },
+          {
+            "name": "JEES・学研災グローバル人材育成奨学金",
+            "organization": "公益財団法人日本国際教育支援協会",
+            "status": "要確認",
+            "deadline": null,
+            "official_url": "https://ryugaku.jasso.go.jp/scholarship/search/data_00173.html",
+            "reasons": [
+              "学年: 条件に合っています",
+              "目的: 条件に合っています",
+              "あなたに当てはまるか確認してください: 損害保険業界に関心がある者、指定大学の長からの推薦が必要"
             ]
           },
           {
@@ -679,12 +786,24 @@
             "reasons": [
               "学年: 条件に合っています",
               "目的: 条件に合っています",
-              "あなたに当てはまるか確認してください: 派遣協定大学からの推薦、協定により対象国18ヶ国へ交換留学"
+              "あなたに当てはまるか確認してください: 指定の派遣協定大学から推薦を受けること、対象の18ヶ国へ留学すること"
+            ]
+          },
+          {
+            "name": "日本人奨学生（学部生留学対象）",
+            "organization": "公益財団法人みずほ国際交流奨学財団",
+            "status": "要確認",
+            "deadline": null,
+            "official_url": "https://mizuhokokusai.la.coocan.jp/information.html",
+            "reasons": [
+              "学年: 条件に合っています",
+              "目的: 条件に合っています",
+              "あなたに当てはまるか確認してください: 27年8〜10月に最長1年の留学開始、協定大学への交換留学が決定、留学期間は最長1年間（半年不可）、大学が財団からの推薦依頼を受けている"
             ]
           },
           {
             "name": "海外留学支援奨学金",
-            "organization": "公益財団法人Innovation of FUJI",
+            "organization": "一般財団法人Innovation of FUJI",
             "status": "要確認",
             "deadline": "2026-10-23",
             "official_url": "https://innovation-of-fuji.or.jp/study-abroad/",
@@ -692,46 +811,33 @@
               "目的: 条件に合っています",
               "あなたに当てはまるか確認してください: 当財団の奨学生でないこと"
             ]
-          },
-          {
-            "name": "川口靜記念奨学生",
-            "organization": "一般財団法人アジア国際交流奨学財団",
-            "status": "要確認",
-            "deadline": null,
-            "official_url": "https://www.u-tokyo.ac.jp/adm/go-global/ja/scholarship-list-kawaguchi_00001.html",
-            "reasons": [
-              "学年: 条件に合っています",
-              "目的: 条件に合っています",
-              "その他の条件: 日本人であること、留学先に応じた語学スコアの提出",
-              "大学経由の応募です。指定校かどうかと学内締切を学生課に確認してください"
-            ]
           }
         ]
       },
       "agent": {
         "by_status": {
           "応募できる": 0,
-          "要確認": 4,
+          "要確認": 5,
           "募集終了": 5,
           "目的が違う": 0,
-          "未確認の候補": 1,
+          "未確認の候補": 2,
           "対象外": 0
         },
-        "applicable_or_check": 4,
+        "applicable_or_check": 5,
         "stats": {
           "queries": 6,
           "hubs_read": 0,
-          "candidates": 10,
-          "verified": 9,
-          "from_cache": 8,
-          "discover_seconds": 0.3,
+          "candidates": 12,
+          "verified": 10,
+          "from_cache": 6,
+          "discover_seconds": 24.8,
           "discover_failed": 0,
-          "seconds": 35.8,
+          "seconds": 85.6,
           "truncated": false
         },
         "items": [
           {
-            "name": "東京グローバル・パスポート",
+            "name": "東京グローバル・パスポート（大学生等向け海外留学支援制度）",
             "organization": "東京都",
             "status": "要確認",
             "deadline": "2026-10-15",
@@ -744,45 +850,58 @@
             ]
           },
           {
-            "name": "海外留学奨学金（指定高校出身者）",
-            "organization": "公益財団法人 浦上奨学会",
+            "name": "海外留学奨学生",
+            "organization": "公益財団法人食生活研究会",
             "status": "要確認",
-            "deadline": null,
-            "official_url": "https://www.urakami-shougakukai.or.jp/requirement/overseas-highschool/",
+            "deadline": "2026-11-13",
+            "official_url": "https://www.z-ssk.org/ab_study/guideline.html",
             "reasons": [
-              "学年: 条件に合っています",
               "目的: 条件に合っています",
-              "あなたに当てはまるか確認してください: 広島県立府中高校出身者"
+              "その他の条件: 2027年4月以降海外大学へ留学、日本国籍を有すること、心身ともに健康であること、留学先は北米、欧州等、修士の学位取得を目指す者、申請時原則27歳以下、報告義務や行事参加の義務",
+              "確認できなかった条件: 対象学年"
             ]
           },
           {
-            "name": "東京大学海外派遣奨学事業 2026年度 短期・超短期海外留学等奨学金",
-            "organization": "東京大学",
+            "name": "トビタテ！留学JAPAN 新・日本代表プログラム【大学生等対象】（2027年度・第19期）",
+            "organization": "文部科学省・独立行政法人日本学生支援機構",
             "status": "要確認",
-            "deadline": null,
-            "official_url": "https://www.u-tokyo.ac.jp/adm/go-global/ja/scholarship-list-kaigaihaken_s.html",
+            "deadline": "2027-02-25",
+            "official_url": "https://www.mext.go.jp/a_menu/kokusai/tobitate/1422994_00017.htm",
             "reasons": [
               "学年: 条件に合っています",
               "目的: 条件に合っています",
-              "その他の条件: 経済的理由で自費のみの参加が困難な者、Go Global Gateway講座受講完了者、過去に本奨学事業で採択されていない者、寄附者との交流会や報告会に参加できる者",
+              "その他の条件: 日本人学生等であること",
               "大学経由の応募です。指定校かどうかと学内締切を学生課に確認してください"
             ]
           },
           {
-            "name": "海外留学奨学金",
-            "organization": "公益財団法人大林財団",
+            "name": "日本人奨学生（2027年度）",
+            "organization": "公益財団法人みずほ国際交流奨学財団",
             "status": "要確認",
             "deadline": null,
-            "official_url": "https://www.obayashifoundation.org/students/",
+            "official_url": "https://mizuhokokusai.la.coocan.jp/information.html",
             "reasons": [
               "学年: 条件に合っています",
               "目的: 条件に合っています",
-              "あなたに当てはまるか確認してください: 指定校に在籍、6ヶ月以上2年以内の留学（語学除く）、5月末までに留学先が確定できる者、将来都市関連分野に従事しようとする者"
+              "あなたに当てはまるか確認してください: 指定時期に留学開始、留学期間は最長1年間、海外協定大学への交換留学決定、在学大学が推薦依頼を受けていること"
             ]
           },
           {
-            "name": "百賢亞洲研究院 AFLSP 2026年度日本人学生交換留学奨学金プログラム",
-            "organization": "百賢亞洲研究院",
+            "name": "海外経験渡航費用支援奨学金",
+            "organization": "一般社団法人スイングバイスカラーシップ代官山",
+            "status": "要確認",
+            "deadline": null,
+            "official_url": "https://www.swingbyscholarship.com/",
+            "reasons": [
+              "学年: 条件に合っています",
+              "地域: 条件に合っています",
+              "目的: 条件に合っています",
+              "あなたに当てはまるか確認してください: 国公立学校に通学"
+            ]
+          },
+          {
+            "name": "海外留学日本人大学院生奨学金",
+            "organization": "公益財団法人本庄国際奨学財団",
             "status": "未確認の候補",
             "deadline": null,
             "official_url": "",
@@ -791,27 +910,17 @@
             ]
           },
           {
-            "name": "経団連グローバル人材育成スカラーシップ",
-            "organization": "公益財団法人経団連国際教育交流財団",
-            "status": "募集終了",
-            "deadline": "2025-10-08",
-            "official_url": "https://www.keidanren.or.jp/japanese/profile/ishizaka/2026global.pdf",
+            "name": "日本人派遣留学プログラム",
+            "organization": "公益財団法人吉田育英会",
+            "status": "未確認の候補",
+            "deadline": null,
+            "official_url": "",
             "reasons": [
-              "締切（2025-10-08）を過ぎています"
+              "運営団体の公式ページで募集要項を確認できませんでした。団体のサイトを直接確認してください"
             ]
           },
           {
-            "name": "2026年度（第18期）官民協働海外留学支援制度～トビタテ！留学JAPAN 新・日本代表プログラム【大学生等対象】",
-            "organization": "文部科学省・独立行政法人日本学生支援機構（JASSO）",
-            "status": "募集終了",
-            "deadline": "2026-02-27",
-            "official_url": "https://www.scholarship-partners.com/service/cmogl5x460000l804uwryjm6h",
-            "reasons": [
-              "締切（2026-02-27）を過ぎています"
-            ]
-          },
-          {
-            "name": "トビタテ！留学JAPAN 新・日本代表プログラム【大学生等対象】",
+            "name": "トビタテ！留学JAPAN 新・日本代表プログラム【大学生等対象】（2027年度・第19期）",
             "organization": "独立行政法人日本学生支援機構",
             "status": "募集終了",
             "deadline": "2026-02-27",
@@ -821,17 +930,17 @@
             ]
           },
           {
-            "name": "海外留学支援奨学生",
-            "organization": "公益財団法人飯塚毅育英会",
+            "name": "海外留学奨学金",
+            "organization": "公益財団法人安田奨学財団",
             "status": "募集終了",
-            "deadline": "2026-05-29",
-            "official_url": "https://ryugaku.jasso.go.jp/scholarship/search/data_00151.html",
+            "deadline": "2026-02-27",
+            "official_url": "https://ssc.sec.tsukuba.ac.jp/archives/57844",
             "reasons": [
-              "締切（2026-05-29）を過ぎています"
+              "締切（2026-02-27）を過ぎています"
             ]
           },
           {
-            "name": "公益財団法人 業務スーパージャパンドリーム財団 2026年度派遣留学奨学生",
+            "name": "留学支援事業",
             "organization": "公益財団法人業務スーパージャパンドリーム財団",
             "status": "募集終了",
             "deadline": "2026-07-31",
@@ -839,32 +948,52 @@
             "reasons": [
               "締切（2026-07-31）を過ぎています"
             ]
+          },
+          {
+            "name": "海外留学奨学金",
+            "organization": "公益財団法人村田海外留学奨学会",
+            "status": "募集終了",
+            "deadline": "2026-08-03",
+            "official_url": "https://scholarship.muratec.jp/requirements/",
+            "reasons": [
+              "締切（2026-08-03）を過ぎています"
+            ]
+          },
+          {
+            "name": "アメリカ・イギリス・カナダ英語留学 グローバルリーダー育成奨学金",
+            "organization": "一般財団法人篠原欣子記念財団",
+            "status": "募集終了",
+            "deadline": "2026-09-18",
+            "official_url": "https://ysmf.or.jp/sp/study-abroad/",
+            "reasons": [
+              "締切（2026-09-18）を過ぎています"
+            ]
           }
         ],
-        "candidates_total": 10,
-        "listed": 10
+        "candidates_total": 12,
+        "listed": 12
       },
       "overlap": {
-        "both": 0,
+        "both": 1,
         "only_agent": 4,
         "only_baseline": 5
       },
-      "minutes": 1.7
+      "minutes": 2.5
     },
     "graduate": {
       "profile": "卒業後1年の社会人（研究・プロジェクト・活動）",
       "baseline": {
-        "candidates": 9,
-        "checked": 9,
+        "candidates": 2,
+        "checked": 2,
         "by_status": {
           "応募できる": 0,
-          "要確認": 3,
-          "募集終了": 6,
+          "要確認": 1,
+          "募集終了": 0,
           "対象外": 0,
-          "目的が違う": 0,
+          "目的が違う": 1,
           "未確認の候補": 0
         },
-        "applicable_or_check": 3,
+        "applicable_or_check": 1,
         "items": [
           {
             "name": "未踏IT人材発掘・育成事業",
@@ -879,87 +1008,13 @@
             ]
           },
           {
-            "name": "始動 Next Innovator",
-            "organization": "経済産業省",
-            "status": "募集終了",
-            "deadline": "2022-09-05",
-            "official_url": "https://nagano-it.jp/wp/wp-content/uploads/%E5%8B%9F%E9%9B%86%E8%A6%81%E9%A0%85.pdf",
-            "reasons": [
-              "締切（2022-09-05）を過ぎています"
-            ]
-          },
-          {
-            "name": "戦略的創造研究推進事業 ACT-X",
-            "organization": "国立研究開発法人科学技術振興機構",
-            "status": "募集終了",
-            "deadline": "2026-05-26",
-            "official_url": "https://jp.his.gr.jp/2026/04/21/jst-crest-sakigake-actx2026/",
-            "reasons": [
-              "締切（2026-05-26）を過ぎています"
-            ]
-          },
-          {
-            "name": "研究助成プログラム",
-            "organization": "公益財団法人トヨタ財団",
-            "status": "募集終了",
-            "deadline": "2026-06-05",
-            "official_url": "https://www.jfc.or.jp/news_subsidy/%E7%A0%94%E7%A9%B6%E5%8A%A9%E6%88%90%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0/",
-            "reasons": [
-              "締切（2026-06-05）を過ぎています"
-            ]
-          },
-          {
-            "name": "笹川科学研究助成（学術研究部門）",
-            "organization": "公益財団法人日本科学協会",
-            "status": "要確認",
-            "deadline": "2026-10-15",
-            "official_url": "https://blog.canpan.info/kagakukyokai/archive/805",
-            "reasons": [
-              "学年: 条件に合っています",
-              "目的: 条件に合っています",
-              "その他の条件: 35歳以下であること",
-              "確認できなかった条件: 卒業後でも応募できるか、地域条件、学部・分野"
-            ]
-          },
-          {
-            "name": "公募助成（信託法制等に関する調査・研究）",
-            "organization": "公益財団法人トラスト未来フォーラム",
-            "status": "募集終了",
-            "deadline": "2026-08-31",
-            "official_url": "https://www.jfc.or.jp/news_subsidy/%E7%A0%94%E7%A9%B6%E5%8A%A9%E6%88%90%E3%83%BB%E6%B4%BB%E5%8B%95%E5%8A%A9%E6%88%90/",
-            "reasons": [
-              "締切（2026-08-31）を過ぎています"
-            ]
-          },
-          {
-            "name": "スタートアップ助成",
-            "organization": "公益財団法人東京都歴史文化財団 アーツカウンシル東京",
-            "status": "募集終了",
-            "deadline": "2026-09-24",
-            "official_url": "https://www.artscouncil-tokyo.jp/grants/startup-grant-program/",
-            "reasons": [
-              "締切（2026-09-24）を過ぎています"
-            ]
-          },
-          {
-            "name": "公募プログラム（セゾン・フェロー／現代演劇・舞踊助成）",
-            "organization": "公益財団法人セゾン文化財団",
-            "status": "募集終了",
-            "deadline": "2025-09-25",
-            "official_url": "https://seisakuplus.com/news/?p=56052",
-            "reasons": [
-              "締切（2025-09-25）を過ぎています"
-            ]
-          },
-          {
-            "name": "公益信託 吉田学記念文化財科学研究助成基金",
-            "organization": "三井住友信託銀行株式会社",
-            "status": "要確認",
+            "name": "孫正義育英財団支援金",
+            "organization": "公益財団法人孫正義育英財団",
+            "status": "目的が違う",
             "deadline": null,
-            "official_url": "https://www.smtb.jp/personal/entrustment/public/example/list",
+            "official_url": "https://ryugaku.jasso.go.jp/scholarship/search/data_00165.html",
             "reasons": [
-              "目的: 条件に合っています",
-              "確認できなかった条件: 締切、対象学年、卒業後でも応募できるか、地域条件、学部・分野"
+              "使途（留学）が、あなたの目的（プロジェクト・活動、研究）と違います"
             ]
           }
         ]
@@ -967,55 +1022,35 @@
       "agent": {
         "by_status": {
           "応募できる": 0,
-          "要確認": 2,
-          "募集終了": 5,
+          "要確認": 1,
+          "募集終了": 2,
           "目的が違う": 1,
           "未確認の候補": 2,
           "対象外": 0
         },
-        "applicable_or_check": 2,
+        "applicable_or_check": 1,
         "stats": {
           "queries": 6,
           "hubs_read": 0,
-          "candidates": 10,
-          "verified": 8,
-          "from_cache": 10,
-          "discover_seconds": 0.2,
+          "candidates": 6,
+          "verified": 4,
+          "from_cache": 3,
+          "discover_seconds": 9.3,
           "discover_failed": 0,
-          "seconds": 1.2,
+          "seconds": 44.0,
           "truncated": false
         },
         "items": [
           {
-            "name": "挑戦的研究助成「セコムチャレンジ2026」",
-            "organization": "公益財団法人セコム科学技術振興財団",
-            "status": "要確認",
-            "deadline": "2026-10-28",
-            "official_url": "https://grant-search.com/grant/1930/",
-            "reasons": [
-              "確認できなかった条件: 対象学年、卒業後でも応募できるか、地域条件、学部・分野、使途（目的に合うか）"
-            ]
-          },
-          {
-            "name": "未踏IT人材発掘・育成事業",
-            "organization": "独立行政法人情報処理推進機構",
+            "name": "平成記念研究助成",
+            "organization": "公益財団法人国際科学技術財団",
             "status": "要確認",
             "deadline": null,
-            "official_url": "https://www.ipa.go.jp/jinzai/mitou/it/about.html",
+            "official_url": "https://www.japanprize.jp/subsidy_top.html",
             "reasons": [
               "目的: 条件に合っています",
-              "その他の条件: 2026年4月1日時点で25歳未満",
-              "確認できなかった条件: 締切、対象学年、卒業後でも応募できるか、地域条件、学部・分野"
-            ]
-          },
-          {
-            "name": "組織および事業活動の強化資金助成",
-            "organization": "公益財団法人ＳＯＭＰＯ福祉財団",
-            "status": "未確認の候補",
-            "deadline": null,
-            "official_url": "",
-            "reasons": [
-              "運営団体の公式ページで募集要項を確認できませんでした。団体のサイトを直接確認してください"
+              "その他の条件: 45歳程度までの人材の発掘を考慮、国内の組織に所属し研究継続できること、所属組織の長の承認を受けること",
+              "確認できなかった条件: 締切、対象学年、卒業後でも応募できるか、地域条件"
             ]
           },
           {
@@ -1029,57 +1064,37 @@
             ]
           },
           {
-            "name": "2026年度年度内募集",
-            "organization": "公益財団法人日本財団",
-            "status": "募集終了",
-            "deadline": "2025-06-30",
-            "official_url": "https://www.nippon-foundation.or.jp/who/news/information/2025/20250522-111989.html",
+            "name": "若手・女性リーダー応援プログラム助成事業",
+            "organization": "公益財団法人東京都中小企業振興公社",
+            "status": "未確認の候補",
+            "deadline": null,
+            "official_url": "",
             "reasons": [
-              "締切（2025-06-30）を過ぎています"
+              "運営団体の公式ページで募集要項を確認できませんでした。団体のサイトを直接確認してください"
             ]
           },
           {
-            "name": "戦略的創造研究推進事業 ACT-X（研究提案募集）",
-            "organization": "国立研究開発法人科学技術振興機構",
+            "name": "農林水産業における革新的・先進的技術に関する研究助成（若手部門）",
+            "organization": "公益財団法人Konno＆レスター財団",
             "status": "募集終了",
-            "deadline": "2026-05-26",
-            "official_url": "https://jp.his.gr.jp/2026/04/21/jst-crest-sakigake-actx2026/",
+            "deadline": "2026-01-15",
+            "official_url": "https://kakenhi.com/wp-content/uploads/opportunity-core/documents/2026/06/post-98271-guideline-20260624-042631.pdf",
             "reasons": [
-              "締切（2026-05-26）を過ぎています"
+              "締切（2026-01-15）を過ぎています"
             ]
           },
           {
-            "name": "２０２６年度研究助成金",
-            "organization": "一般財団法人未来研究支援財団",
+            "name": "2026-2027 研究助成プロジェクト",
+            "organization": "一般財団法人篠原欣子記念財団",
             "status": "募集終了",
-            "deadline": "2026-05-31",
-            "official_url": "https://mirai-future.or.jp/news/197/",
+            "deadline": "2026-09-18",
+            "official_url": "https://ysmf.or.jp/sp/study-abroad/",
             "reasons": [
-              "締切（2026-05-31）を過ぎています"
+              "締切（2026-09-18）を過ぎています"
             ]
           },
           {
-            "name": "2026年度 国内助成プログラム",
-            "organization": "公益財団法人トヨタ財団",
-            "status": "募集終了",
-            "deadline": "2026-06-05",
-            "official_url": "https://www.jfc.or.jp/news_subsidy/%E7%A0%94%E7%A9%B6%E5%8A%A9%E6%88%90%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0/",
-            "reasons": [
-              "締切（2026-06-05）を過ぎています"
-            ]
-          },
-          {
-            "name": "科学研究費助成事業 奨励研究",
-            "organization": "独立行政法人日本学術振興会",
-            "status": "募集終了",
-            "deadline": "2026-09-17",
-            "official_url": "https://www.jsps.go.jp/j-grantsinaid/11_shourei/koubo.html",
-            "reasons": [
-              "締切（2026-09-17）を過ぎています"
-            ]
-          },
-          {
-            "name": "孫正義育英財団 財団生支援金（第10期生）",
+            "name": "財団生（支援金給付・研究開発活動支援）",
             "organization": "公益財団法人孫正義育英財団",
             "status": "目的が違う",
             "deadline": null,
@@ -1089,15 +1104,15 @@
             ]
           }
         ],
-        "candidates_total": 10,
-        "listed": 10
+        "candidates_total": 6,
+        "listed": 6
       },
       "overlap": {
-        "both": 1,
+        "both": 0,
         "only_agent": 1,
-        "only_baseline": 2
+        "only_baseline": 1
       },
-      "minutes": 0.9
+      "minutes": 0.8
     }
   }
 }
